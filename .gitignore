@@ -1,0 +1,6 @@
+*.pyc
+.idea
+db.sqlite3
+migrations
+*~
+test-env*
