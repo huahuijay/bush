@@ -76,7 +76,7 @@ class STAFWrapper(object):
 
     def execute(self):
         self.result = self.handle.submit('local', 'stax',
-                                         'execute file {STAF/Env/HOME}/PycharmProjects/STAF/staf/staf_wrapper/demo.xml')
+                                         'execute file {STAF/Env/HOME}/PycharmProjects/STAF/staf/staf_wrapper/litian_case.xml')
         if self.result.rc != STAFResult.Ok:
             raise Exception, 'Error on execute stax task, RC: %d, Result: %s' % (result.rc, result.result)
         self.job_id = self.result.result
