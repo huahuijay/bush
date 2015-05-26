@@ -39,8 +39,6 @@
                     </sequence>
                 </testcase>
             </loop>
-
-
         </sequence>
 	</function>
  </stax>
