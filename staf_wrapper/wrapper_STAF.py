@@ -80,6 +80,7 @@ class STAFWrapper(object):
         if self.result.rc != STAFResult.Ok:
             raise Exception, 'Error on execute stax task, RC: %d, Result: %s' % (result.rc, result.result)
         self.job_id = self.result.result
+        return self.result.result
 
     def query(self):
         self.result = self.handle.submit('local', 'stax',
@@ -87,6 +88,14 @@ class STAFWrapper(object):
         if type(self.result) is dict:
             return 0
         else:
+            return 1
+
+    def unregister(self):
+        try:
+            self.handle.unregister()
+            return 0
+        except STAFException, e:
+            print "Error unregistering static handle with STAF, RC: %d" % e.rc
             return 1
 
 
