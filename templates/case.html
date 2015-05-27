@@ -3,86 +3,71 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title></title>
-    <link rel="stylesheet" href="{{ STATIC_URL }}/bootstrap/dist/css/bootstrap.css"/>
+    <link rel="stylesheet" href="{{ STATIC_URL }}bootstrap/css/bootstrap.css"/>
+    <script src="{{ STATIC_URL }}bootstrap/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+    <script src="{{ STATIC_URL }}bootstrap/js/bootstrap.js" type="text/javascript" charset="utf-8"></script>
 </head>
 <body>
-<a href="plateform.html">plateform</a>
-</br>
-<a href="project.html">project</a>
-</br>
-<a href="project_group.html">project_group</a>
-</br>
-<a href="case.html">case</a>
-</br>
-
 <table>
     <thead>
     <tr>
-        <th class='w-id'>
-            <div class='headerSortUp'>
-                <a href='/bug-browse-1-unclosed-0-id_asc-5-20.html'>ID</a>
-            </div>
-        </th>
-        <th class='w-severity'>
-            <div class='header'>
-                <a href='/bug-browse-1-unclosed-0-severity_asc-5-20.html'>平台</a>
-            </div>
-        </th>
-        <th class='w-pri'>
-            <div class='header'>
-                <a href='/bug-browse-1-unclosed-0-pri_asc-5-20.html'>项目</a>
-            </div>
-        </th>
-        <th>
-            <div class='header'>
-                <a href='/bug-browse-1-unclosed-0-title_asc-5-20.html'>项目组</a>
-            </div>
-        </th>
         <th class='w-80px'>
             <div class='header'>
-                <a href='/bug-browse-1-unclosed-0-status_asc-5-20.html'>用例标题</a>
-            </div>
-        </th>
-        <th class='w-user'>
-            <div class='header'>
-                <a href='/bug-browse-1-unclosed-0-openedBy_asc-5-20.html'>创建人</a>
+                用例名称
             </div>
         </th>
         <th class='w-date'>
             <div class='header'>
-                <a href='/bug-browse-1-unclosed-0-openedDate_asc-5-20.html'>创建日期</a>
+                用例描述
+            </div>
+        </th>
+        <th class='w-date'>
+            <div class='header'>
+                脚本
+            </div>
+        </th>
+        <th class='w-date'>
+            <div class='header'>
+                命令
+            </div>
+        </th>
+        <th class='w-date'>
+            <div class='header'>
+                参数
+            </div>
+        </th>
+        <th class='w-date'>
+            <div class='header'>
+                创建时间
             </div>
         </th>
     </tr>
     </thead>
     <tbody>
+     {% for case in cases %}
     <tr class='text-center'>
-        <td class='bug-active strong text-left'>
-            <div class='header'><a href='/bug-view-7.html'>1</a></div>
-        </td>
-        <td>
-            <div class='header'><a href='/bug-view-7.html'>cdos1.5</a></div>
-        </td>
 
-        <td class='text-left' title="aaa">
-            <div class='header'> <a href='/bug-view-7.html'>package</a></div>
-        </td>
+            <td>
+                <div class='header'>{{ case.name }}</div>
+            </td>
+            <td>
+                <div class='header'>{{ case.description }}</div>
+            </td>
+            <td>
+                <div class='header'>{{ case.script }}</div>
+            </td>
+            <td>
+                <div class='header'>{{ case.command }}</div>
+            </td>
+            <td>
+                <div class='header'>{{ case.param }}</div>
+            </td>
+            <td>
+                <div class='header'>{{ case.createdAt|date:'Y-m-d H:i:s' }}</div>
+            </td>
 
-        <td class='bug-active'>
-            <div class='header'>fomart</div>
-        </td>
-
-        <td>
-            <div class='header'>demo case</div>
-        </td>
-        <td>
-            <div class='header'>测试经理</div>
-        </td>
-
-        <td>
-            <div class='header'>05-26 15:27</div>
-        </td>
     </tr>
+     {% endfor %}
     </tbody>
     <tfoot>
     <tr>
@@ -91,5 +76,50 @@
     </tr>
     </tfoot>
 </table>
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+    Launch demo modal
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label >Name</label>
+                        <input type="username" class="form-control" name="name"  placeholder="Case name">
+                    </div>
+                    <div class="form-group">
+                        <label >Description</label>
+                        <input type="username" class="form-control" name="script"  placeholder="Case script">
+                    </div>
+                    <div class="form-group">
+                        <label >Description</label>
+                        <input type="username" class="form-control" name="command"  placeholder="Case command">
+                    </div>
+                    <div class="form-group">
+                        <label >Param</label>
+                        <textarea class="form-control" name="param" rows="6" placeholder="Case param"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label >Description</label>
+                        <textarea class="form-control" name="description" rows="6" placeholder="Case description"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-success">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 </body>
 </html>

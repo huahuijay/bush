@@ -7,5 +7,7 @@ urlpatterns = [
     url(r'project', views.project),
     url(r'project_group', views.project_group),
     url(r'case', views.case),
-    url(r'index', views.index),
+    #url(r'index', views.index),
+    url(r'^$', views.case),
+    url(r'index.html', views.case),
 ]

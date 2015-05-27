@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.shortcuts import render
 from app.models import *
 # Create your views here.
@@ -7,12 +8,11 @@ def index(request):
 
 
 def plateform(request):
-
     if not User.objects.exists():
-        User(username="bittoy").save()
-    user = User.objects.get(username="bittoy")
+        User(username="admin").save()
+    user = User.objects.get(username="admin")
 
-    #print(user.id)
+    # print(user.id)
     if not Plateform.objects.exists():
         Plateform(userId=user, name="cdos1.1", description="description1.1").save()
         Plateform(userId=user, name="cdos1.2", description="description1.2").save()
@@ -31,4 +31,18 @@ def project_group(request):
 
 
 def case(request):
-    return render(request, "case.html", {"key": "11111111111111"})
+    error = None
+    if request.method == "POST":
+        p_name = request.POST['name']
+        p_script = request.POST['script']
+        p_command = request.POST['command']
+        p_param = request.POST['param']
+        p_description = request.POST['description']
+        if p_name == "" or p_script == "" or p_command == "" or p_param == "" or p_description == "":
+            error = "数据不能为空"
+        else:
+            Case(name=p_name, script=p_script, command=p_command, param=p_param, description=p_description).save()
+    if Case.objects.exists():
+        cases = Case.objects.all()
+
+    return render(request, "case.html", {"cases": cases, "error": error})
