@@ -13,6 +13,58 @@
 </br>
 <a href="case.html">case</a>
 </br>
-plateform
+
+<table>
+    <thead>
+    <tr>
+        <th class='w-id'>
+            <div class='headerSortUp'>
+                <a href='/bug-browse-1-unclosed-0-id_asc-5-20.html'>ID</a>
+            </div>
+        </th>
+        <th class='w-severity'>
+            <div class='header'>
+                <a href='/bug-browse-1-unclosed-0-severity_asc-5-20.html'>平台名</a>
+            </div>
+        </th>
+        <th class='w-pri'>
+            <div class='header'>
+                <a href='/bug-browse-1-unclosed-0-pri_asc-5-20.html'>创建者</a>
+            </div>
+        </th>
+        <th class='w-date'>
+            <div class='header'>
+                <a href='/bug-browse-1-unclosed-0-openedDate_asc-5-20.html'>创建日期</a>
+            </div>
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for plateform in plateforms %}
+    <tr class='text-center'>
+        <td class='bug-active strong text-left'>
+            <div class='header'><a href='/bug-view-7.html'>{{ plateform.id }}</a></div>
+        </td>
+        <td>
+            <div class='header'><a href='/bug-view-7.html'>{{ plateform.name }}</a></div>
+        </td>
+
+        <td class='text-left' title="aaa">
+            <div class='header'> <a href='/bug-view-7.html'>{{ plateform.userId }}</a></div>
+        </td>
+
+        <td class='bug-active'>
+            <div class='header'>{{ plateform.createdAt }}</div>
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+    <tfoot>
+    <tr>
+        <td colspan='12'>
+        </td>
+    </tr>
+    </tfoot>
+</table>
 </body>
 </html>
