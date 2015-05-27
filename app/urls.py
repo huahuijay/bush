@@ -3,11 +3,14 @@ from tastypie.api import Api
 from app import views
 
 urlpatterns = [
-    url(r'plateform', views.plateform),
-    url(r'project', views.project),
-    url(r'project_group', views.project_group),
-    url(r'case', views.case),
+    url(r'plateform.html$', views.plateform),
+    url(r'project.html$', views.project),
+    url(r'project_group.html$', views.project_group),
+    url(r'case.html$', views.case_list),
+    url(r'script.html$', views.script_list),
+    url(r'script_show.html$', views.script_show),
+    url(r'case/del/(?P<pk>\d+).html$', views.case_delete, name="case_delete"),
     #url(r'index', views.index),
-    url(r'^$', views.case),
-    url(r'index.html', views.case),
+    url(r'^$', views.case_list),
+    url(r'index.html$', views.case_list),
 ]

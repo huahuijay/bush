@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
+from django.conf import settings
 from django.shortcuts import render
 from app.models import *
+import os
 # Create your views here.
 
 def index(request):
@@ -30,7 +32,7 @@ def project_group(request):
     return render(request, "project_group.html", {"key": "11111111111111"})
 
 
-def case(request):
+def case_list(request):
     error = None
     if request.method == "POST":
         p_name = request.POST['name']
@@ -46,3 +48,27 @@ def case(request):
         cases = Case.objects.all()
 
     return render(request, "case.html", {"cases": cases, "error": error})
+
+def case_delete(request, pk):
+    cases = None
+    Case.objects.get(id=pk).delete()
+    if Case.objects.exists():
+        cases = Case.objects.all()
+    return render(request, "case.html", {"cases": cases})
+
+def script_list(request):
+    script_path = settings.MEDIA_ROOT + "/script/"
+    scripts = os.listdir(script_path)
+    return render(request, "script.html", {"scripts": scripts})
+
+def script_show(request):
+    g_name = request.GET['name']
+    script_path = settings.MEDIA_ROOT + "/script/"
+
+    script = open(script_path+g_name)
+
+    try:
+        script_text = script.read( )
+    finally:
+        script.close()
+    return render(request, "script_show.html", {"script_text": script_text})

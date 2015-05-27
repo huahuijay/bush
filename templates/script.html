@@ -11,25 +11,13 @@
 <table>
     <thead>
     <tr>
-        <th>用例名称</th>
-        <th>用例描述</th>
-        <th>脚本</th>
-        <th>命令</th>
-        <th>参数</th>
-        <th>创建时间</th>
-        <th>操作</th>
+        <th>文件列表</th>
     </tr>
     </thead>
     <tbody>
-    {% for case in cases %}
+    {% for script in scripts %}
         <tr>
-            <td>{{ case.name }}</td>
-            <td>{{ case.description }}</td>
-            <td>{{ case.script }}</td>
-            <td>{{ case.command }}</td>
-            <td>{{ case.param }}</td>
-            <td>{{ case.createdAt|date:'Y-m-d H:i:s' }}</td>
-            <td><a href="{% url 'case_delete' case.id %}">删除</a> </td>
+            <td> <a href="script_show.html?name={{ script }}">{{ script }}</a></td>
         </tr>
     {% endfor %}
     </tbody>
