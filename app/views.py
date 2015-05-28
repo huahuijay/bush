@@ -52,19 +52,18 @@ def case_list(request):
     cases = None
     if request.method == "POST":
         p_name = request.POST['name']
-        p_script = request.POST['script']
+        p_level = request.POST['level']
         p_suite = request.POST['suite']
         p_command = request.POST['command']
         p_param = request.POST['param']
         p_description = request.POST['description']
-        if p_name == "" or p_script == "" or p_command == "" or p_param == "" or p_description == "":
+        if p_name == "" or p_command == "" or p_param == "" or p_description == "":
             error = "数据不能为空"
         else:
-            Case(name=p_name, script=p_script, suite=Suite.objects.get(id=p_suite),  command=p_command, param=p_param, description=p_description).save()
+            Case(name=p_name, suite=Suite.objects.get(id=p_suite),  level=p_level, command=p_command, param=p_param, description=p_description).save()
             #根据数据库信息生成新的xml
 
             #保存xml到本地路径
-
     if Case.objects.exists():
         cases = Case.objects.all()
     suites = Suite.objects.all()
@@ -79,6 +78,10 @@ def case_delete(request, pk):
 
 def script_list(request):
     script_path = settings.MEDIA_ROOT + "/script/"
+    if request.method == "POST":
+        file = request.FILES['name']
+        open(script_path + file.name, 'wb').write(file.read())
+
     scripts = os.listdir(script_path)
     return render(request, "script.html", {"scripts": scripts})
 
@@ -86,10 +89,15 @@ def script_show(request):
     g_name = request.GET['name']
     script_path = settings.MEDIA_ROOT + "/script/"
 
-    script = open(script_path+g_name)
+    name = script_path + g_name
 
-    try:
-        script_text = script.read()
-    finally:
-        script.close()
-    return render(request, "script_show.html", {"script_text": script_text})
+    if os.path.isdir(name):
+        scripts = os.listdir(name)
+        return render(request, "script.html", {"scripts": scripts})
+    else:
+        try:
+            script = open(name)
+            script_text = script.read()
+        finally:
+            script.close()
+        return render(request, "script_show.html", {"script_text": script_text})
