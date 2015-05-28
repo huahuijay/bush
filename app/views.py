@@ -3,6 +3,7 @@ from django.conf import settings
 from django.shortcuts import render
 from app.models import *
 import os
+import re
 # Create your views here.
 
 def index(request):
@@ -50,6 +51,37 @@ def suite_list(request):
 def case_list(request):
     error = None
     cases = None
+    proj_name = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    xml_path = os.path.join(proj_name, 'media', 'case')
+    xml_content_starting = '''<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE stax SYSTEM "stax.dtd">
+<stax>
+	<defaultcall function="func_test"/>
+	<function name="func_test">
+        <sequence>'''
+    xml_content = '''            <loop from="0" to="1">
+                <testcase name="'TestA'">
+                    <sequence>
+                        <process>
+                            <location>'local'</location>
+                            <command>'/usr/bin/python'</command>
+                            <parms>'{STAF/Env/HOME}/PycharmProjects/STAF/staf/staf_wrapper/demo.py case1'</parms>
+                        </process>
+                        <if expr="RC == 0">
+                            <tcstatus result="'pass'"/>
+                            <else>
+                                <tcstatus result="'fail'"/>
+                            </else>
+                        </if>
+                    </sequence>
+                </testcase>
+            </loop>
+'''
+    xml_content_ending = '''            </sequence>
+    </function>
+</stax>
+'''
+
     if request.method == "POST":
         p_name = request.POST['name']
         p_level = request.POST['level']
@@ -62,6 +94,20 @@ def case_list(request):
         else:
             Case(name=p_name, suite=Suite.objects.get(id=p_suite),  level=p_level, command=p_command, param=p_param, description=p_description).save()
             #根据数据库信息生成新的xml
+            suite_name = '.'.join([Suite.objects.get(id=p_suite).name, 'xml'])
+            cases = Suite.objects.get(id=p_suite).case_set.all()
+            xml_location = os.path.join(xml_path, suite_name)
+            print xml_location
+
+            if os.path.exists(xml_location):
+                os.remove(xml_location)
+            with open(xml_location, 'a+') as xml_handle:
+                xml_handle.write(xml_content_starting)
+                for case in cases:
+                    xml_content = re.sub('''<testcase name="'.*'">''', '''<testcase name="'{case.name}'">'''.format(case=case), xml_content)
+                    xml_content = re.sub('<parms>.*</parms>', "<parms>'{0}{case.command} {case.param}'</parms>".format(proj_name, case=case), xml_content)
+                    xml_handle.write(xml_content)
+                xml_handle.write(xml_content_ending)
 
             #保存xml到本地路径
     if Case.objects.exists():

@@ -7,46 +7,47 @@ import time
 
 
 class ProjectStafResource(Resource):
+    def __init__(self):
+        Resource.__init__(self)
+        self.staf_obj = wrapper_STAF.STAFWrapper()
+        self.staf_obj.register()
+
     def prepend_urls(self):
         return [
             url(r"^(?P<resource_name>%s)/?$" % self._meta.resource_name, self.wrap_view('staf_api'), name='staf_api'),
-            url(r"^(?P<resource_name>%s)/?$" % 'non_blocking_trigger', self.wrap_view('non_blocking_trigger'), name='non_blocking_trigger'),
-            url(r"^(?P<resource_name>%s)/(?P<fun>.+)%s$" % ('query', trailing_slash()), self.wrap_view('query'), name='query'),
-            url(r"^initialize$", self.wrap_view('initialize'), name='initialize'),
-            url(r"^unregister$", self.wrap_view('unregister'), name='unregister'),
+            # following is new APIs
+            url(r"^trigger_deb/(?P<mode>.+)/(?P<suite_name>.+?/?)$", self.wrap_view('trigger_deb'), name='trigger_deb'),
+            url(r"^trigger_iso/(?P<mode>.+)/(?P<suite_name>.+?/?)$", self.wrap_view('trigger_iso'), name='trigger_iso'),
+            url(r"^get_result/(?P<staf_handle_key>.+/?)$", self.wrap_view('get_result'), name='get_result'),
         ]
 
-    def initialize(self, request, **kwargs):
-        self._num = 0
-        self._map_str_obj = dict()
-        return self.create_response(request, {"key": 'value'})
-
-
-    def non_blocking_trigger(self, request, **kwargs):
-        staf_obj = wrapper_STAF.STAFWrapper()
-        staf_obj.register()
-        staf_handle = staf_obj.execute()
-        # self._map_str_obj[staf_handle] = staf_obj
-        self._num += 1
-        self._map_str_obj[self._num] = staf_obj
-        return self.create_response(request, {"key": self._num})
-
-
-    def query(self, request, **kwargs):
-        key = int(kwargs['fun'])
-        staf_obj = self._map_str_obj.get(key)
-        if staf_obj.query() == 0:
-            return self.create_response(request, {"key": staf_obj.result})
+    def trigger_deb(self, request, **kwargs):
+        if kwargs['mode'] == u'non-blocking':
+            exec_handle = self.staf_obj.execute(kwargs['suite_name'])
+            return self.create_response(request, {"key": exec_handle})
         else:
+            raise
+
+    def trigger_iso(self, request, **kwargs):
+        pass
+
+    def get_result(self, request, **kwargs):
+        if self._query(kwargs['staf_handle_key']) == 'on-going':
             return self.create_response(request, {"key": 'on-going'})
-
-
-    def unregister(self, request, **kwargs):
-        if staf_obj.unregister() == 0:
-            return self.create_response(request, {"key": 'successful'})
         else:
-            return self.create_response(request, {"key": 'unsuccessful'})
+            return self.create_response(request, {"key": self.staf_obj.result})
 
+    def _query(self, exec_handle):
+        if self.staf_obj.query(job_id=exec_handle) == 0:
+            return 'has-done'
+        else:
+            return 'on-going'
+
+    def _unregister(self):
+        if self.staf_obj.unregister() == 0:
+            return 'successful'
+        else:
+            return 'unsuccessful'
 
     def staf_api(self, request, **kwargs):
         staf_obj = wrapper_STAF.STAFWrapper()
@@ -64,7 +65,6 @@ class ProjectStafResource(Resource):
         staf_obj.unregister()
 
         return self.create_response(request, {"key": staf_obj.result})
-
 
     class Meta:
         resource_name = 'staf'

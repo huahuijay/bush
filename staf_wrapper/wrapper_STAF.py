@@ -66,7 +66,6 @@ class STAFWrapper(object):
     def __init__(self):
         self.handle = None
         self.result = None
-        self.job_id = None
 
     def register(self):
         try:
@@ -74,17 +73,17 @@ class STAFWrapper(object):
         except STAFException, e:
             print "Error registering with STAF, RC: %d" % e.rc
 
-    def execute(self):
+    def execute(self, xml_name):
+        xml_location = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'media', 'case', xml_name)
         self.result = self.handle.submit('local', 'stax',
-                                         'execute file {STAF/Env/HOME}/PycharmProjects/STAF/staf/staf_wrapper/litian_case.xml')
+                                         'execute file {0}.xml'.format(xml_location))
         if self.result.rc != STAFResult.Ok:
             raise Exception, 'Error on execute stax task, RC: %d, Result: %s' % (result.rc, result.result)
-        self.job_id = self.result.result
         return self.result.result
 
-    def query(self):
+    def query(self, job_id):
         self.result = self.handle.submit('local', 'stax',
-                                         'get result job {0} details'.format(self.job_id)).resultContext.getRootObject()
+                                         'get result job {0} details'.format(job_id)).resultContext.getRootObject()
         if type(self.result) is dict:
             return 0
         else:
