@@ -6,6 +6,7 @@ urlpatterns = [
     url(r'plateform.html$', views.plateform),
     url(r'project.html$', views.project),
     url(r'project_group.html$', views.project_group),
+    url(r'suite.html$', views.suite_list),
     url(r'case.html$', views.case_list),
     url(r'script.html$', views.script_list),
     url(r'script_show.html$', views.script_show),

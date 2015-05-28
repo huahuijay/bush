@@ -31,23 +31,44 @@ def project(request):
 def project_group(request):
     return render(request, "project_group.html", {"key": "11111111111111"})
 
+def suite_list(request):
+    error = None
+    suites = None
+    if request.method == "POST":
+        p_name = request.POST['name']
+        p_description = request.POST['description']
+        if p_name == "" or p_description == "":
+            error = "数据不能为空"
+        else:
+            Suite(name=p_name, description=p_description).save()
+
+    if Suite.objects.exists():
+        suites = Suite.objects.all()
+
+    return render(request, "suite.html", {"suites": suites, "error": error})
 
 def case_list(request):
     error = None
+    cases = None
     if request.method == "POST":
         p_name = request.POST['name']
         p_script = request.POST['script']
+        p_suite = request.POST['suite']
         p_command = request.POST['command']
         p_param = request.POST['param']
         p_description = request.POST['description']
         if p_name == "" or p_script == "" or p_command == "" or p_param == "" or p_description == "":
             error = "数据不能为空"
         else:
-            Case(name=p_name, script=p_script, command=p_command, param=p_param, description=p_description).save()
+            Case(name=p_name, script=p_script, suite=Suite.objects.get(id=p_suite),  command=p_command, param=p_param, description=p_description).save()
+            #根据数据库信息生成新的xml
+
+            #保存xml到本地路径
+
     if Case.objects.exists():
         cases = Case.objects.all()
-
-    return render(request, "case.html", {"cases": cases, "error": error})
+    suites = Suite.objects.all()
+    return render(request, "case.html", {"cases": cases, "error": error, "suites": suites})
 
 def case_delete(request, pk):
     cases = None
@@ -68,7 +89,7 @@ def script_show(request):
     script = open(script_path+g_name)
 
     try:
-        script_text = script.read( )
+        script_text = script.read()
     finally:
         script.close()
     return render(request, "script_show.html", {"script_text": script_text})

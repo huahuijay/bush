@@ -26,9 +26,16 @@ class ProjectGroup(models.Model):
     name = models.CharField('项目组名称', max_length=255, unique=True)
     description = models.TextField('项目组描述', blank=True, null=True)
 
+class Suite(models.Model):
+    #user = models.ForeignKey(User)
+    name = models.CharField('套件名称', max_length=255, unique=True)
+    description = models.TextField('套件描述', blank=True, null=True)
+    createdAt = models.DateTimeField("创建的时间", auto_now_add=True)
+
 class Case(models.Model):
     #user = models.ForeignKey(User)
     #progect_group = models.ForeignKey(ProjectGroup)
+    suite = models.ForeignKey(Suite)
     name = models.CharField('用例名称', max_length=255, unique=True)
     description = models.TextField('用例描述', blank=True, null=True)
     script = models.TextField('脚本', blank=True, null=True)

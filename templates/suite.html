@@ -11,27 +11,17 @@
 <table>
     <thead>
     <tr>
-        <th>用例名称</th>
-        <th>用例描述</th>
-        <th>套件</th>
-        <th>脚本</th>
-        <th>命令</th>
-        <th>参数</th>
+        <th>套件名称</th>
+        <th>套件描述</th>
         <th>创建时间</th>
-        <th>操作</th>
     </tr>
     </thead>
     <tbody>
-    {% for case in cases %}
+    {% for suite in suites %}
         <tr>
-            <td>{{ case.name }}</td>
-            <td>{{ case.description }}</td>
-            <td>{{ case.suite.name }}</td>
-            <td>{{ case.script }}</td>
-            <td>{{ case.command }}</td>
-            <td>{{ case.param }}</td>
+            <td>{{ suite.name }}</td>
+            <td>{{ suite.description }}</td>
             <td>{{ case.createdAt|date:'Y-m-d H:i:s' }}</td>
-            <td><a href="{% url 'case_delete' case.id %}">删除</a> </td>
         </tr>
     {% endfor %}
     </tbody>
@@ -54,36 +44,16 @@
                 {% csrf_token %}
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Case Manager</h4>
+                    <h4 class="modal-title" id="myModalLabel">Suite manager</h4>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
                         <label >Name</label>
-                        <input type="username" class="form-control" name="name"  placeholder="Case name">
-                    </div>
-                    <div class="form-group">
-                        <label >Script</label>
-                        <input type="username" class="form-control" name="script"  placeholder="Case script">
-                    </div>
-                    <div class="form-group">
-                        <label >Suite</label>
-                        <select name = "suite">
-                            {% for suite in suites %}
-                            <option value="{{ suite.id }}" >{{ suite.name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label >Command</label>
-                        <input type="username" class="form-control" name="command"  placeholder="Case command">
-                    </div>
-                    <div class="form-group">
-                        <label >Param</label>
-                        <textarea class="form-control" name="param" rows="6" placeholder="Case param"></textarea>
+                        <input type="username" class="form-control" name="name"  placeholder="Suite name">
                     </div>
                     <div class="form-group">
                         <label >Description</label>
-                        <textarea class="form-control" name="description" rows="6" placeholder="Case description"></textarea>
+                        <textarea class="form-control" name="description" rows="6" placeholder="Suite description"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
