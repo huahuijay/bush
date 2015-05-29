@@ -2,6 +2,8 @@
 from django.conf import settings
 from django.shortcuts import render
 from app.models import *
+
+from utils import xml_content_starting, xml_content, xml_content_ending
 import os
 import re
 # Create your views here.
@@ -53,35 +55,6 @@ def case_list(request):
     cases = None
     proj_name = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     xml_path = os.path.join(proj_name, 'media', 'case')
-    xml_content_starting = '''<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE stax SYSTEM "stax.dtd">
-<stax>
-	<defaultcall function="func_test"/>
-	<function name="func_test">
-        <sequence>'''
-    xml_content = '''            <loop from="0" to="1">
-                <testcase name="'TestA'">
-                    <sequence>
-                        <process>
-                            <location>'local'</location>
-                            <command>'/usr/bin/python'</command>
-                            <parms>'{STAF/Env/HOME}/PycharmProjects/STAF/staf/staf_wrapper/demo.py case1'</parms>
-                        </process>
-                        <if expr="RC == 0">
-                            <tcstatus result="'pass'"/>
-                            <else>
-                                <tcstatus result="'fail'"/>
-                            </else>
-                        </if>
-                    </sequence>
-                </testcase>
-            </loop>
-'''
-    xml_content_ending = '''            </sequence>
-    </function>
-</stax>
-'''
-
     if request.method == "POST":
         p_name = request.POST['name']
         p_level = request.POST['level']
@@ -104,9 +77,9 @@ def case_list(request):
             with open(xml_location, 'a+') as xml_handle:
                 xml_handle.write(xml_content_starting)
                 for case in cases:
-                    xml_content = re.sub('''<testcase name="'.*'">''', '''<testcase name="'{case.name}'">'''.format(case=case), xml_content)
-                    xml_content = re.sub('<parms>.*</parms>', "<parms>'{0}{case.command} {case.param}'</parms>".format(proj_name, case=case), xml_content)
-                    xml_handle.write(xml_content)
+                    xml_content_towrite = re.sub('''<testcase name="'.*'">''', '''<testcase name="'{case.name}'">'''.format(case=case), xml_content)
+                    xml_content_towrite = re.sub('<parms>.*</parms>', "<parms>'{0}/{case.command} {case.param}'</parms>".format(proj_name, case=case), xml_content_towrite)
+                    xml_handle.write(xml_content_towrite)
                 xml_handle.write(xml_content_ending)
 
             #保存xml到本地路径
