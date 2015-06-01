@@ -43,3 +43,14 @@ class Case(models.Model):
     param = models.TextField('参数', max_length=255, null=True)
     createdAt = models.DateTimeField("创建的时间", auto_now_add=True)
 
+class Task(models.Model):
+    #user = models.ForeignKey(User)
+    suite = models.ForeignKey(Suite)
+    name = models.CharField("任务名称", max_length=255, unique=True)
+    description = models.TextField('任务描述', blank=True, null=True)
+    createdAt = models.DateTimeField("创建的时间", auto_now_add=True)
+
+class Task_Case(models.Model):
+    case = models.ForeignKey(Case)
+    task = models.ForeignKey(Task)
+    createdAt = models.DateTimeField("创建的时间", auto_now_add=True)

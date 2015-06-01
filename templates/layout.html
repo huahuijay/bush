@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="{{ STATIC_URL }}bootstrap/css/bootstrap.css"/>
+    <script src="{{ STATIC_URL }}bootstrap/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+    <script src="{{ STATIC_URL }}bootstrap/js/bootstrap.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+<div class="nav">
+    <ul class="nav nav-pills">
+        <li role="presentation" {% ifequal active 'case' %}class="active"{% endifequal %}><a href="case.html">用例</a></li>
+        <li role="presentation" {% ifequal active 'report' %}class="active"{% endifequal %}><a href="report.html">报表</a></li>
+        <li role="presentation" {% ifequal active 'task' %}class="active"{% endifequal %}><a href="task.html">任务</a></li>
+        <li role="presentation" {% ifequal active 'machine' %}class="active"{% endifequal %}><a href="machine.html">测试机</a></li>
+    </ul>
+</div>
+{% block content %}
+{% endblock %}
+</body>
+</html>

@@ -3,25 +3,17 @@
     <table class="table table-hover">
         <thead>
         <tr>
-            <th>用例</th>
-            <th>套件</th>
-            <th>参数</th>
-            <th>命令</th>
-            <th>重要性</th>
+            <th>任务名称</th>
+            <th>所属套件</th>
             <th>创建时间</th>
-            <th>操作</th>
         </tr>
         </thead>
         <tbody>
-        {% for case in cases %}
+        {% for task in tasks %}
             <tr>
-                <td><a href="{% url 'case_view' case.id %}">{{ case.name }}</a></td>
-                <td><a href="{% url 'suite_view' case.suite.id %}">{{ case.suite.name }}</a></td>
-                <td>{{ case.get_level_display }}</td>
-                <td>{{ case.command }}</td>
-                <td>{{ case.param }}</td>
-                <td>{{ case.createdAt|date:'Y-m-d H:i:s' }}</td>
-                <td><a href="{% url 'case_delete' case.id %}">删除</a></td>
+                <td><a href="{% url 'task_view' task.id %}">{{ task.name }}</a></td>
+                <td><a href="{% url 'suite_view' task.suite.id %}">{{ task.suite.name }}</a></td>
+                <td>{{ task.createdAt|date:'Y-m-d H:i:s' }}</td>
             </tr>
         {% endfor %}
         </tbody>
@@ -33,7 +25,7 @@
     </table>
     <!-- Button trigger modal -->
     <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
-        添加用例
+        添加任务
     </button>
 
     <!-- Modal -->
@@ -44,20 +36,12 @@
                     {% csrf_token %}
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="myModalLabel">Case Manager</h4>
+                        <h4 class="modal-title" id="myModalLabel">Task Manager</h4>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
                             <label >名称</label>
-                            <input type="username" class="form-control" name="name"  placeholder="Case name">
-                        </div>
-                        <div class="form-group">
-                            <label >重要性</label>
-                            <select name = "level">
-                                <option value="1" >低</option>
-                                <option value="2" >中</option>
-                                <option value="3" >高</option>
-                            </select>
+                            <input type="username" class="form-control" name="name"  placeholder="Task name">
                         </div>
                         <div class="form-group">
                             <label >套件</label>
@@ -68,16 +52,8 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label >命令</label>
-                            <input type="username" class="form-control" name="command"  placeholder="Case command">
-                        </div>
-                        <div class="form-group">
-                            <label >参数</label>
-                            <textarea class="form-control" name="param" rows="6" placeholder="Case param"></textarea>
-                        </div>
-                        <div class="form-group">
                             <label >描述</label>
-                            <textarea class="form-control" name="description" rows="6" placeholder="Case description"></textarea>
+                            <textarea class="form-control" name="description" rows="6" placeholder="Task description"></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">

@@ -1,27 +1,17 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title></title>
-    <link rel="stylesheet" href="{{ STATIC_URL }}bootstrap/css/bootstrap.css"/>
-    <script src="{{ STATIC_URL }}bootstrap/js/jquery.js" type="text/javascript" charset="utf-8"></script>
-    <script src="{{ STATIC_URL }}bootstrap/js/bootstrap.js" type="text/javascript" charset="utf-8"></script>
-</head>
-<body>
-<table>
+{% extends "layout.html" %}
+{% block content %}
+<table class="table table-hover">
     <thead>
     <tr>
         <th>套件名称</th>
-        <th>套件描述</th>
         <th>创建时间</th>
     </tr>
     </thead>
     <tbody>
     {% for suite in suites %}
         <tr>
-            <td>{{ suite.name }}</td>
-            <td>{{ suite.description }}</td>
-            <td>{{ case.createdAt|date:'Y-m-d H:i:s' }}</td>
+            <td><a href="{% url 'suite_view' suite.id %}">{{ suite.name }}</a></td>
+            <td>{{ suite.createdAt|date:'Y-m-d H:i:s' }}</td>
         </tr>
     {% endfor %}
     </tbody>
@@ -33,7 +23,7 @@
 </table>
 <!-- Button trigger modal -->
 <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
-    Launch demo modal
+    添加套件
 </button>
 
 <!-- Modal -->
@@ -64,5 +54,4 @@
         </div>
     </div>
 </div>
-</body>
-</html>
+{% endblock %}
