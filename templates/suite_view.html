@@ -27,7 +27,7 @@
             <th>用例名称</th>
             <th>参数</th>
             <th>命令</th>
-            <th>等级</th>
+            <th>重要性</th>
             <th>创建时间</th>
         </tr>
         </thead>
@@ -79,7 +79,7 @@
                 </tr>
                 </tfoot>
             </table>
-
+    {% if request.user.is_authenticated %}
     <!-- Button trigger modal -->
     <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
         添加文件
@@ -110,5 +110,6 @@
             </div>
         </div>
     </div>
+    {% endif %}
     <a href="/suite.html">All</a>
 {% endblock %}

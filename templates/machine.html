@@ -3,45 +3,24 @@
     <table class="table table-hover">
         <thead>
         <tr>
-            <th>任务名称</th>
-            <th>所属套件</th>
-            <th>描述</th>
+            <th>主机名称</th>
+            <th>状态</th>
             <th>创建时间</th>
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <td>{{ p_task.name }}</td>
-            <td><a href="{% url 'suite_view' p_task.suite.id %}">{{ p_task.suite.name }}</a></td>
-            <td>{{ p_task.description }}</td>
-            <td>{{ p_task.createdAt|date:'Y-m-d H:i:s' }}</td>
-        </tr>
-        </tbody>
-        <tfoot>
-        <tr>
-            <td colspan='12'></td>
-        </tr>
-        </tfoot>
-    </table>
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th>用例名称</th>
-            <th>创建时间</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% if child_cases%}
-        {% for child_case in child_cases %}
-        <tr>
-            <td><a href="{% url 'case_view' child_case.case.id %}">{{ child_case.case.name }}</a></td>
-            <td>{{ child_case.createdAt|date:'Y-m-d H:i:s' }}</td>
-        </tr>
+        {% if machines %}
+        {% for machine in machines %}
+            <tr>
+                <td><a href="{% url 'machine_view' machine.id %}">{{ machine.name }}</a></td>
+                <td>{{ machine.get_status_display }}</td>
+                <td>{{ machine.createdAt|date:'Y-m-d H:i:s' }}</td>
+            </tr>
         {% endfor %}
         {% else %}
             <tr>
-            <td>没有找到数据.</td>
-        </tr>
+                <td>没有找到数据.</td>
+            </tr>
         {% endif %}
         </tbody>
         <tfoot>
@@ -51,10 +30,9 @@
         </tfoot>
     </table>
     {% if request.user.is_authenticated %}
-    {% if cases %}
     <!-- Button trigger modal -->
     <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
-        添加用例
+        添加主机
     </button>
 
     <!-- Modal -->
@@ -65,16 +43,20 @@
                     {% csrf_token %}
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="myModalLabel">Task Manager</h4>
+                        <h4 class="modal-title" id="myModalLabel">Machine Manager</h4>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label >用例</label>
-                            <select name = "case">
-                                {% for case in cases %}
-                                    <option value="{{ case.id }}" >{{ case.name }}</option>
-                                {% endfor %}
-                            </select>
+                            <label >名称</label>
+                            <input type="username" class="form-control" name="name"  placeholder="Machine name">
+                        </div>
+                        <div class="form-group">
+                            <label>主机地址</label>
+                            <input type="username" class="form-control" name="address"  placeholder="Machine address">
+                        </div>
+                        <div class="form-group">
+                            <label >描述</label>
+                            <textarea class="form-control" name="description" rows="6" placeholder="Machine description"></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -85,6 +67,5 @@
             </div>
         </div>
     </div>
-    {% endif %}
     {% endif %}
 {% endblock %}

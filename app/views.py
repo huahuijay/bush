@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 from django.conf import settings
+from django.contrib.auth import authenticate, login, logout
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, redirect
+from django.utils.timezone import now
 from app.models import *
 
 from utils import xml_content_starting, xml_content, xml_content_ending
@@ -36,6 +38,21 @@ def project(request):
 def project_group(request):
     return render(request, "project_group.html", {"key": "11111111111111"})
 
+def login_view(request):
+    if request.method == 'POST':
+        user = authenticate(username=request.POST['username'], password=request.POST['password'])
+        if user:
+            login(request, user)
+            return redirect(reverse("case_list"))
+        else:
+            return render(request, "login.html")
+    else:
+        return render(request, "login.html")
+
+def logout_view(request):
+    logout(request)
+    return redirect(reverse("case_list"))
+
 def suite_list(request):
     error = None
     suites = None
@@ -45,9 +62,10 @@ def suite_list(request):
         if p_name == "" or p_description == "":
             error = "数据不能为空"
         else:
-            Suite(name=p_name, description=p_description).save()
+            Suite(name=p_name, description=p_description, createdAt=now()).save()
             script_path = settings.MEDIA_ROOT + settings.SCRIPT_DIR + p_name
-            os.mkdir(script_path)
+            if not os.path.isdir(script_path):
+                os.mkdir(script_path)
     if Suite.objects.exists():
         suites = Suite.objects.all()
 
@@ -75,10 +93,10 @@ def case_list(request):
         p_command = request.POST['command']
         p_param = request.POST['param']
         p_description = request.POST['description']
-        if p_name == "" or p_command == "" or p_param == "" or p_description == "":
+        if p_name == "" or p_command == "" or p_description == "":
             error = "数据不能为空"
         else:
-            Case(name=p_name, suite=Suite.objects.get(id=p_suite),  level=p_level, command=p_command, param=p_param, description=p_description).save()
+            Case(name=p_name, suite=Suite.objects.get(id=p_suite),  level=p_level, command=p_command, param=p_param, description=p_description, createdAt=now()).save()
             #根据数据库信息生成新的xml
             suite_name = '.'.join([Suite.objects.get(id=p_suite).name, 'xml'])
             cases = Suite.objects.get(id=p_suite).case_set.all()
@@ -103,11 +121,16 @@ def case_list(request):
 
 def case_view(request, pk):
     case = Case.objects.get(id=pk)
-    return render(request, "case_view.html", {"case": case})
+    return render(request, "case_view.html", locals())
 
 def case_delete(request, pk):
     Case.objects.get(id=pk).delete()
     return redirect(reverse("case_list"))
+
+def case_edit(request, pk):
+    #Case.objects.get(id=pk).delete()
+    case = Case.objects.get(id=pk)
+    return render(request, "case_edit.html", locals())
 
 def task_list(request):
     tasks = Task.objects.all()
@@ -121,20 +144,58 @@ def task_list(request):
         if p_name == "" or p_description == "":
             error = "数据不能为空"
         else:
-            Task(name=p_name, suite=Suite.objects.get(id=p_suite), description=p_description).save()
+            Task(name=p_name, suite=Suite.objects.get(id=p_suite), description=p_description, createdAt=now()).save()
     return render(request, "task.html", locals())
 
 def task_view(request, pk):
     p_task = Task.objects.get(id=pk)
+    print p_task.name
     #cases = Case.objects.filter(suite=p_task.suite)
     if request.method == "POST":
         p_id = request.POST['case']
         p_case = Case.objects.get(id=p_id)
-        Task_Case(case=p_case, task=p_task).save()
+        task_cases = Task_Case.objects.filter(case=p_case)
+        has_in = False
+        if task_cases:
+            for case in task_cases:
+                if p_case.id == case.id:
+                    has_in=True
+            if not has_in:
+                Task_Case(case=p_case, task=p_task).save()
+        else:
+            Task_Case(case=p_case, task=p_task).save()
+        #根据数据库信息生成新的xml
+        #xml_file = settings.MEDIA_ROOT + settings.CASE_DIR + p_task.name
+        #with open(xml_file, 'a+') as xml_handle:
+        #        xml_handle.write(xml_content_starting)
+        #        for case in p_case:
+        #            xml_content_towrite = re.sub('''<testcase name="'.*'">''', '''<testcase name="'{case.name}'">'''.format(case=case), xml_content)
+        #            xml_content_towrite = re.sub('<parms>.*</parms>', "<parms>'{0}/{case.command} {case.param}'</parms>".format(proj_name, case=case), xml_content_towrite)
+        #            xml_handle.write(xml_content_towrite)
+        #        xml_handle.write(xml_content_ending)
+
     child_cases = Task_Case.objects.filter(task=p_task)
 
     cases = Case.objects.filter(suite=p_task.suite).exclude(task_case__in=child_cases.values_list("id", flat=True))
     return render(request, "task_view.html", locals())
+
+def machine_list(request):
+    if request.method == "POST":
+        p_name = request.POST['name']
+        p_description = request.POST['description']
+        p_address = request.POST['address']
+        if p_name == "" or p_description == "":
+            error = "数据不能为空"
+        else:
+            Machine(name=p_name, description=p_description, address=p_address, createdAt=now()).save()
+    machines = Machine.objects.all()
+    suites = Suite.objects.all()
+    return render(request, "machine.html", locals())
+
+
+def machine_view(request, pk):
+    p_machine = Machine.objects.get(id=pk)
+    return render(request, "machine_view.html", locals())
 
 def script_add(request):
     if request.method == "POST":

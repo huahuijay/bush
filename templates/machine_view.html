@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block content %}
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>主机名称</th>
+            <th>状态</th>
+            <th>主机地址</th>
+            <th>描述</th>
+            <th>创建时间</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>{{ p_machine.name }}</td>
+            <td>{{ p_machine.get_status_display }}</td>
+            <td>{{ p_machine.address }}</td>
+            <td>{{ p_machine.description }}</td>
+            <td>{{ p_machine.createdAt|date:'Y-m-d H:i:s' }}</td>
+        </tr>
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan='12'></td>
+        </tr>
+        </tfoot>
+    </table>
+    <a href="/machine.html">All</a>
+{% endblock %}

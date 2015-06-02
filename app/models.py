@@ -30,7 +30,8 @@ class Suite(models.Model):
     #user = models.ForeignKey(User)
     name = models.CharField('套件名称', max_length=255, unique=True)
     description = models.TextField('套件描述', blank=True, null=True)
-    createdAt = models.DateTimeField("创建的时间", auto_now_add=True)
+    createdAt = models.DateTimeField("创建的时间")
+    modifyAt = models.DateTimeField("修改的时间", auto_now_add=True)
 
 class Case(models.Model):
     #user = models.ForeignKey(User)
@@ -38,19 +39,30 @@ class Case(models.Model):
     suite = models.ForeignKey(Suite)
     name = models.CharField("用例名称", max_length=255, unique=True)
     description = models.TextField('用例描述', blank=True, null=True)
-    level = models.IntegerField('用例等级', choices=((1, "低"), (2, '中'), (3, '高')))
+    level = models.IntegerField('用例等级', choices=((1, '低'), (2, '中'), (3, '高')))
     command = models.TextField('命令', max_length=255, null=True)
     param = models.TextField('参数', max_length=255, null=True)
-    createdAt = models.DateTimeField("创建的时间", auto_now_add=True)
+    createdAt = models.DateTimeField("创建的时间")
+    modifyAt = models.DateTimeField("修改的时间", auto_now_add=True)
 
 class Task(models.Model):
     #user = models.ForeignKey(User)
     suite = models.ForeignKey(Suite)
     name = models.CharField("任务名称", max_length=255, unique=True)
     description = models.TextField('任务描述', blank=True, null=True)
-    createdAt = models.DateTimeField("创建的时间", auto_now_add=True)
+    createdAt = models.DateTimeField("创建的时间")
+    modifyAt = models.DateTimeField("修改的时间", auto_now_add=True)
 
 class Task_Case(models.Model):
     case = models.ForeignKey(Case)
     task = models.ForeignKey(Task)
     createdAt = models.DateTimeField("创建的时间", auto_now_add=True)
+
+class Machine(models.Model):
+    #suite = models.ForeignKey(Suite)
+    name = models.CharField("主机名称", max_length=255, unique=True)
+    description = models.TextField('主机描述', blank=True, null=True)
+    address = models.IPAddressField('IP')
+    status = models.IntegerField('主机状态', choices=((1, '在线'), (2, '离线')), default=2)
+    createdAt = models.DateTimeField("创建的时间")
+    modifyAt = models.DateTimeField("修改的时间", auto_now_add=True)

@@ -1,57 +1,65 @@
 {% extends "layout.html" %}
 {% block content %}
-<table class="table table-hover">
-    <thead>
-    <tr>
-        <th>套件名称</th>
-        <th>创建时间</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for suite in suites %}
+    <table class="table table-hover">
+        <thead>
         <tr>
-            <td><a href="{% url 'suite_view' suite.id %}">{{ suite.name }}</a></td>
-            <td>{{ suite.createdAt|date:'Y-m-d H:i:s' }}</td>
+            <th>套件名称</th>
+            <th>创建时间</th>
         </tr>
-    {% endfor %}
-    </tbody>
-    <tfoot>
-    <tr>
-        <td colspan='12'></td>
-    </tr>
-    </tfoot>
-</table>
-<!-- Button trigger modal -->
-<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
-    添加套件
-</button>
+        </thead>
+        <tbody>
+        {% if suites %}
+            {% for suite in suites %}
+                <tr>
+                    <td><a href="{% url 'suite_view' suite.id %}">{{ suite.name }}</a></td>
+                    <td>{{ suite.createdAt|date:'Y-m-d H:i:s' }}</td>
+                </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td>没有找到数据.</td>
+            </tr>
+        {% endif %}
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan='12'></td>
+        </tr>
+        </tfoot>
+    </table>
+    {% if request.user.is_authenticated %}
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+            添加套件
+        </button>
 
-<!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form method="post">
-                {% csrf_token %}
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Suite manager</h4>
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Suite manager</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label >Name</label>
+                                <input type="username" class="form-control" name="name"  placeholder="Suite name">
+                            </div>
+                            <div class="form-group">
+                                <label >Description</label>
+                                <textarea class="form-control" name="description" rows="6" placeholder="Suite description"></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-success">Commit</button>
+                        </div>
+                    </form>
                 </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label >Name</label>
-                        <input type="username" class="form-control" name="name"  placeholder="Suite name">
-                    </div>
-                    <div class="form-group">
-                        <label >Description</label>
-                        <textarea class="form-control" name="description" rows="6" placeholder="Suite description"></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-success">Commit</button>
-                </div>
-            </form>
+            </div>
         </div>
-    </div>
-</div>
+    {% endif %}
 {% endblock %}

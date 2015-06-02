@@ -10,10 +10,15 @@
 <body>
 <div class="nav">
     <ul class="nav nav-pills">
-        <li role="presentation" {% ifequal active 'case' %}class="active"{% endifequal %}><a href="case.html">用例</a></li>
-        <li role="presentation" {% ifequal active 'report' %}class="active"{% endifequal %}><a href="report.html">报表</a></li>
-        <li role="presentation" {% ifequal active 'task' %}class="active"{% endifequal %}><a href="task.html">任务</a></li>
-        <li role="presentation" {% ifequal active 'machine' %}class="active"{% endifequal %}><a href="machine.html">测试机</a></li>
+        <li role="presentation" {% ifequal active 'case' %}class="active"{% endifequal %}><a href="/case.html">用例</a></li>
+        <li role="presentation" {% ifequal active 'report' %}class="active"{% endifequal %}><a href="/report.html">报表</a></li>
+        <li role="presentation" {% ifequal active 'task' %}class="active"{% endifequal %}><a href="/task.html">任务</a></li>
+        <li role="presentation" {% ifequal active 'machine' %}class="active"{% endifequal %}><a href="/machine.html">测试机</a></li>
+        {% if request.user.is_authenticated %}
+            <li><a href="/logout.html">{{ request.user }} | 退出</a></li>
+        {% else %}
+            <li><a href="/login.html">登录</a></li>
+        {% endif %}
     </ul>
 </div>
 {% block content %}

@@ -6,13 +6,23 @@ urlpatterns = [
     #url(r'plateform.html$', views.plateform),
     #url(r'project.html$', views.project),
     #url(r'project_group.html$', views.project_group),
+    url(r'login.html$', views.login_view),
+    url(r'logout.html$', views.logout_view),
+
     url(r'suite.html$', views.suite_list),
     url(r'suite/view/(?P<pk>\d+).html$', views.suite_view, name="suite_view"),
+
     url(r'case.html$', views.case_list, name="case_list"),
     url(r'case/view/(?P<pk>\d+).html$', views.case_view, name="case_view"),
+    url(r'case/edit/(?P<pk>\d+).html$', views.case_edit, name="case_edit"),
     url(r'case/del/(?P<pk>\d+).html$', views.case_delete, name="case_delete"),
+
     url(r'task.html$', views.task_list),
     url(r'task/view/(?P<pk>\d+).html$', views.task_view, name="task_view"),
+
+    url(r'machine.html$', views.machine_list),
+    url(r'machine/view/(?P<pk>\d+).html$', views.machine_view, name="machine_view"),
+
     url(r'script_add.html$', views.script_add),
     url(r'script_view.html$', views.script_view),
 

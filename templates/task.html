@@ -9,6 +9,7 @@
         </tr>
         </thead>
         <tbody>
+        {% if tasks %}
         {% for task in tasks %}
             <tr>
                 <td><a href="{% url 'task_view' task.id %}">{{ task.name }}</a></td>
@@ -16,6 +17,11 @@
                 <td>{{ task.createdAt|date:'Y-m-d H:i:s' }}</td>
             </tr>
         {% endfor %}
+        {% else %}
+            <tr>
+                <td>没有找到数据.</td>
+            </tr>
+        {% endif %}
         </tbody>
         <tfoot>
         <tr>
@@ -23,6 +29,7 @@
         </tr>
         </tfoot>
     </table>
+    {% if request.user.is_authenticated %}
     <!-- Button trigger modal -->
     <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
         添加任务
@@ -64,4 +71,5 @@
             </div>
         </div>
     </div>
+    {% endif %}
 {% endblock %}
