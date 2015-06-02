@@ -53,6 +53,9 @@ class Task(models.Model):
     createdAt = models.DateTimeField("创建的时间")
     modifyAt = models.DateTimeField("修改的时间", auto_now_add=True)
 
+    def __unicode__(self):
+        return self.name
+
 class Task_Case(models.Model):
     case = models.ForeignKey(Case)
     task = models.ForeignKey(Task)

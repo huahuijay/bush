@@ -4,6 +4,7 @@ from tastypie.utils import trailing_slash
 
 from staf_wrapper import wrapper_STAF
 import time
+from models import *
 
 
 class ProjectStafResource(Resource):
@@ -16,14 +17,40 @@ class ProjectStafResource(Resource):
         return [
             url(r"^(?P<resource_name>%s)/?$" % self._meta.resource_name, self.wrap_view('staf_api'), name='staf_api'),
             # following is new APIs
-            url(r"^trigger_deb/(?P<mode>.+)/(?P<suite_name>.+?/?)$", self.wrap_view('trigger_deb'), name='trigger_deb'),
-            url(r"^trigger_iso/(?P<mode>.+)/(?P<suite_name>.+?/?)$", self.wrap_view('trigger_iso'), name='trigger_iso'),
+            url(r"^trigger_deb/(?P<mode>.+)/(?P<task_name>.+?/?)$", self.wrap_view('trigger_deb'), name='trigger_deb'),
+            url(r"^trigger_iso/(?P<mode>.+)/(?P<task_name>.+?/?)$", self.wrap_view('trigger_iso'), name='trigger_iso'),
             url(r"^get_result/(?P<staf_handle_key>.+/?)$", self.wrap_view('get_result'), name='get_result'),
+            url(r"^query_task/?$", self.wrap_view('query_task'), name='query_task'),
+            url(r"^query_suite/?$", self.wrap_view('query_suite'), name='query_suite'),
         ]
+
+    def query_suite(self, request, **kwargs):
+        data_struct = dict()
+        suites = Suite.objects.all()
+        for suite in suites:
+            data_struct.setdefault(suite.name, dict())
+            tasks = suite.task_set.all()
+            for task in tasks:
+                data_struct[suite.name].setdefault(task.name, list())
+                task_cases = task.task_case_set.all()
+                for taskcase in task_cases:
+                    data_struct[suite.name][task.name].append(taskcase.case.__dict__)
+        return self.create_response(request, {"key": data_struct})
+
+    def query_task(self, request, **kwargs):
+        data_struct = dict()
+        tasks = Task.objects.all()
+        for task in tasks:
+            data_struct.setdefault(task.name, list())
+            task_cases = task.task_case_set.all()
+            for taskcase in task_cases:
+                data_struct[task.name].append(taskcase.case.__dict__)
+        return self.create_response(request, {"key": data_struct})
+
 
     def trigger_deb(self, request, **kwargs):
         if kwargs['mode'] == u'non-blocking':
-            exec_handle = self.staf_obj.execute(kwargs['suite_name'])
+            exec_handle = self.staf_obj.execute(kwargs['task_name'])
             return self.create_response(request, {"key": exec_handle})
         else:
             raise

@@ -6,9 +6,10 @@ from django.shortcuts import render, redirect
 from django.utils.timezone import now
 from app.models import *
 
-from utils import xml_content_starting, xml_content, xml_content_ending
+from utils import generate_xml
 import os
-import re
+
+
 # Create your views here.
 
 
@@ -83,9 +84,6 @@ def case_list(request):
     active = "case"
     error = None
     cases = None
-    proj_name = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    #xml_path = os.path.join(proj_name, 'media', 'case')
-    xml_path = settings.MEDIA_ROOT + settings.CASE_DIR
     if request.method == "POST":
         p_name = request.POST['name']
         p_level = request.POST['level']
@@ -96,24 +94,8 @@ def case_list(request):
         if p_name == "" or p_command == "" or p_description == "":
             error = "数据不能为空"
         else:
-            Case(name=p_name, suite=Suite.objects.get(id=p_suite),  level=p_level, command=p_command, param=p_param, description=p_description, createdAt=now()).save()
-            #根据数据库信息生成新的xml
-            suite_name = '.'.join([Suite.objects.get(id=p_suite).name, 'xml'])
-            cases = Suite.objects.get(id=p_suite).case_set.all()
-            xml_location = os.path.join(xml_path, suite_name)
-            print xml_location
+            Case(name=p_name, suite=Suite.objects.get(id=p_suite),  level=p_level, command=p_command, param=p_param, description=p_description).save()
 
-            if os.path.exists(xml_location):
-                os.remove(xml_location)
-            with open(xml_location, 'a+') as xml_handle:
-                xml_handle.write(xml_content_starting)
-                for case in cases:
-                    xml_content_towrite = re.sub('''<testcase name="'.*'">''', '''<testcase name="'{case.name}'">'''.format(case=case), xml_content)
-                    xml_content_towrite = re.sub('<parms>.*</parms>', "<parms>'{0}/{case.command} {case.param}'</parms>".format(proj_name, case=case), xml_content_towrite)
-                    xml_handle.write(xml_content_towrite)
-                xml_handle.write(xml_content_ending)
-
-                #保存xml到本地路径
     if Case.objects.exists():
         cases = Case.objects.all()
     suites = Suite.objects.all()
@@ -154,26 +136,9 @@ def task_view(request, pk):
     if request.method == "POST":
         p_id = request.POST['case']
         p_case = Case.objects.get(id=p_id)
-        task_cases = Task_Case.objects.filter(case=p_case)
-        has_in = False
-        if task_cases:
-            for case in task_cases:
-                if p_case.id == case.id:
-                    has_in=True
-            if not has_in:
-                Task_Case(case=p_case, task=p_task).save()
-        else:
-            Task_Case(case=p_case, task=p_task).save()
-        #根据数据库信息生成新的xml
-        #xml_file = settings.MEDIA_ROOT + settings.CASE_DIR + p_task.name
-        #with open(xml_file, 'a+') as xml_handle:
-        #        xml_handle.write(xml_content_starting)
-        #        for case in p_case:
-        #            xml_content_towrite = re.sub('''<testcase name="'.*'">''', '''<testcase name="'{case.name}'">'''.format(case=case), xml_content)
-        #            xml_content_towrite = re.sub('<parms>.*</parms>', "<parms>'{0}/{case.command} {case.param}'</parms>".format(proj_name, case=case), xml_content_towrite)
-        #            xml_handle.write(xml_content_towrite)
-        #        xml_handle.write(xml_content_ending)
-
+        Task_Case(case=p_case, task=p_task).save()
+        child_cases = Task_Case.objects.filter(task=p_task)
+        generate_xml(p_task.name, child_cases)
     child_cases = Task_Case.objects.filter(task=p_task)
 
     cases = Case.objects.filter(suite=p_task.suite).exclude(task_case__in=child_cases.values_list("id", flat=True))

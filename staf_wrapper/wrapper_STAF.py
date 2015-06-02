@@ -3,10 +3,11 @@
 
 
 import time
+import multiprocessing
 
 from PySTAF import *
-from PySTAFMon import *
-from PySTAFLog import *
+# from PySTAFMon import *
+# from PySTAFLog import *
 
 
 # following is a sample of format of test result
@@ -61,7 +62,6 @@ from PySTAFLog import *
 # 'arguments': None}
 # '''
 
-
 class STAFWrapper(object):
     def __init__(self):
         self.handle = None
@@ -73,10 +73,18 @@ class STAFWrapper(object):
         except STAFException, e:
             print "Error registering with STAF, RC: %d" % e.rc
 
+    def detect_device(self, device_IP):
+        result = self.handle.submit(device_IP, 'ping', 'ping')
+        if result.result == 'PONG':
+            return 0
+        else:
+            return 1
+
+
     def execute(self, xml_name):
         xml_location = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'media', 'case', xml_name)
         self.result = self.handle.submit('local', 'stax',
-                                         'execute file {0}.xml'.format(xml_location))
+                                         'execute file {0}'.format(xml_location))
         if self.result.rc != STAFResult.Ok:
             raise Exception, 'Error on execute stax task, RC: %d, Result: %s' % (result.rc, result.result)
         return self.result.result
@@ -101,16 +109,7 @@ class STAFWrapper(object):
 def test():
     staf_obj = STAFWrapper()
     staf_obj.register()
-    staf_obj.execute()
-    while True:
-        time.sleep(5)
-        # successful
-        if staf_obj.query() == 0:
-            print staf_obj.result
-            break
-        # unsuccessful
-        else:
-            print 'is on-going'
+    print staf_obj.detect_device('10.3.3.23')
 
 
 if __name__ == '__main__':

@@ -14,7 +14,7 @@ random_num = random.randint(0, 100)
 print sys.argv[:]
 time.sleep(3)
 
-if sys.argv[1] == 'litian':
+if len(sys.argv) > 1 and sys.argv[1] == 'litian':
     deb_location = sys.argv[2]
     basename = os.path.basename(deb_location)
     os.system('wget {0} -O /tmp/{1}'.format(deb_location, basename))
