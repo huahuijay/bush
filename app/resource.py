@@ -20,32 +20,42 @@ class ProjectStafResource(Resource):
             url(r"^trigger_deb/(?P<mode>.+)/(?P<task_name>.+?/?)$", self.wrap_view('trigger_deb'), name='trigger_deb'),
             url(r"^trigger_iso/(?P<mode>.+)/(?P<task_name>.+?/?)$", self.wrap_view('trigger_iso'), name='trigger_iso'),
             url(r"^get_result/(?P<staf_handle_key>.+/?)$", self.wrap_view('get_result'), name='get_result'),
-            url(r"^query_task/?$", self.wrap_view('query_task'), name='query_task'),
+            url(r"^query_task/(?P<suite_name>.+?)/?$", self.wrap_view('query_task'), name='query_task'),
             url(r"^query_suite/?$", self.wrap_view('query_suite'), name='query_suite'),
         ]
 
     def query_suite(self, request, **kwargs):
-        data_struct = dict()
+        suite_list = list()
         suites = Suite.objects.all()
         for suite in suites:
-            data_struct.setdefault(suite.name, dict())
-            tasks = suite.task_set.all()
-            for task in tasks:
-                data_struct[suite.name].setdefault(task.name, list())
-                task_cases = task.task_case_set.all()
-                for taskcase in task_cases:
-                    data_struct[suite.name][task.name].append(taskcase.case.__dict__)
-        return self.create_response(request, {"key": data_struct})
+            suite_struct_dict = dict()
+            suite_struct_dict['id'] = suite.id
+            suite_struct_dict['name'] = suite.name
+            suite_list.append(suite_struct_dict)
+            # data_struct.setdefault(suite.name, dict())
+            # tasks = suite.task_set.all()
+            # for task in tasks:
+            #     data_struct[suite.name].setdefault(task.name, list())
+            #     task_cases = task.task_case_set.all()
+            #     for taskcase in task_cases:
+            #         data_struct[suite.name][task.name].append(taskcase.case.__dict__)
+        return self.create_response(request, {"key": suite_list})
 
     def query_task(self, request, **kwargs):
-        data_struct = dict()
-        tasks = Task.objects.all()
+        task_list = list()
+        suite_name = kwargs['suite_name']
+        tasks = Suite.objects.get(name=suite_name).task_set.all()
+
         for task in tasks:
-            data_struct.setdefault(task.name, list())
-            task_cases = task.task_case_set.all()
-            for taskcase in task_cases:
-                data_struct[task.name].append(taskcase.case.__dict__)
-        return self.create_response(request, {"key": data_struct})
+            task_struct_dict = dict()
+            task_struct_dict['name'] = task.name
+            task_struct_dict['id'] = task.id
+            task_list.append(task_struct_dict)
+            # data_struct.setdefault(task.name, list())
+            # task_cases = task.task_case_set.all()
+            # for taskcase in task_cases:
+            #     data_struct[task.name].append(taskcase.case.__dict__)
+        return self.create_response(request, {"key": task_list})
 
 
     def trigger_deb(self, request, **kwargs):
