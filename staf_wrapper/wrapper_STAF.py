@@ -76,9 +76,9 @@ class STAFWrapper(object):
     def detect_device(self, device_IP):
         result = self.handle.submit(device_IP, 'ping', 'ping')
         if result.result == 'PONG':
-            return 0
-        else:
             return 1
+        else:
+            return 2
 
 
     def execute(self, xml_name):

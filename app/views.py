@@ -7,8 +7,8 @@ from django.utils.timezone import now
 from app.models import *
 
 from utils import generate_xml
+from staf_wrapper.wrapper_STAF import STAFWrapper
 import os
-
 
 # Create your views here.
 
@@ -162,6 +162,8 @@ def task_view(request, pk):
     return render(request, "task_view.html", locals())
 
 def machine_list(request):
+    staf_obj = STAFWrapper()
+    staf_obj.register()
     if request.method == "POST":
         p_name = request.POST['name']
         p_description = request.POST['description']
@@ -171,12 +173,24 @@ def machine_list(request):
         else:
             Machine(name=p_name, description=p_description, address=p_address, createdAt=now()).save()
     machines = Machine.objects.all()
+    for machine in machines:
+        status = staf_obj.detect_device(machine.address)
+        machine.status = status
+        machine.save()
     suites = Suite.objects.all()
+    staf_obj.unregister()
+    # machines = Machine.objects.all()
     return render(request, "machine.html", locals())
 
 
 def machine_view(request, pk):
+    staf_obj = STAFWrapper()
+    staf_obj.register()
     p_machine = Machine.objects.get(id=pk)
+    status = staf_obj.detect_device(p_machine.address)
+    p_machine.status = status
+    p_machine.save()
+    staf_obj.unregister()
     return render(request, "machine_view.html", locals())
 
 def script_add(request):
