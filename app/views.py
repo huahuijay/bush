@@ -9,6 +9,8 @@ from app.models import *
 from utils import generate_xml
 from staf_wrapper.wrapper_STAF import STAFWrapper
 import os
+import threading
+import time
 
 # Create your views here.
 
@@ -174,13 +176,21 @@ def machine_list(request):
         else:
             Machine(name=p_name, description=p_description, address=p_address, createdAt=now()).save()
     machines = Machine.objects.all()
+    map_macheine_p = dict()
     for machine in machines:
-        status = staf_obj.detect_device(machine.address)
+        p = threading.Thread(target=staf_obj.detect_device, args=(machine.address, ))
+        p.start()
+        map_macheine_p[machine] = p
+    time.sleep(0.5)
+    for machine, p in map_macheine_p.items():
+        if p.is_alive():
+            status = 2
+        else:
+            status = staf_obj.detect_ret_value
         machine.status = status
         machine.save()
     suites = Suite.objects.all()
     staf_obj.unregister()
-    # machines = Machine.objects.all()
     return render(request, "machine.html", locals())
 
 
@@ -188,7 +198,14 @@ def machine_view(request, pk):
     staf_obj = STAFWrapper()
     staf_obj.register()
     p_machine = Machine.objects.get(id=pk)
-    status = staf_obj.detect_device(p_machine.address)
+    p = threading.Thread(target=staf_obj.detect_device, args=(p_machine.address, ))
+    p.start()
+    time.sleep(0.5)
+    if p.is_alive():
+        status = 2
+    else:
+        status = staf_obj.detect_ret_value
+    # status = staf_obj.detect_device(p_machine.address)
     p_machine.status = status
     p_machine.save()
     staf_obj.unregister()

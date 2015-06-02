@@ -1,10 +1,5 @@
 #!/usr/bin/python
 # -*-coding:utf-8-*-
-
-
-import time
-import multiprocessing
-
 from PySTAF import *
 # from PySTAFMon import *
 # from PySTAFLog import *
@@ -66,6 +61,7 @@ class STAFWrapper(object):
     def __init__(self):
         self.handle = None
         self.result = None
+        self.detect_ret_value = None
 
     def register(self):
         try:
@@ -76,10 +72,9 @@ class STAFWrapper(object):
     def detect_device(self, device_IP):
         result = self.handle.submit(device_IP, 'ping', 'ping')
         if result.result == 'PONG':
-            return 1
+            self.detect_ret_value = 1
         else:
-            return 2
-
+            self.detect_ret_value = 2
 
     def execute(self, xml_name):
         xml_location = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'media', 'case', xml_name)
