@@ -50,6 +50,9 @@ class Task(models.Model):
     description = models.TextField('任务描述', blank=True, null=True)
     createdAt = models.DateTimeField("创建的时间", auto_now_add=True)
 
+    def __unicode__(self):
+        return self.name
+
 class Task_Case(models.Model):
     case = models.ForeignKey(Case)
     task = models.ForeignKey(Task)
