@@ -5,3 +5,4 @@ migrations
 *~
 test-env*
 media/script/*
+media/case/*
