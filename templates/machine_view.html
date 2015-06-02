@@ -8,6 +8,10 @@
             <th>主机地址</th>
             <th>描述</th>
             <th>创建时间</th>
+            <th>修改时间</th>
+            {% if request.user.is_authenticated %}
+                <th>操作</th>
+            {% endif %}
         </tr>
         </thead>
         <tbody>
@@ -17,6 +21,10 @@
             <td>{{ p_machine.address }}</td>
             <td>{{ p_machine.description }}</td>
             <td>{{ p_machine.createdAt|date:'Y-m-d H:i:s' }}</td>
+            <td>{{ p_machine.modifyAt|date:'Y-m-d H:i:s' }}</td>
+            {% if request.user.is_authenticated %}
+                <td><a href="{% url 'machine_edit' p_machine.id %}">修改</a> | <a href="{% url 'machine_delete' p_machine.id %}">删除</a></td>
+            {% endif %}
         </tr>
         </tbody>
         <tfoot>

@@ -12,33 +12,6 @@ import os
 
 # Create your views here.
 
-
-def index(request):
-    return render(request, "index.html", {"key": "11111111111111"})
-
-
-def plateform(request):
-    if not User.objects.exists():
-        User(username="admin").save()
-    user = User.objects.get(username="admin")
-
-    # print(user.id)
-    if not Plateform.objects.exists():
-        Plateform(userId=user, name="cdos1.1", description="description1.1").save()
-        Plateform(userId=user, name="cdos1.2", description="description1.2").save()
-        Plateform(userId=user, name="cdos1.3", description="description1.3").save()
-    plateforms = Plateform.objects.all()
-
-    return render(request, "plateform.html", {"key": "11111111111111", "plateforms": plateforms})
-
-
-def project(request):
-    return render(request, "project.html", {"key": "11111111111111"})
-
-
-def project_group(request):
-    return render(request, "project_group.html", {"key": "11111111111111"})
-
 def login_view(request):
     if request.method == 'POST':
         user = authenticate(username=request.POST['username'], password=request.POST['password'])
@@ -70,11 +43,12 @@ def suite_list(request):
     if Suite.objects.exists():
         suites = Suite.objects.all()
 
-    return render(request, "suite.html", {"suites": suites, "error": error})
+    return render(request, "suite.html", locals())
 
 def suite_view(request, pk):
     p_suite = Suite.objects.get(id=pk)
     cases = Case.objects.filter(suite=p_suite)
+    tasks = Task.objects.filter(suite=p_suite)
     script_path = settings.MEDIA_ROOT + settings.SCRIPT_DIR + p_suite.name
     scripts = os.listdir(script_path)
     return render(request, "suite_view.html", locals())
@@ -161,6 +135,33 @@ def task_view(request, pk):
     cases = Case.objects.filter(suite=p_task.suite).exclude(task_case__in=child_cases.values_list("id", flat=True))
     return render(request, "task_view.html", locals())
 
+def task_edit(request, pk):
+    p_task = Task.objects.get(id=pk)
+    if request.method == "POST":
+        p_name = request.POST['name']
+        p_description = request.POST['description']
+        if p_name == "" or p_description == "":
+            error = "数据不能为空"
+        else:
+            p_task.name = p_name
+            p_task.description = p_description
+            p_task.modifyAt = now()
+            p_task.save()
+            return redirect(reverse("task_view", kwargs={"pk": pk}))
+
+    return render(request, "task_edit.html", locals())
+
+def task_trigger(request, pk):
+    p_task = Task.objects.get(id=pk)
+    return redirect(reverse("task_view", kwargs={"pk": pk}))
+
+def task_delete(request, pk_task, pk_case):
+    p_task = Task.objects.get(id=pk_task)
+    p_case = Case.objects.get(id=pk_case)
+    Task_Case.objects.filter(task=p_task).get(case=p_case).delete()
+    return redirect(reverse("task_view", kwargs={"pk": pk_task}))
+
+
 def machine_list(request):
     staf_obj = STAFWrapper()
     staf_obj.register()
@@ -193,6 +194,28 @@ def machine_view(request, pk):
     staf_obj.unregister()
     return render(request, "machine_view.html", locals())
 
+def machine_edit(request, pk):
+    p_machine = Machine.objects.get(id=pk)
+    if request.method == "POST":
+        p_name = request.POST['name']
+        p_address = request.POST['address']
+        p_description = request.POST['description']
+        if p_name == "" or p_description == "":
+            error = "数据不能为空"
+        else:
+            p_machine.name = p_name
+            p_machine.address = p_address
+            p_machine.description = p_description
+            p_machine.modifyAt = now()
+            p_machine.save()
+            return redirect(reverse("machine_view", kwargs={"pk": pk}))
+
+    return render(request, "machine_edit.html", locals())
+
+def machine_delete(request, pk):
+    Machine.objects.get(id=pk).delete()
+    return redirect(reverse("machine_list"))
+
 def script_add(request):
     if request.method == "POST":
         p_id = request.POST['id']
@@ -213,4 +236,4 @@ def script_view(request):
         script_text = script.read()
     finally:
         script.close()
-    return render(request, "script_view.html", {"script_text": script_text})
+    return render(request, "script_view.html", locals())

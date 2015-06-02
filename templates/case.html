@@ -5,8 +5,6 @@
         <tr>
             <th>用例</th>
             <th>套件</th>
-            <th>参数</th>
-            <th>命令</th>
             <th>重要性</th>
             <th>创建时间</th>
         </tr>
@@ -18,8 +16,6 @@
                     <td><a href="{% url 'case_view' case.id %}">{{ case.name }}</a></td>
                     <td><a href="{% url 'suite_view' case.suite.id %}">{{ case.suite.name }}</a></td>
                     <td>{{ case.get_level_display }}</td>
-                    <td>{{ case.command }}</td>
-                    <td>{{ case.param }}</td>
                     <td>{{ case.createdAt|date:'Y-m-d H:i:s' }}</td>
                 </tr>
             {% endfor %}

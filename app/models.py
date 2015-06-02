@@ -4,28 +4,6 @@ from django.db import models
 
 # Create your models here.
 
-
-class Plateform(models.Model):
-    userId = models.ForeignKey(User)
-    createdAt = models.DateTimeField("创建的时间", auto_now_add=True)
-    name = models.CharField('平台名称', max_length=255, unique=True)
-    description = models.TextField('平台描述', blank=True, null=True)
-
-class Project(models.Model):
-    user = models.ForeignKey(User)
-    plateform = models.ForeignKey(Plateform)
-    createdAt = models.DateTimeField("创建的时间", auto_now_add=True)
-    name = models.CharField('项目名称', max_length=255, unique=True)
-    description = models.TextField('项目描述', blank=True, null=True)
-    owner = models.IntegerField(blank=True, null=True)
-
-class ProjectGroup(models.Model):
-    user = models.ForeignKey(User)
-    project = models.ForeignKey(Project)
-    createdAt = models.DateTimeField("创建的时间",auto_now_add=True)
-    name = models.CharField('项目组名称', max_length=255, unique=True)
-    description = models.TextField('项目组描述', blank=True, null=True)
-
 class Suite(models.Model):
     #user = models.ForeignKey(User)
     name = models.CharField('套件名称', max_length=255, unique=True)

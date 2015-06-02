@@ -7,6 +7,10 @@
             <th>所属套件</th>
             <th>描述</th>
             <th>创建时间</th>
+            <th>修改时间</th>
+            {% if request.user.is_authenticated %}
+                <th>操作</th>
+            {% endif %}
         </tr>
         </thead>
         <tbody>
@@ -15,6 +19,10 @@
             <td><a href="{% url 'suite_view' p_task.suite.id %}">{{ p_task.suite.name }}</a></td>
             <td>{{ p_task.description }}</td>
             <td>{{ p_task.createdAt|date:'Y-m-d H:i:s' }}</td>
+            <td>{{ p_task.modifyAt|date:'Y-m-d H:i:s' }}</td>
+            {% if request.user.is_authenticated %}
+                <td><a href="{% url 'task_edit' p_task.id %}">修改</a> | <a href="{% url 'task_trigger' p_task.id %}">执行</a></td>
+            {% endif %}
         </tr>
         </tbody>
         <tfoot>
@@ -28,6 +36,9 @@
         <tr>
             <th>用例名称</th>
             <th>创建时间</th>
+            {% if request.user.is_authenticated %}
+                <th>操作</th>
+            {% endif %}
         </tr>
         </thead>
         <tbody>
@@ -36,6 +47,9 @@
         <tr>
             <td><a href="{% url 'case_view' child_case.case.id %}">{{ child_case.case.name }}</a></td>
             <td>{{ child_case.createdAt|date:'Y-m-d H:i:s' }}</td>
+            {% if request.user.is_authenticated %}
+                <td><a href="{% url 'task_delete' p_task.id child_case.case.id %}">删除</a></td>
+            {% endif %}
         </tr>
         {% endfor %}
         {% else %}

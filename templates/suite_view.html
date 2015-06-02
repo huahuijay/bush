@@ -6,6 +6,7 @@
             <th>套件</th>
             <th>描述</th>
             <th>创建时间</th>
+            <th>修改时间</th>
         </tr>
         </thead>
         <tbody>
@@ -13,6 +14,7 @@
             <td>{{ p_suite.name }}</td>
             <td>{{ p_suite.description }}</td>
             <td>{{ p_suite.createdAt|date:'Y-m-d H:i:s' }}</td>
+            <td>{{ p_suite.modifyAt|date:'Y-m-d H:i:s' }}</td>
         </tr>
         </tbody>
         <tfoot>
@@ -24,9 +26,34 @@
     <table class="table table-hover">
         <thead>
         <tr>
+            <th>任务名称</th>
+            <th>创建时间</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% if tasks %}
+        {% for task in tasks %}
+            <tr>
+                <td><a href="{% url 'task_view' task.id %}">{{ task.name }}</a></td>
+                <td>{{ task.createdAt|date:'Y-m-d H:i:s' }}</td>
+            </tr>
+        {% endfor %}
+        {% else %}
+            <tr>
+                <td>没有找到数据.</td>
+            </tr>
+        {% endif %}
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan='12'></td>
+        </tr>
+        </tfoot>
+    </table>
+    <table class="table table-hover">
+        <thead>
+        <tr>
             <th>用例名称</th>
-            <th>参数</th>
-            <th>命令</th>
             <th>重要性</th>
             <th>创建时间</th>
         </tr>
@@ -36,8 +63,6 @@
             {% for case in cases %}
                 <tr>
                     <td><a href="{% url 'case_view' case.id %}">{{ case.name }}</a></td>
-                    <td>{{ case.command }}</td>
-                    <td>{{ case.param }}</td>
                     <td>{{ case.get_level_display }}</td>
                     <td>{{ case.createdAt|date:'Y-m-d H:i:s' }}</td>
                 </tr>

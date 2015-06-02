@@ -9,7 +9,7 @@ urlpatterns = [
     url(r'login.html$', views.login_view),
     url(r'logout.html$', views.logout_view),
 
-    url(r'suite.html$', views.suite_list),
+    url(r'suite.html$', views.suite_list, name="suite_list"),
     url(r'suite/view/(?P<pk>\d+).html$', views.suite_view, name="suite_view"),
 
     url(r'case.html$', views.case_list, name="case_list"),
@@ -17,11 +17,16 @@ urlpatterns = [
     url(r'case/edit/(?P<pk>\d+).html$', views.case_edit, name="case_edit"),
     url(r'case/del/(?P<pk>\d+).html$', views.case_delete, name="case_delete"),
 
-    url(r'task.html$', views.task_list),
+    url(r'task.html$', views.task_list, name="task_list"),
     url(r'task/view/(?P<pk>\d+).html$', views.task_view, name="task_view"),
+    url(r'task/edit/(?P<pk>\d+).html$', views.task_edit, name="task_edit"),
+    url(r'task/del/(?P<pk_task>\d+)/(?P<pk_case>\d+).html$', views.task_delete, name="task_delete"),
+    url(r'task/trigger/(?P<pk>\d+).html$', views.task_trigger, name="task_trigger"),
 
-    url(r'machine.html$', views.machine_list),
+    url(r'machine.html$', views.machine_list, name="machine_list"),
     url(r'machine/view/(?P<pk>\d+).html$', views.machine_view, name="machine_view"),
+    url(r'machine/edit/(?P<pk>\d+).html$', views.machine_edit, name="machine_edit"),
+    url(r'machine/del/(?P<pk>\d+).html$', views.machine_delete, name="machine_delete"),
 
     url(r'script_add.html$', views.script_add),
     url(r'script_view.html$', views.script_view),
