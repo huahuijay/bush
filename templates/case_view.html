@@ -10,6 +10,10 @@
             <th>参数</th>
             <th>描述</th>
             <th>创建时间</th>
+            <th>修改时间</th>
+            {% if request.user.is_authenticated %}
+                <th>操作</th>
+            {% endif %}
         </tr>
         </thead>
         <tbody>
@@ -21,6 +25,10 @@
                 <td>{{ case.param }}</td>
                 <td>{{ case.description }}</td>
                 <td>{{ case.createdAt|date:'Y-m-d H:i:s' }}</td>
+                <td>{{ case.modifyAt|date:'Y-m-d H:i:s' }}</td>
+                {% if request.user.is_authenticated %}
+                    <td><a href="{% url 'case_edit' case.id %}">修改</a> | <a href="{% url 'case_delete' case.id %}">删除</a></td>
+                {% endif %}
             </tr>
         </tbody>
         <tfoot>

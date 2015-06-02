@@ -77,7 +77,6 @@ def suite_view(request, pk):
     cases = Case.objects.filter(suite=p_suite)
     script_path = settings.MEDIA_ROOT + settings.SCRIPT_DIR + p_suite.name
     scripts = os.listdir(script_path)
-    print scripts
     return render(request, "suite_view.html", locals())
 
 def case_list(request):
@@ -94,7 +93,7 @@ def case_list(request):
         if p_name == "" or p_command == "" or p_description == "":
             error = "数据不能为空"
         else:
-            Case(name=p_name, suite=Suite.objects.get(id=p_suite),  level=p_level, command=p_command, param=p_param, description=p_description).save()
+            Case(name=p_name, suite=Suite.objects.get(id=p_suite),  level=p_level, command=p_command, param=p_param, description=p_description, createdAt=now()).save()
 
     if Case.objects.exists():
         cases = Case.objects.all()
@@ -112,6 +111,24 @@ def case_delete(request, pk):
 def case_edit(request, pk):
     #Case.objects.get(id=pk).delete()
     case = Case.objects.get(id=pk)
+    if request.method == "POST":
+        p_name = request.POST['name']
+        p_level = request.POST['level']
+        p_command = request.POST['command']
+        p_param = request.POST['param']
+        p_description = request.POST['description']
+        if p_name == "" or p_command == "" or p_description == "":
+            error = "数据不能为空"
+        else:
+            case.name = p_name
+            case.level = p_level
+            case.command = p_command
+            case.param = p_param
+            case.description = p_description
+            case.modifyAt = now()
+            case.save()
+            return redirect(reverse("case_view", kwargs={"pk": pk}))
+
     return render(request, "case_edit.html", locals())
 
 def task_list(request):

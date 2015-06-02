@@ -9,9 +9,6 @@
             <th>命令</th>
             <th>重要性</th>
             <th>创建时间</th>
-            {% if request.user.is_authenticated %}
-                <th>操作</th>
-            {% endif %}
         </tr>
         </thead>
         <tbody>
@@ -24,9 +21,6 @@
                     <td>{{ case.command }}</td>
                     <td>{{ case.param }}</td>
                     <td>{{ case.createdAt|date:'Y-m-d H:i:s' }}</td>
-                    {% if request.user.is_authenticated %}
-                        <td><a href="{% url 'case_edit' case.id %}">修改</a> | <a href="{% url 'case_delete' case.id %}">删除</a></td>
-                    {% endif %}
                 </tr>
             {% endfor %}
         {% else %}
