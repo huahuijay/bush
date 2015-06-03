@@ -85,12 +85,12 @@ class ProjectStafResource(Resource):
                 case_name = test_attribute['testcaseStack'][0]
                 # Case.objects.get(name=case_name)
                 try:
-                    report_case = Report_Case.objects.get(case=Case.objects.get(name=case_name))
+                    report = Report.objects.get(case=Case.objects.get(name=case_name))
                 except Exception,e:
-                    Report_Case(case=Case.objects.get(name=case_name), task=Task.objects.get(name=task_name), result=test_result).save()
+                    Report(case=Case.objects.get(name=case_name), task=Task.objects.get(name=task_name), result=test_result).save()
                 else:
-                    report_case.result = test_result
-                    report_case.save()
+                    report.result = test_result
+                    report.save()
 
             return self.create_response(request, {"key": self.staf_obj.result})
 

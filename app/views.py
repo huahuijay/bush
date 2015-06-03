@@ -268,5 +268,7 @@ def report_list(request):
         print totle_num, pass_num, fail_num
     return render(request, "task.html", locals())
 
-def report_view(request,version):
-    pass
+def report_view(request, task_name):
+    task = Task.objects.get(name=task_name)
+    reports = task.report_set.all()
+

@@ -32,7 +32,7 @@ urlpatterns = [
     url(r'script_view.html$', views.script_view),
 
     url(r'report.html$', views.report_list, name="report_list"),
-    # url(r'machine/view/(?P<pk>\d+).html$', views.machine_view, name="machine_view"),
+    url(r'report/view/(?P<task_name>.+).html$', views.report_view, name="report_view"),
     # url(r'machine/edit/(?P<pk>\d+).html$', views.machine_edit, name="machine_edit"),
     # url(r'machine/del/(?P<pk>\d+).html$', views.machine_delete, name="machine_delete"),
 
