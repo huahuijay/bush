@@ -254,3 +254,15 @@ def script_view(request):
     finally:
         script.close()
     return render(request, "script_view.html", locals())
+
+def report_list(request):
+    tasks = Task.objects.all()
+    for task in tasks:
+        totle_num = task.report_case_set.count()
+        pass_num = task.report_case_set.filter(result=1).count()
+        fail_num = task.report_case_set.filter(result=2).count()
+        print totle_num, pass_num, fail_num
+    return render(request, "task.html", locals())
+
+def report_view(request,version):
+    pass
