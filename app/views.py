@@ -155,6 +155,10 @@ def task_edit(request, pk):
 
 def task_trigger(request, pk):
     p_task = Task.objects.get(id=pk)
+    staf_obj = STAFWrapper()
+    staf_obj.register()
+    job_handle = staf_obj.execute(p_task.name)
+    staf_obj.unregister()
     return redirect(reverse("task_view", kwargs={"pk": pk}))
 
 def task_delete(request, pk_task, pk_case):
@@ -258,9 +262,9 @@ def script_view(request):
 def report_list(request):
     tasks = Task.objects.all()
     for task in tasks:
-        totle_num = task.report_case_set.count()
-        pass_num = task.report_case_set.filter(result=1).count()
-        fail_num = task.report_case_set.filter(result=2).count()
+        totle_num = task.report_set.count()
+        pass_num = task.report_set.filter(result=1).count()
+        fail_num = task.report_set.filter(result=2).count()
         print totle_num, pass_num, fail_num
     return render(request, "task.html", locals())
 
