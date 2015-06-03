@@ -6,7 +6,7 @@ xml_content_starting = '''<?xml version="1.0" encoding="UTF-8" standalone="no"?>
         <sequence>
 '''
 
-xml_content = '''            <loop from="0" to="1">
+xml_content = '''            <loop from="0" to="0">
                 <testcase name="'TestA'">
                     <sequence>
                         <process>
