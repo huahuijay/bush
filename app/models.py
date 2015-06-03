@@ -58,3 +58,9 @@ class Machine(models.Model):
     status = models.IntegerField('主机状态', choices=((1, '在线'), (2, '离线')), default=2)
     createdAt = models.DateTimeField("创建的时间")
     modifyAt = models.DateTimeField("修改的时间", auto_now_add=True)
+
+class Report(models.Model):
+    case = models.ForeignKey(Case)
+    task = models.ForeignKey(Task)
+    result = models.IntegerField('结果', choices=((1, 'pass'), (2, 'fail'), (3, 'not complete')), default=3)
+    createdAt = models.DateTimeField("创建的时间", auto_now_add=True)

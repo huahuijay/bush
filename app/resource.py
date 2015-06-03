@@ -4,6 +4,7 @@ from tastypie.utils import trailing_slash
 
 from staf_wrapper import wrapper_STAF
 import time
+import os
 from models import *
 
 
@@ -72,6 +73,25 @@ class ProjectStafResource(Resource):
         if self._query(kwargs['staf_handle_key']) == 'on-going':
             return self.create_response(request, {"key": 'on-going'})
         else:
+            print 123
+            test_attributes = self.staf_obj.result['testcaseList']
+            xml_file = self.staf_obj.result['xmlFileName']
+            task_name = os.path.splitext(os.path.basename(xml_file))[0]
+            for test_attribute in test_attributes:
+                if test_attribute['lastStatus'] == 'pass':
+                    test_result = 1
+                else:
+                    test_result = 2
+                case_name = test_attribute['testcaseStack'][0]
+                # Case.objects.get(name=case_name)
+                try:
+                    report_case = Report_Case.objects.get(case=Case.objects.get(name=case_name))
+                except Exception,e:
+                    Report_Case(case=Case.objects.get(name=case_name), task=Task.objects.get(name=task_name), result=test_result).save()
+                else:
+                    report_case.result = test_result
+                    report_case.save()
+
             return self.create_response(request, {"key": self.staf_obj.result})
 
     def _query(self, exec_handle):
