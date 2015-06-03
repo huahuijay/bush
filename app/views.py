@@ -19,15 +19,12 @@ def login_view(request):
         user = authenticate(username=request.POST['username'], password=request.POST['password'])
         if user:
             login(request, user)
-            return redirect(reverse("case_list"))
-        else:
-            return render(request, "login.html")
-    else:
-        return render(request, "login.html")
+            return redirect(request.META.get("HTTP_REFERER", reverse("task_list")))
+    return redirect(request.META.get("HTTP_REFERER", reverse("task_list")))
 
 def logout_view(request):
     logout(request)
-    return redirect(reverse("case_list"))
+    return redirect(request.META.get("HTTP_REFERER", reverse("task_list")))
 
 def suite_list(request):
     error = None
@@ -77,6 +74,7 @@ def case_list(request):
     return render(request, "case.html", locals())
 
 def case_view(request, pk):
+    active = "case"
     case = Case.objects.get(id=pk)
     return render(request, "case_view.html", locals())
 
@@ -85,7 +83,7 @@ def case_delete(request, pk):
     return redirect(reverse("case_list"))
 
 def case_edit(request, pk):
-    #Case.objects.get(id=pk).delete()
+    active = "case"
     case = Case.objects.get(id=pk)
     if request.method == "POST":
         p_name = request.POST['name']
@@ -104,14 +102,12 @@ def case_edit(request, pk):
             case.modifyAt = now()
             case.save()
             return redirect(reverse("case_view", kwargs={"pk": pk}))
-
     return render(request, "case_edit.html", locals())
 
 def task_list(request):
+    active = 'task'
     tasks = Task.objects.all()
     suites = Suite.objects.all()
-    active = 'task'
-
     if request.method == "POST":
         p_name = request.POST['name']
         p_suite = request.POST['suite']
@@ -123,9 +119,8 @@ def task_list(request):
     return render(request, "task.html", locals())
 
 def task_view(request, pk):
+    active = 'task'
     p_task = Task.objects.get(id=pk)
-    print p_task.name
-    #cases = Case.objects.filter(suite=p_task.suite)
     if request.method == "POST":
         p_id = request.POST['case']
         p_case = Case.objects.get(id=p_id)
@@ -138,6 +133,7 @@ def task_view(request, pk):
     return render(request, "task_view.html", locals())
 
 def task_edit(request, pk):
+    active = 'task'
     p_task = Task.objects.get(id=pk)
     if request.method == "POST":
         p_name = request.POST['name']
@@ -155,10 +151,6 @@ def task_edit(request, pk):
 
 def task_trigger(request, pk):
     p_task = Task.objects.get(id=pk)
-    staf_obj = STAFWrapper()
-    staf_obj.register()
-    job_handle = staf_obj.execute(p_task.name)
-    staf_obj.unregister()
     return redirect(reverse("task_view", kwargs={"pk": pk}))
 
 def task_delete(request, pk_task, pk_case):
@@ -169,6 +161,7 @@ def task_delete(request, pk_task, pk_case):
 
 
 def machine_list(request):
+    active = 'machine'
     staf_obj = STAFWrapper()
     staf_obj.register()
     if request.method == "POST":
@@ -199,6 +192,7 @@ def machine_list(request):
 
 
 def machine_view(request, pk):
+    active = 'machine'
     staf_obj = STAFWrapper()
     staf_obj.register()
     p_machine = Machine.objects.get(id=pk)
@@ -216,6 +210,7 @@ def machine_view(request, pk):
     return render(request, "machine_view.html", locals())
 
 def machine_edit(request, pk):
+    active = 'machine'
     p_machine = Machine.objects.get(id=pk)
     if request.method == "POST":
         p_name = request.POST['name']
@@ -260,15 +255,9 @@ def script_view(request):
     return render(request, "script_view.html", locals())
 
 def report_list(request):
-    tasks = Task.objects.all()
-    for task in tasks:
-        totle_num = task.report_set.count()
-        pass_num = task.report_set.filter(result=1).count()
-        fail_num = task.report_set.filter(result=2).count()
-        print totle_num, pass_num, fail_num
-    return render(request, "task.html", locals())
+    active = 'report'
+    reports = Report.objects.all()
+    return render(request, "report.html", locals())
 
-def report_view(request, task_name):
-    task = Task.objects.get(name=task_name)
-    reports = task.report_set.all()
-
+def report_view(request, pk):
+    pass

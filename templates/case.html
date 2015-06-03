@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% block content %}
+    <h4>用例列表:</h4>
     <table class="table table-hover">
         <thead>
         <tr>
@@ -33,7 +34,7 @@
     </table>
     {% if request.user.is_authenticated %}
         <!-- Button trigger modal -->
-        <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">
             添加用例
         </button>
 
@@ -54,7 +55,7 @@
                             </div>
                             <div class="form-group">
                                 <label >重要性</label>
-                                <select name = "level">
+                                <select name = "level"  class="form-control">
                                     <option value="1" >低</option>
                                     <option value="2" >中</option>
                                     <option value="3" >高</option>
@@ -62,7 +63,7 @@
                             </div>
                             <div class="form-group">
                                 <label >套件</label>
-                                <select name = "suite">
+                                <select name = "suite"  class="form-control">
                                     {% for suite in suites %}
                                         <option value="{{ suite.id }}" >{{ suite.name }}</option>
                                     {% endfor %}

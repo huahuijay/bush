@@ -1,5 +1,23 @@
 {% extends "layout.html" %}
 {% block content %}
+    <!--
+    <div class="tree">
+        <ul class="nav navbar-default" style="background-color: #ffffff" >
+            <li role="presentation" class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">
+                    All <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href="#">Action</a></li>
+                    <li><a href="#">Another action</a></li>
+                    <li><a href="#">Something else here</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="layout-right">
+    -->
+    <h4>任务列表:</h4>
     <table class="table table-hover">
         <thead>
         <tr>
@@ -10,13 +28,13 @@
         </thead>
         <tbody>
         {% if tasks %}
-        {% for task in tasks %}
-            <tr>
-                <td><a href="{% url 'task_view' task.id %}">{{ task.name }}</a></td>
-                <td><a href="{% url 'suite_view' task.suite.id %}">{{ task.suite.name }}</a></td>
-                <td>{{ task.createdAt|date:'Y-m-d H:i:s' }}</td>
-            </tr>
-        {% endfor %}
+            {% for task in tasks %}
+                <tr>
+                    <td><a href="{% url 'task_view' task.id %}">{{ task.name }}</a></td>
+                    <td><a href="{% url 'suite_view' task.suite.id %}">{{ task.suite.name }}</a></td>
+                    <td>{{ task.createdAt|date:'Y-m-d H:i:s' }}</td>
+                </tr>
+            {% endfor %}
         {% else %}
             <tr>
                 <td>没有找到数据.</td>
@@ -30,46 +48,47 @@
         </tfoot>
     </table>
     {% if request.user.is_authenticated %}
-    <!-- Button trigger modal -->
-    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
-        添加任务
-    </button>
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">
+            添加任务
+        </button>
 
-    <!-- Modal -->
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <form method="post">
-                    {% csrf_token %}
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="myModalLabel">Task Manager</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label >名称</label>
-                            <input type="username" class="form-control" name="name"  placeholder="Task name">
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Task Manager</h4>
                         </div>
-                        <div class="form-group">
-                            <label >套件</label>
-                            <select name = "suite">
-                                {% for suite in suites %}
-                                    <option value="{{ suite.id }}" >{{ suite.name }}</option>
-                                {% endfor %}
-                            </select>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label >名称</label>
+                                <input type="username" class="form-control" name="name"  placeholder="Task name">
+                            </div>
+                            <div class="form-group">
+                                <label >套件</label>
+                                <select name = "suite" class="form-control">
+                                    {% for suite in suites %}
+                                        <option value="{{ suite.id }}" >{{ suite.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label >描述</label>
+                                <textarea class="form-control" name="description" rows="6" placeholder="Task description"></textarea>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label >描述</label>
-                            <textarea class="form-control" name="description" rows="6" placeholder="Task description"></textarea>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                            <button type="submit" class="btn btn-success">提交</button>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                        <button type="submit" class="btn btn-success">提交</button>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
+        <!--</div> -->
     {% endif %}
 {% endblock %}

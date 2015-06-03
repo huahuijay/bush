@@ -4,24 +4,76 @@
     <meta charset="UTF-8">
     <title></title>
     <link rel="stylesheet" href="{{ STATIC_URL }}bootstrap/css/bootstrap.css"/>
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/style.css"/>
     <script src="{{ STATIC_URL }}bootstrap/js/jquery.js" type="text/javascript" charset="utf-8"></script>
     <script src="{{ STATIC_URL }}bootstrap/js/bootstrap.js" type="text/javascript" charset="utf-8"></script>
 </head>
 <body>
-<div class="nav">
-    <ul class="nav nav-pills">
-        <li role="presentation" {% ifequal active 'case' %}class="active"{% endifequal %}><a href="/case.html">用例</a></li>
-        <li role="presentation" {% ifequal active 'report' %}class="active"{% endifequal %}><a href="/report.html">报表</a></li>
-        <li role="presentation" {% ifequal active 'task' %}class="active"{% endifequal %}><a href="/task.html">任务</a></li>
-        <li role="presentation" {% ifequal active 'machine' %}class="active"{% endifequal %}><a href="/machine.html">测试机</a></li>
-        {% if request.user.is_authenticated %}
-            <li><a href="/logout.html">{{ request.user }} | 退出</a></li>
-        {% else %}
-            <li><a href="/login.html">登录</a></li>
-        {% endif %}
-    </ul>
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/task.html">自动化测试管理平台</a>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li {% ifequal active 'task' %}class="active"{% endifequal %}><a href="/task.html">任务</a></li>
+                <li {% ifequal active 'report' %}class="active"{% endifequal %}><a href="/report.html">报表</a></li>
+                <li {% ifequal active 'case' %}class="active"{% endifequal %}><a href="/case.html">用例</a></li>
+                <li {% ifequal active 'machine' %}class="active"{% endifequal %}><a href="/machine.html">测试机</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                {% if request.user.is_authenticated %}
+                    <li><a href="/logout.html">{{ request.user }} | 退出</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">管理入口 <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="/suite.html">套件管理</a></li>
+                        </ul>
+                    </li>
+                {% else %}
+                    <li>
+                        <button type="button" class="btn btn-link" data-toggle="modal" data-target="#myModal" style="padding: 15px; text-decoration: none">登录</button>
+                    </li>
+                    <!--<li><a href="/login.html">登录</a></li>
+                    <!-- Modal -->
+                    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <form method="post" action="login.html">
+                                    {% csrf_token %}
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title" id="myModalLabel">Login Manager</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <label >Username</label>
+                                            <input type="username" class="form-control" name="username"  placeholder="Your name">
+                                        </div>
+                                        <div class="form-group">
+                                            <label >Password</label>
+                                            <input type="password" class="form-control" name="password">
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                                        <button type="submit" class="btn btn-success">登录</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+<div class="content">
+    {% block content %}
+    {% endblock %}
 </div>
-{% block content %}
-{% endblock %}
 </body>
 </html>

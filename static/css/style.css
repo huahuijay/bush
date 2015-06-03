@@ -1,0 +1,50 @@
+/* content */
+.content {
+    height: 100%;
+    margin: 10px;
+    background: #ffffff;
+    border-radius: 4px;
+    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+}
+
+/* tree */
+.tree {
+    padding-right: 20px;
+    float: left;
+    width: 230px;
+    left: 0px;
+}
+
+.layout-right {
+    margin-left: 230px;
+    box-shadow: -13px 0 20px -20px gray;
+    padding: 20px;
+}
+
+.follow {
+    margin-top: 10px;
+    font-size: 100%;
+}
+
+.basic-info {
+    padding: 10px 15px;
+}
+
+.detail-info {
+    overflow: hidden;
+    border: 1px solid #CFCFCF;
+    border-radius: 4px;
+    padding: 10px;
+}
+
+.detail {
+    margin: 10px 0;
+    padding: 10px;
+}
+
+.block {
+    background: #FAFBFC;
+    border: 1px solid #DADBDF;
+    border-radius: 4px;
+}
