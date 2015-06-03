@@ -62,5 +62,5 @@ class Machine(models.Model):
 class Report(models.Model):
     case = models.ForeignKey(Case)
     task = models.ForeignKey(Task)
-    result = models.IntegerField('结果', choices=((1, 'pass'), (2, 'fail'), (3, 'not complete')), default=3)
+    result = models.IntegerField('结果', choices=((1, 'pass'), (2, 'fail'), (3, 'running')), default=3)
     createdAt = models.DateTimeField("创建的时间", auto_now_add=True)

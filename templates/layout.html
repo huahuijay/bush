@@ -34,15 +34,46 @@
                         </ul>
                     </li>
                 {% else %}
-                    <li><a href="/login.html">登录</a></li>
+                    <li>
+                        <button type="button" class="btn btn-link" data-toggle="modal" data-target="#myModal" style="padding: 15px; text-decoration: none">登录</button>
+                    </li>
+                    <!--<li><a href="/login.html">登录</a></li>
+                    <!-- Modal -->
+                    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <form method="post" action="login.html">
+                                    {% csrf_token %}
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title" id="myModalLabel">Login Manager</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <label >Username</label>
+                                            <input type="username" class="form-control" name="username"  placeholder="Your name">
+                                        </div>
+                                        <div class="form-group">
+                                            <label >Password</label>
+                                            <input type="password" class="form-control" name="password">
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                                        <button type="submit" class="btn btn-success">登录</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 {% endif %}
             </ul>
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
 </nav>
 <div class="content">
-{% block content %}
-{% endblock %}
+    {% block content %}
+    {% endblock %}
 </div>
 </body>
 </html>

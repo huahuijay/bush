@@ -70,7 +70,7 @@
                             </div>
                             <div class="form-group">
                                 <label >套件</label>
-                                <select name = "suite">
+                                <select name = "suite" class="form-control">
                                     {% for suite in suites %}
                                         <option value="{{ suite.id }}" >{{ suite.name }}</option>
                                     {% endfor %}
