@@ -1,5 +1,9 @@
 {% extends "layout.html" %}
 {% block content %}
+    <ol class="breadcrumb">
+        <li><a href="/case.html">All</a></li>
+        <li>{{ case.name }}</li>
+    </ol>
     <table class="table table-hover">
         <thead>
         <tr>
@@ -17,19 +21,19 @@
         </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>{{ case.name }}</td>
-                <td><a href="{% url 'suite_view' case.suite.id %}">{{ case.suite.name }}</a></td>
-                <td>{{ case.get_level_display }}</td>
-                <td>{{ case.command }}</td>
-                <td>{{ case.param }}</td>
-                <td>{{ case.description }}</td>
-                <td>{{ case.createdAt|date:'Y-m-d H:i:s' }}</td>
-                <td>{{ case.modifyAt|date:'Y-m-d H:i:s' }}</td>
-                {% if request.user.is_authenticated %}
-                    <td><a href="{% url 'case_edit' case.id %}">修改</a> | <a href="{% url 'case_delete' case.id %}">删除</a></td>
-                {% endif %}
-            </tr>
+        <tr>
+            <td>{{ case.name }}</td>
+            <td><a href="{% url 'suite_view' case.suite.id %}">{{ case.suite.name }}</a></td>
+            <td>{{ case.get_level_display }}</td>
+            <td>{{ case.command }}</td>
+            <td>{{ case.param }}</td>
+            <td>{{ case.description }}</td>
+            <td>{{ case.createdAt|date:'Y-m-d H:i:s' }}</td>
+            <td>{{ case.modifyAt|date:'Y-m-d H:i:s' }}</td>
+            {% if request.user.is_authenticated %}
+                <td><a href="{% url 'case_edit' case.id %}">修改</a> | <a href="{% url 'case_delete' case.id %}">删除</a></td>
+            {% endif %}
+        </tr>
         </tbody>
         <tfoot>
         <tr>
@@ -37,5 +41,4 @@
         </tr>
         </tfoot>
     </table>
-    <a href="/case.html">All</a>
 {% endblock %}

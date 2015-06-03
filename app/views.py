@@ -83,7 +83,6 @@ def case_delete(request, pk):
     return redirect(reverse("case_list"))
 
 def case_edit(request, pk):
-    #Case.objects.get(id=pk).delete()
     case = Case.objects.get(id=pk)
     if request.method == "POST":
         p_name = request.POST['name']
@@ -102,7 +101,6 @@ def case_edit(request, pk):
             case.modifyAt = now()
             case.save()
             return redirect(reverse("case_view", kwargs={"pk": pk}))
-
     return render(request, "case_edit.html", locals())
 
 def task_list(request):

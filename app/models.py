@@ -1,8 +1,19 @@
 # -*- coding: utf-8 -*-
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AbstractUser
 from django.db import models
 
 # Create your models here.
+# class User(AbstractUser):
+#     human_name = models.TextField("真实姓名", null=True, blank=True)
+#     gpg_keyid = models.CharField(max_length=64, null=True, blank=True)
+#     ssh_key = models.TextField(null=True, blank=True)
+#     level = models.IntegerField('用例等级', choices=((1, '低'), (2, '中'), (3, '高')))
+#
+#     old_password = models.CharField("旧密码", max_length=127, null=True, blank=True)
+#     password_changed = models.DateTimeField("修改密码的时间", auto_now_add=True)
+#     passwordtoken = models.TextField("找回密码Token", null=True, blank=True)
+#     passwordtoken_expires = models.DateTimeField("找回密码Token有效期限", null=True, blank=True)
+
 
 class Suite(models.Model):
     #user = models.ForeignKey(User)

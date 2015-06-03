@@ -4,24 +4,45 @@
     <meta charset="UTF-8">
     <title></title>
     <link rel="stylesheet" href="{{ STATIC_URL }}bootstrap/css/bootstrap.css"/>
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/style.css"/>
     <script src="{{ STATIC_URL }}bootstrap/js/jquery.js" type="text/javascript" charset="utf-8"></script>
     <script src="{{ STATIC_URL }}bootstrap/js/bootstrap.js" type="text/javascript" charset="utf-8"></script>
 </head>
 <body>
-<div class="nav">
-    <ul class="nav nav-pills">
-        <li role="presentation" {% ifequal active 'case' %}class="active"{% endifequal %}><a href="/case.html">用例</a></li>
-        <li role="presentation" {% ifequal active 'report' %}class="active"{% endifequal %}><a href="/report.html">报表</a></li>
-        <li role="presentation" {% ifequal active 'task' %}class="active"{% endifequal %}><a href="/task.html">任务</a></li>
-        <li role="presentation" {% ifequal active 'machine' %}class="active"{% endifequal %}><a href="/machine.html">测试机</a></li>
-        {% if request.user.is_authenticated %}
-            <li><a href="/logout.html">{{ request.user }} | 退出</a></li>
-        {% else %}
-            <li><a href="/login.html">登录</a></li>
-        {% endif %}
-    </ul>
-</div>
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/task.html">自动化测试管理平台</a>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li {% ifequal active 'task' %}class="active"{% endifequal %}><a href="/task.html">任务</a></li>
+                <li {% ifequal active 'report' %}class="active"{% endifequal %}><a href="/report.html">报表</a></li>
+                <li {% ifequal active 'case' %}class="active"{% endifequal %}><a href="/case.html">用例</a></li>
+                <li {% ifequal active 'machine' %}class="active"{% endifequal %}><a href="/machine.html">测试机</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                {% if request.user.is_authenticated %}
+                    <li><a href="/logout.html">{{ request.user }} | 退出</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">管理入口 <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="/suite.html">套件管理</a></li>
+                        </ul>
+                    </li>
+                {% else %}
+                    <li><a href="/login.html">登录</a></li>
+                {% endif %}
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+<div class="content">
 {% block content %}
 {% endblock %}
+</div>
 </body>
 </html>

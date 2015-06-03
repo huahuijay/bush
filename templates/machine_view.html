@@ -1,5 +1,9 @@
 {% extends "layout.html" %}
 {% block content %}
+    <ol class="breadcrumb">
+        <li><a href="/machine.html">All</a></li>
+        <li>{{ p_machine.name }}</li>
+    </ol>
     <table class="table table-hover">
         <thead>
         <tr>
@@ -33,5 +37,4 @@
         </tr>
         </tfoot>
     </table>
-    <a href="/machine.html">All</a>
 {% endblock %}

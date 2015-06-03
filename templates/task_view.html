@@ -1,5 +1,15 @@
 {% extends "layout.html" %}
 {% block content %}
+    <ol class="breadcrumb">
+        <li><a href="/task.html">All</a></li>
+        <li>{{ p_task.name }}</li>
+    </ol>
+    <div class="detail block">
+        <small>任务类型</small>
+        <small>功能测试</small>
+        <small>任务名称</small>
+        <small>main</small>
+    </div>
     <table class="table table-hover">
         <thead>
         <tr>
@@ -21,7 +31,7 @@
             <td>{{ p_task.createdAt|date:'Y-m-d H:i:s' }}</td>
             <td>{{ p_task.modifyAt|date:'Y-m-d H:i:s' }}</td>
             {% if request.user.is_authenticated %}
-                <td><a href="{% url 'task_edit' p_task.id %}">修改</a> | <a href="{% url 'task_trigger' p_task.id %}">执行</a></td>
+                <td><a href="{% url 'task_edit' p_task.id %}">修改</a> {% if child_cases%} | <a href="{% url 'task_trigger' p_task.id %}">执行</a> {% endif %}</td>
             {% endif %}
         </tr>
         </tbody>
@@ -67,7 +77,7 @@
     {% if request.user.is_authenticated %}
     {% if cases %}
     <!-- Button trigger modal -->
-    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">
         添加用例
     </button>
 
