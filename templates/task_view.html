@@ -95,7 +95,7 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label >用例</label>
-                            <select name = "case">
+                            <select name = "case" class="form-control">
                                 {% for case in cases %}
                                     <option value="{{ case.id }}" >{{ case.name }}</option>
                                 {% endfor %}

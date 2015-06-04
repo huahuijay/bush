@@ -39,9 +39,6 @@ def suite_list(request):
             error = "数据不能为空"
         else:
             Suite(name=p_name, description=p_description, createdAt=now()).save()
-            script_path = settings.MEDIA_ROOT + settings.SCRIPT_DIR + p_name
-            if not os.path.isdir(script_path):
-                os.mkdir(script_path)
     if Suite.objects.exists():
         suites = Suite.objects.all()
 
@@ -51,8 +48,6 @@ def suite_view(request, pk):
     p_suite = Suite.objects.get(id=pk)
     cases = Case.objects.filter(suite=p_suite)
     tasks = Task.objects.filter(suite=p_suite)
-    script_path = settings.MEDIA_ROOT + settings.SCRIPT_DIR + p_suite.name
-    scripts = os.listdir(script_path)
     return render(request, "suite_view.html", locals())
 
 def case_list(request):
@@ -64,12 +59,14 @@ def case_list(request):
         p_level = request.POST['level']
         p_suite = request.POST['suite']
         p_command = request.POST['command']
+        p_script = request.POST['script']
         p_param = request.POST['param']
         p_description = request.POST['description']
         if p_name == "" or p_command == "" or p_description == "":
             error = "数据不能为空"
         else:
-            Case(name=p_name, suite=Suite.objects.get(id=p_suite),  level=p_level, command=p_command, param=p_param, description=p_description, createdAt=now()).save()
+            Case(name=p_name, suite=Suite.objects.get(id=p_suite),  level=p_level, command=p_command,
+                 script=p_script, param=p_param, description=p_description, createdAt=now()).save()
 
     if Case.objects.exists():
         cases = Case.objects.all()
@@ -92,6 +89,7 @@ def case_edit(request, pk):
         p_name = request.POST['name']
         p_level = request.POST['level']
         p_command = request.POST['command']
+        p_script = request.POST['script']
         p_param = request.POST['param']
         p_description = request.POST['description']
         if p_name == "" or p_command == "" or p_description == "":
@@ -100,6 +98,7 @@ def case_edit(request, pk):
             case.name = p_name
             case.level = p_level
             case.command = p_command
+            case.script = p_script
             case.param = p_param
             case.description = p_description
             case.modifyAt = now()
@@ -158,6 +157,10 @@ def task_trigger(request, pk):
     staf_obj.register()
     utils.tmp_handle_global = staf_obj.execute(p_task.name)
     staf_obj.unregister()
+    cases = Task_Case.objects.filter(p_task)
+    if cases:
+        for p_case in cases:
+            Report(case=p_case, )
     return redirect(reverse("task_view", kwargs={"pk": pk}))
 
 def task_delete(request, pk_task, pk_case):
@@ -239,20 +242,17 @@ def machine_delete(request, pk):
     Machine.objects.get(id=pk).delete()
     return redirect(reverse("machine_list"))
 
-def script_add(request):
+def script_list(request):
+    script_path = settings.MEDIA_ROOT + settings.SCRIPT_DIR
     if request.method == "POST":
-        p_id = request.POST['id']
         p_file = request.FILES['name']
-        suite = Suite.objects.get(id=p_id)
-        script_path = settings.MEDIA_ROOT + settings.SCRIPT_DIR + suite.name
-        open(script_path + '/' + p_file.name, 'wb').write(p_file.read())
-        return redirect(reverse("suite_view", kwargs={"pk": suite.id}))
+        open(script_path + p_file.name, 'wb').write(p_file.read())
+    scripts = os.listdir(script_path)
+    return render(request, "script.html", locals())
 
 def script_view(request):
-    g_suite = request.GET['suite']
     g_name = request.GET['name']
-    suite = Suite.objects.get(id=g_suite)
-    script_path = settings.MEDIA_ROOT + settings.SCRIPT_DIR + suite.name + '/' +g_name
+    script_path = settings.MEDIA_ROOT + settings.SCRIPT_DIR + g_name
 
     try:
         script = open(script_path)
@@ -260,6 +260,13 @@ def script_view(request):
     finally:
         script.close()
     return render(request, "script_view.html", locals())
+
+def script_add(request):
+    if request.method == "POST":
+        p_file = request.FILES['name']
+        script_path = settings.MEDIA_ROOT + settings.SCRIPT_DIR
+        open(script_path + p_file.name, 'wb').write(p_file.read())
+        return redirect(reverse("script_view"))
 
 def report_list(request):
     active = 'report'

@@ -21,7 +21,13 @@
         <tbody>
         <tr>
             <td>{{ p_machine.name }}</td>
-            <td>{{ p_machine.get_status_display }}</td>
+            <td>
+                {% if p_machine.status == 1 %}
+                    <span class="label label-success">{{ p_machine.get_status_display }}</span>
+                {% else %}
+                    <span class="label label-danger">{{ p_machine.get_status_display }}</span>
+                {% endif %}
+            </td>
             <td>{{ p_machine.address }}</td>
             <td>{{ p_machine.description }}</td>
             <td>{{ p_machine.createdAt|date:'Y-m-d H:i:s' }}</td>

@@ -28,8 +28,10 @@ urlpatterns = [
     url(r'machine/edit/(?P<pk>\d+).html$', views.machine_edit, name="machine_edit"),
     url(r'machine/del/(?P<pk>\d+).html$', views.machine_delete, name="machine_delete"),
 
-    url(r'script_add.html$', views.script_add),
-    url(r'script_view.html$', views.script_view),
+    url(r'script.html$', views.script_list, name="script_list"),
+    url(r'script/view.html$', views.script_view),
+    #url(r'machine/edit/(?P<pk>\d+).html$', views.machine_edit, name="machine_edit"),
+    #url(r'script/del/(?P<pk>\d+).html$', views.script_delete, name="script_delete"),
 
     url(r'report.html$', views.report_list, name="report_list"),
     url(r'report/view/(?P<pk>\d+).html$', views.report_view, name="report_view"),

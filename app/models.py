@@ -30,6 +30,7 @@ class Case(models.Model):
     description = models.TextField('用例描述', blank=True, null=True)
     level = models.IntegerField('用例等级', choices=((1, '低'), (2, '中'), (3, '高')))
     command = models.TextField('命令', max_length=255, null=True)
+    script = models.TextField('脚本', max_length=255, null=True)
     param = models.TextField('参数', max_length=255, null=True)
     createdAt = models.DateTimeField("创建的时间")
     modifyAt = models.DateTimeField("修改的时间", auto_now_add=True)
@@ -62,5 +63,7 @@ class Machine(models.Model):
 class Report(models.Model):
     case = models.ForeignKey(Case)
     task = models.ForeignKey(Task)
+    machine = models.ForeignKey(Machine)
     result = models.IntegerField('结果', choices=((1, 'pass'), (2, 'fail'), (3, 'running')), default=3)
     createdAt = models.DateTimeField("创建的时间", auto_now_add=True)
+    #completedAt = models.DateTimeField("完成的时间", blank=True, null=True)
