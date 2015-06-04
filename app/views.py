@@ -8,9 +8,12 @@ from app.models import *
 
 from utils import generate_xml
 from staf_wrapper.wrapper_STAF import STAFWrapper
+
 import os
 import threading
 import time
+
+import utils
 
 # Create your views here.
 
@@ -151,6 +154,10 @@ def task_edit(request, pk):
 
 def task_trigger(request, pk):
     p_task = Task.objects.get(id=pk)
+    staf_obj = STAFWrapper()
+    staf_obj.register()
+    utils.tmp_handle_global = staf_obj.execute(p_task.name)
+    staf_obj.unregister()
     return redirect(reverse("task_view", kwargs={"pk": pk}))
 
 def task_delete(request, pk_task, pk_case):

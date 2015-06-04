@@ -35,6 +35,8 @@ import os
 from models import *
 from django.conf import settings
 
+tmp_handle_global = None
+
 
 def generate_xml(task_name, task_cases):
     proj_name = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

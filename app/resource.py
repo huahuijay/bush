@@ -3,6 +3,7 @@ from tastypie.resources import Resource
 from tastypie.utils import trailing_slash
 
 from staf_wrapper import wrapper_STAF
+import utils
 import time
 import os
 from models import *
@@ -20,7 +21,7 @@ class ProjectStafResource(Resource):
             # following is new APIs
             url(r"^trigger_deb/(?P<mode>.+)/(?P<task_name>.+?/?)$", self.wrap_view('trigger_deb'), name='trigger_deb'),
             url(r"^trigger_iso/(?P<mode>.+)/(?P<task_name>.+?/?)$", self.wrap_view('trigger_iso'), name='trigger_iso'),
-            url(r"^get_result/(?P<staf_handle_key>.+/?)$", self.wrap_view('get_result'), name='get_result'),
+            url(r"^get_result/(?P<staf_handle_key>.+/?)?$", self.wrap_view('get_result'), name='get_result'),
             url(r"^query_task/(?P<suite_name>.+?)/?$", self.wrap_view('query_task'), name='query_task'),
             url(r"^query_suite/?$", self.wrap_view('query_suite'), name='query_suite'),
         ]
@@ -70,10 +71,14 @@ class ProjectStafResource(Resource):
         pass
 
     def get_result(self, request, **kwargs):
-        if self._query(kwargs['staf_handle_key']) == 'on-going':
+        parameter = kwargs['staf_handle_key']
+        if parameter is None:
+            staf_handle_key = utils.tmp_handle_global
+        else:
+            staf_handle_key = kwargs['staf_handle_key']
+        if self._query(staf_handle_key) == 'on-going':
             return self.create_response(request, {"key": 'on-going'})
         else:
-            print 123
             test_attributes = self.staf_obj.result['testcaseList']
             xml_file = self.staf_obj.result['xmlFileName']
             task_name = os.path.splitext(os.path.basename(xml_file))[0]
