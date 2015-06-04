@@ -78,11 +78,11 @@ class STAFWrapper(object):
 
     def execute(self, xml_name):
         xml_location = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'media', 'case', xml_name)
-        self.result = self.handle.submit('local', 'stax',
+        result = self.handle.submit('local', 'stax',
                                          'execute file {0}.xml'.format(xml_location))
-        if self.result.rc != STAFResult.Ok:
+        if result.rc != STAFResult.Ok:
             raise Exception, 'Error on execute stax task, RC: %d, Result: %s' % (result.rc, result.result)
-        return self.result.result
+        return result.result
 
     def query(self, job_id):
         self.result = self.handle.submit('local', 'stax',

@@ -20,8 +20,6 @@ class QueryAndFillSQL(threading.Thread):
     def run(self):
         QueryAndFillSQL.Running = True
         while True:
-            print 123
-
             if self.staf_obj.query(job_id=app.utils.tmp_handle_global) == 0:
                 app.utils.tmp_handle_global = None
                 test_attributes = self.staf_obj.result['testcaseList']
