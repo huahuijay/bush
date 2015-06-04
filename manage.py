@@ -8,12 +8,10 @@ def start_daemon():
     import time
     import app.utils
     from staf_wrapper.wrapper_STAF import STAFWrapper
-    from app.models import Report
+    from app.models import Report, Case, Task
 
 
     class QueryAndFillSQL(threading.Thread):
-        Running = False
-        url = '/'.join(['http://127.0.0.1:8000/api/v1', 'get_result'])
         def __init__(self):
             threading.Thread.__init__(self)
             self.staf_obj = STAFWrapper()
@@ -23,8 +21,10 @@ def start_daemon():
             QueryAndFillSQL.Running = True
             while True:
                 time.sleep(60)
+                print 123
                 if self.staf_obj.query(job_id=app.utils.tmp_handle_global) == 0:
                     app.utils.tmp_handle_global = None
+                    print 456
                     test_attributes = self.staf_obj.result['testcaseList']
                     xml_file = self.staf_obj.result['xmlFileName']
                     task_name = os.path.splitext(os.path.basename(xml_file))[0]
@@ -45,17 +45,17 @@ def start_daemon():
 
                 # requests.get(QueryAndFillSQL.url)
 
-    if not QueryAndFillSQL.Running:
-        print 'asfashasklfhalskfhalkfalsjkf'
-        p_deamon = QueryAndFillSQL()
-        p_deamon.daemon = True
-        p_deamon.start()
+    print 'asfashasklfhalskfhalkfalsjkf'
+    p_deamon = QueryAndFillSQL()
+    p_deamon.daemon = True
+    p_deamon.start()
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "staf.settings")
 
     from django.core.management import execute_from_command_line
 
+    start_daemon()
     execute_from_command_line(sys.argv)
 
-    start_daemon()
+

@@ -32,7 +32,6 @@ xml_content_ending = '''            </sequence>
 
 import re
 import os
-from models import *
 from django.conf import settings
 
 tmp_handle_global = None
@@ -40,6 +39,7 @@ tmp_handle_global = None
 
 def generate_xml(task_name, task_cases):
     proj_name = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    script_path = os.path.join(proj_name, 'media/script')
     xml_path = settings.MEDIA_ROOT + settings.CASE_DIR
     xml_name = '.'.join([task_name, 'xml'])
     # cases = Suite.objects.get(id=p_suite).case_set.all()
@@ -51,7 +51,8 @@ def generate_xml(task_name, task_cases):
     with open(xml_location, 'a+') as xml_handle:
         xml_handle.write(xml_content_starting)
         for task_case in task_cases:
-            xml_content_towrite = re.sub('''<testcase name="'.*'">''', '''<testcase name="'{case.name}'">'''.format(case=task_case.case), xml_content)
-            xml_content_towrite = re.sub('<parms>.*</parms>', "<parms>'{0}/{case.command} {case.param}'</parms>".format(proj_name, case=task_case.case), xml_content_towrite)
+            xml_content_towrite = re.sub('''<command>'.*'</command>''', '''<command>'{case.command}'</command>'''.format(case=task_case.case), xml_content)
+            xml_content_towrite = re.sub('''<testcase name="'.*'">''', '''<testcase name="'{case.name}'">'''.format(case=task_case.case), xml_content_towrite)
+            xml_content_towrite = re.sub('<parms>.*</parms>', "<parms>'{0}/{case.script} {case.param}'</parms>".format(script_path, case=task_case.case), xml_content_towrite)
             xml_handle.write(xml_content_towrite)
         xml_handle.write(xml_content_ending)

@@ -22,7 +22,7 @@ class ProjectStafResource(Resource):
             url(r"^trigger_deb/(?P<mode>.+)/(?P<task_name>.+?/?)$", self.wrap_view('trigger_deb'), name='trigger_deb'),
             url(r"^trigger_iso/(?P<mode>.+)/(?P<task_name>.+?/?)$", self.wrap_view('trigger_iso'), name='trigger_iso'),
             url(r"^get_result/(?P<staf_handle_key>.+/?)?$", self.wrap_view('get_result'), name='get_result'),
-            url(r"^query_task/(?P<suite_name>.+?)/?$", self.wrap_view('query_task'), name='query_task'),
+            url(r"^query_task/(?P<suite_id>.+?)/?$", self.wrap_view('query_task'), name='query_task'),
             url(r"^query_suite/?$", self.wrap_view('query_suite'), name='query_suite'),
         ]
 
@@ -45,8 +45,8 @@ class ProjectStafResource(Resource):
 
     def query_task(self, request, **kwargs):
         task_list = list()
-        suite_name = kwargs['suite_name']
-        tasks = Suite.objects.get(name=suite_name).task_set.all()
+        suite_id = kwargs['suite_id']
+        tasks = Suite.objects.get(id=suite_id).task_set.all()
 
         for task in tasks:
             task_struct_dict = dict()
@@ -97,7 +97,7 @@ class ProjectStafResource(Resource):
                     report.result = test_result
                     report.save()
 
-            return self.create_response(request, {"key": self.staf_obj.result})
+            return self.create_response(request, self.staf_obj.result)
 
     def _query(self, exec_handle):
         if self.staf_obj.query(job_id=exec_handle) == 0:

@@ -157,10 +157,10 @@ def task_trigger(request, pk):
     staf_obj.register()
     utils.tmp_handle_global = staf_obj.execute(p_task.name)
     staf_obj.unregister()
-    cases = Task_Case.objects.filter(p_task)
-    if cases:
-        for p_case in cases:
-            Report(case=p_case, )
+    # cases = Task_Case.objects.filter(p_task)
+    # if cases:
+    #     for p_case in cases:
+    #         Report(case=p_case, )
     return redirect(reverse("task_view", kwargs={"pk": pk}))
 
 def task_delete(request, pk_task, pk_case):
