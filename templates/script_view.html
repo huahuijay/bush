@@ -1,15 +1,10 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title></title>
-    <link rel="stylesheet" href="{{ STATIC_URL }}bootstrap/css/bootstrap.css"/>
-    <script src="{{ STATIC_URL }}bootstrap/js/jquery.js" type="text/javascript" charset="utf-8"></script>
-    <script src="{{ STATIC_URL }}bootstrap/js/bootstrap.js" type="text/javascript" charset="utf-8"></script>
-</head>
-<body>
+{% extends "layout.html" %}
+{% block content %}
+<ol class="breadcrumb">
+        <li><a href="/script.html">All</a></li>
+        <li>{{ g_name }}</li>
+    </ol>
 <pre>
         {{ script_text }}
 </pre>
-</body>
-</html>
+{% endblock %}
