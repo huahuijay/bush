@@ -38,6 +38,9 @@ urlpatterns = [
     # url(r'machine/edit/(?P<pk>\d+).html$', views.machine_edit, name="machine_edit"),
     # url(r'machine/del/(?P<pk>\d+).html$', views.machine_delete, name="machine_delete"),
 
+    url(r'demo_celery.html$', views.demo_celery, name="demo_celery"),
+
+
     #url(r'index', views.index),
     url(r'^$', views.case_list),
     url(r'index.html$', views.case_list),

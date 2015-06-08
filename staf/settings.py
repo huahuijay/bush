@@ -28,6 +28,10 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
+import djcelery
+djcelery.setup_loader()
+BROKER_URL = 'django://'
+
 # Application definition
 
 INSTALLED_APPS = (
@@ -38,6 +42,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'app',
+    'djcelery',
+    'kombu.transport.django',
 )
 
 MIDDLEWARE_CLASSES = (

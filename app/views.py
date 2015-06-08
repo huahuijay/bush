@@ -14,6 +14,7 @@ import threading
 import time
 
 import utils
+import tasks
 
 # Create your views here.
 
@@ -154,8 +155,8 @@ def task_edit(request, pk):
 def task_trigger(request, pk):
     p_task = Task.objects.get(id=pk)
     staf_obj = STAFWrapper()
-    staf_obj.register()
-    utils.tmp_handle_global = staf_obj.execute(p_task.name)
+    exec_handle = staf_obj.execute(p_task.name)
+    tasks.monitor(staf_obj, exec_handle)
     staf_obj.unregister()
     # cases = Task_Case.objects.filter(p_task)
     # if cases:
@@ -173,7 +174,6 @@ def task_delete(request, pk_task, pk_case):
 def machine_list(request):
     active = 'machine'
     staf_obj = STAFWrapper()
-    staf_obj.register()
     if request.method == "POST":
         p_name = request.POST['name']
         p_description = request.POST['description']
@@ -204,7 +204,6 @@ def machine_list(request):
 def machine_view(request, pk):
     active = 'machine'
     staf_obj = STAFWrapper()
-    staf_obj.register()
     p_machine = Machine.objects.get(id=pk)
     p = threading.Thread(target=staf_obj.detect_device, args=(p_machine.address, ))
     p.start()
@@ -275,3 +274,9 @@ def report_list(request):
 
 def report_view(request, pk):
     pass
+
+def demo_celery(request):
+    print 123
+    from tasks import add
+    add.delay(2, 2)
+    print 778

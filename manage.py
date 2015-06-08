@@ -15,7 +15,6 @@ def start_daemon():
         def __init__(self):
             threading.Thread.__init__(self)
             self.staf_obj = STAFWrapper()
-            self.staf_obj.register()
 
         def run(self):
             QueryAndFillSQL.Running = True
@@ -55,7 +54,7 @@ if __name__ == "__main__":
 
     from django.core.management import execute_from_command_line
 
-    start_daemon()
+    # start_daemon()
     execute_from_command_line(sys.argv)
 
 

@@ -3,6 +3,7 @@
 from PySTAF import *
 # from PySTAFMon import *
 # from PySTAFLog import *
+import time
 
 
 # following is a sample of format of test result
@@ -62,8 +63,11 @@ class STAFWrapper(object):
         self.handle = None
         self.result = None
         self.detect_ret_value = None
+        self._register()
+        self.handle.submit('local', 'event', 'register type monitor subtype properties')
+        self.handle.submit('local', 'event', 'register type monitor subtype endoftest')
 
-    def register(self):
+    def _register(self):
         try:
             self.handle = STAFHandle("demo_livecd")
         except STAFException, e:
@@ -103,8 +107,24 @@ class STAFWrapper(object):
 
 def test():
     staf_obj = STAFWrapper()
-    staf_obj.register()
-    print staf_obj.detect_device('10.3.3.23')
+    staf_obj._register()
+    staf_obj.execute('task_name')
+    while True:
+        result = staf_obj.handle.submit('local', 'queue', 'get wait')
+        property_dict = result.resultContext.getRootObject()
+        try:
+            status = property_dict['message']['propertyMap']['status']
+            print 'status', status
+            case_name = property_dict['message']['propertyMap']['case_name']
+            print 'case_name', case_name
+        except KeyError, e:
+            pass
+        if property_dict['message']['subtype'] == 'endoftest':
+            time.sleep(3)
+            break
+
+
+
 
 
 if __name__ == '__main__':

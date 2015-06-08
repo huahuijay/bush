@@ -13,7 +13,6 @@ class ProjectStafResource(Resource):
     def __init__(self):
         Resource.__init__(self)
         self.staf_obj = wrapper_STAF.STAFWrapper()
-        self.staf_obj.register()
 
     def prepend_urls(self):
         return [
@@ -113,7 +112,6 @@ class ProjectStafResource(Resource):
 
     def staf_api(self, request, **kwargs):
         staf_obj = wrapper_STAF.STAFWrapper()
-        staf_obj.register()
         staf_obj.execute()
         while True:
             time.sleep(5)

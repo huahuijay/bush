@@ -7,12 +7,17 @@ xml_content_starting = '''<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 '''
 
 xml_content = '''            <loop from="0" to="0">
-                <testcase name="'TestA'">
+                <testcase name="'{case.name}'">
                     <sequence>
+                        <stafcmd>
+                            <location>'local'</location>
+                            <service>'event'</service>
+                            <request>'generate type monitor subtype properties property status=running property case_name={case.name} property task_name={task_name}'</request>
+                        </stafcmd>
                         <process>
                             <location>'local'</location>
-                            <command>'/usr/bin/python'</command>
-                            <parms>'{STAF/Env/HOME}/PycharmProjects/STAF/staf/staf_wrapper/demo.py case1'</parms>
+                            <command>'{case.command}'</command>
+                            <parms>'{script_path}/{case.script} {case.param}'</parms>
                         </process>
                         <if expr="RC == 0">
                             <tcstatus result="'pass'"/>
@@ -20,12 +25,29 @@ xml_content = '''            <loop from="0" to="0">
                                 <tcstatus result="'fail'"/>
                             </else>
                         </if>
+                        <stafcmd>
+                            <location>'local'</location>
+                            <service>'event'</service>
+                            <request>'generate type monitor subtype properties property status=finish property case_name={case.name} property task_name={task_name}'</request>
+                        </stafcmd>
                     </sequence>
                 </testcase>
             </loop>
 '''
 
-xml_content_ending = '''            </sequence>
+xml_content_ending = '''        <loop from="0" to="0">
+                <testcase name="'last_case'">
+                    <sequence>
+                        <stafcmd>
+                            <location>'local'</location>
+                            <service>'event'</service>
+                            <request>'generate type monitor subtype endoftest'</request>
+                        </stafcmd>
+                        <tcstatus result="'pass'"/>
+                    </sequence>
+                </testcase>
+            </loop>
+        </sequence>
     </function>
 </stax>
 '''
@@ -51,8 +73,6 @@ def generate_xml(task_name, task_cases):
     with open(xml_location, 'a+') as xml_handle:
         xml_handle.write(xml_content_starting)
         for task_case in task_cases:
-            xml_content_towrite = re.sub('''<command>'.*'</command>''', '''<command>'{case.command}'</command>'''.format(case=task_case.case), xml_content)
-            xml_content_towrite = re.sub('''<testcase name="'.*'">''', '''<testcase name="'{case.name}'">'''.format(case=task_case.case), xml_content_towrite)
-            xml_content_towrite = re.sub('<parms>.*</parms>', "<parms>'{0}/{case.script} {case.param}'</parms>".format(script_path, case=task_case.case), xml_content_towrite)
+            xml_content_towrite = xml_content.format(case=task_case.case, script_path=script_path, task_name=task_name)
             xml_handle.write(xml_content_towrite)
         xml_handle.write(xml_content_ending)
