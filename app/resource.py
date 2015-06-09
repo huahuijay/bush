@@ -12,7 +12,7 @@ from models import *
 class ProjectStafResource(Resource):
     def __init__(self):
         Resource.__init__(self)
-        self.staf_obj = wrapper_STAF.STAFWrapper()
+        self.staf_obj = wrapper_STAF.staf_obj
 
     def prepend_urls(self):
         return [
@@ -111,7 +111,7 @@ class ProjectStafResource(Resource):
             return 'unsuccessful'
 
     def staf_api(self, request, **kwargs):
-        staf_obj = wrapper_STAF.STAFWrapper()
+        staf_obj = wrapper_STAF.staf_obj
         staf_obj.execute()
         while True:
             time.sleep(5)

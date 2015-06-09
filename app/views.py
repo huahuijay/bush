@@ -7,7 +7,7 @@ from django.utils.timezone import now
 from app.models import *
 
 from utils import generate_xml
-from staf_wrapper.wrapper_STAF import STAFWrapper
+from staf_wrapper.wrapper_STAF import STAFWrapper,staf_obj
 
 import os
 import threading
@@ -154,9 +154,10 @@ def task_edit(request, pk):
 
 def task_trigger(request, pk):
     p_task = Task.objects.get(id=pk)
-    staf_obj = STAFWrapper()
     exec_handle = staf_obj.execute(p_task.name)
-    tasks.monitor(staf_obj, exec_handle)
+    print exec_handle
+    tasks.monitor.delay(staf_obj, exec_handle)
+    # tasks.monitor(staf_obj, exec_handle)
     staf_obj.unregister()
     # cases = Task_Case.objects.filter(p_task)
     # if cases:
@@ -173,7 +174,6 @@ def task_delete(request, pk_task, pk_case):
 
 def machine_list(request):
     active = 'machine'
-    staf_obj = STAFWrapper()
     if request.method == "POST":
         p_name = request.POST['name']
         p_description = request.POST['description']
@@ -203,7 +203,6 @@ def machine_list(request):
 
 def machine_view(request, pk):
     active = 'machine'
-    staf_obj = STAFWrapper()
     p_machine = Machine.objects.get(id=pk)
     p = threading.Thread(target=staf_obj.detect_device, args=(p_machine.address, ))
     p.start()

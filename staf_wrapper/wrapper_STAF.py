@@ -69,7 +69,9 @@ class STAFWrapper(object):
 
     def _register(self):
         try:
-            self.handle = STAFHandle("demo_livecd")
+            tmp_handle = STAFHandle("demo_livecd")
+            result = tmp_handle.submit('local', 'handle', 'create handle name test')
+            self.handle = STAFHandle(int(result.result), 1)
         except STAFException, e:
             print "Error registering with STAF, RC: %d" % e.rc
 
@@ -124,8 +126,7 @@ def test():
             break
 
 
-
-
-
 if __name__ == '__main__':
     test()
+else:
+    staf_obj = STAFWrapper()

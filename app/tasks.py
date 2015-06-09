@@ -29,7 +29,7 @@ def monitor(staf_obj, exec_handle):
             try:
                 report = Report.objects.get(case=Case.objects.get(name=case_name))
             except Exception,e:
-                        Report(case=Case.objects.get(name=case_name), task=Task.objects.get(name=task_name), result=status).save()
+                Report(case=Case.objects.get(name=case_name), task=Task.objects.get(name=task_name), result=status).save()
             else:
                 report.result = status
                 report.save()
@@ -51,7 +51,10 @@ def monitor(staf_obj, exec_handle):
                     try:
                         report = Report.objects.get(case=Case.objects.get(name=case_name))
                     except Exception,e:
-                        Report(case=Case.objects.get(name=case_name), task=Task.objects.get(name=task_name), result=test_result).save()
+                        try:
+                            Report(case=Case.objects.get(name=case_name), task=Task.objects.get(name=task_name), result=test_result).save()
+                        except Exception:
+                            pass
                     else:
                         report.result = test_result
                         report.save()
