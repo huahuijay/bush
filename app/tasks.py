@@ -1,10 +1,20 @@
 import time
 import os
+import threading
+import Queue
 
 from celery import task
 
 from models import *
+from staf_wrapper.wrapper_STAF import staf_obj
 
+
+@task()
+def loop_machine_status():
+    machines = Machine.objects.all()
+    for machine in machines:
+        machine.status = staf_obj.detect_device(machine.address)
+        machine.save()
 
 @task()
 def monitor(staf_obj, exec_handle):

@@ -78,9 +78,9 @@ class STAFWrapper(object):
     def detect_device(self, device_IP):
         result = self.handle.submit(device_IP, 'ping', 'ping')
         if result.result == 'PONG':
-            self.detect_ret_value = 1
+            return 1
         else:
-            self.detect_ret_value = 2
+            return 2
 
     def execute(self, xml_name):
         xml_location = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'media', 'case', xml_name)
@@ -109,21 +109,8 @@ class STAFWrapper(object):
 
 def test():
     staf_obj = STAFWrapper()
-    staf_obj._register()
-    staf_obj.execute('task_name')
-    while True:
-        result = staf_obj.handle.submit('local', 'queue', 'get wait')
-        property_dict = result.resultContext.getRootObject()
-        try:
-            status = property_dict['message']['propertyMap']['status']
-            print 'status', status
-            case_name = property_dict['message']['propertyMap']['case_name']
-            print 'case_name', case_name
-        except KeyError, e:
-            pass
-        if property_dict['message']['subtype'] == 'endoftest':
-            time.sleep(3)
-            break
+    staf_obj.detect_device('10.3.3.22')
+
 
 
 if __name__ == '__main__':

@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-
+from staf_wrapper.wrapper_STAF import staf_obj
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -27,10 +27,23 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+TIME_ZONE = 'Asia/Shanghai'
 
 import djcelery
+from datetime import timedelta
 djcelery.setup_loader()
 BROKER_URL = 'django://'
+CELERY_IMPORTS = ('app.tasks', )
+CELERY_TIMEZONE = TIME_ZONE
+
+CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
+
+# CELERYBEAT_SCHEDULE = {
+#    'add-every-120-seconds': {
+#        'task': 'app.tasks.loop_machine_status',
+#        'schedule': timedelta(seconds=120),
+#    },
+# }
 
 # Application definition
 
@@ -99,7 +112,7 @@ DATABASES = {
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'Asia/Shanghai'
+
 
 USE_I18N = True
 
