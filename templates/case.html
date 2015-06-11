@@ -1,98 +1,103 @@
 {% extends "layout.html" %}
-{% block content %}
-    <h4>用例列表:</h4>
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th>用例</th>
-            <th>套件</th>
-            <th>重要性</th>
-            <th>创建时间</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% if cases %}
-            {% for case in cases %}
-                <tr>
-                    <td><a href="{% url 'case_view' case.id %}">{{ case.name }}</a></td>
-                    <td><a href="{% url 'suite_view' case.suite.id %}">{{ case.suite.name }}</a></td>
-                    <td>{{ case.get_level_display }}</td>
-                    <td>{{ case.createdAt|date:'Y-m-d H:i:s' }}</td>
-                </tr>
-            {% endfor %}
-        {% else %}
-            <tr>
-                <td>没有找到数据.</td>
-            </tr>
+{% block sidebar %}
+    <div class="sidebar-menu nav-collapse">
+        <div class="divide-20"></div>
+        <!-- SEARCH BAR -->
+        <div id="search-bar">
+            <input class="search" type="text" placeholder="Search"><i class="fa fa-search search-icon"></i>
+        </div>
+        <!-- /SEARCH BAR -->
+        {%  if suites %}
+            <!-- SIDEBAR MENU -->
+            <ul>
+                {% for suite in suites %}
+                    <li>
+                        <a class="" href="{% url 'case_list_index' suite.id %}">
+                            <i class="fa fa-bookmark"></i>
+                            <span class="menu-text">{{ suite.name }}</span>
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+            <!-- /SIDEBAR MENU -->
         {% endif %}
-        </tbody>
-        <tfoot>
-        <tr>
-            <td colspan='12'></td>
-        </tr>
-        </tfoot>
-    </table>
-    {% if request.user.is_authenticated %}
-        <!-- Button trigger modal -->
-        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">
-            添加用例
-        </button>
+    </div>
+{% endblock %}
 
-        <!-- Modal -->
-        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form method="post">
-                        {% csrf_token %}
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title" id="myModalLabel">Case Manager</h4>
-                        </div>
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <label >名称</label>
-                                <input type="username" class="form-control" name="name"  placeholder="Case name">
-                            </div>
-                            <div class="form-group">
-                                <label >重要性</label>
-                                <select name = "level"  class="form-control">
-                                    <option value="1" >低</option>
-                                    <option value="2" >中</option>
-                                    <option value="3" >高</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label >套件</label>
-                                <select name = "suite"  class="form-control">
-                                    {% for suite in suites %}
-                                        <option value="{{ suite.id }}" >{{ suite.name }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label >命令</label>
-                                <input type="username" class="form-control" name="command"  placeholder="Case command">
-                            </div>
-                            <div class="form-group">
-                                <label >脚本</label>
-                                <input type="username" class="form-control" name="script"  placeholder="Case script">
-                            </div>
-                            <div class="form-group">
-                                <label >参数</label>
-                                <textarea class="form-control" name="param" rows="4" placeholder="Case param"></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label >描述</label>
-                                <textarea class="form-control" name="description" rows="5" placeholder="Case description"></textarea>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                            <button type="submit" class="btn btn-success">提交</button>
-                        </div>
-                    </form>
+{% block header %}
+    <!-- PAGE HEADER-->
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-header" style="padding-top: 15px">
+                <div class="clearfix">
+                    {% if p_suite %}
+                        <h3 class="content-title pull-left">{{ p_suite.name }}</h3>
+                    {% endif %}
                 </div>
             </div>
         </div>
-    {% endif %}
+    </div>
+    <!-- /PAGE HEADER -->
+{% endblock %}
+
+
+{% block content %}
+    <!-- BOX -->
+    <div class="box border blue">
+        <div class="box-title">
+            <h4><i class="fa fa-hand-o-up"></i>用例列表</h4>
+            <div class="tools">
+                <a href="#box-config" data-toggle="modal" class="config">
+                    <i class="fa fa-cog"></i>
+                </a>
+                <a href="javascript:;" class="reload">
+                    <i class="fa fa-refresh"></i>
+                </a>
+                <a href="javascript:;" class="collapse">
+                    <i class="fa fa-chevron-up"></i>
+                </a>
+                <a href="javascript:;" class="remove">
+                    <i class="fa fa-times"></i>
+                </a>
+            </div>
+        </div>
+        <div class="box-body">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>用例名称</th>
+                    <th>重要性</th>
+                    <th>创建时间</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% if cases %}
+                    {% for case in cases %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td><a href="{% url 'case_view' case.id %}">{{ case.name }}</a></td>
+                            <td>{{ case.get_level_display }}</td>
+                            <td>{{ case.createdAt|date:'Y-m-d H:i:s' }}</td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td>没有找到数据.</td>
+                    </tr>
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- /BOX -->
+
+    <div>
+        {% if p_suite %}
+            <a href="{% url 'case_create' p_suite.id %}">
+        {% endif %}
+        <button class="btn btn-primary"><i class="fa fa-file-text fa-fw"></i> 新建</button>
+        </a>
+    </div>
+
 {% endblock %}

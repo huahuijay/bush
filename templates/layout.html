@@ -1,80 +1,200 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title></title>
-    <link rel="stylesheet" href="{{ STATIC_URL }}bootstrap/css/bootstrap.css"/>
-    <link rel="stylesheet" href="{{ STATIC_URL }}css/style.css"/>
-    <script src="{{ STATIC_URL }}bootstrap/js/jquery.js" type="text/javascript" charset="utf-8"></script>
-    <script src="{{ STATIC_URL }}bootstrap/js/bootstrap.js" type="text/javascript" charset="utf-8"></script>
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Cloud Admin | Gallery</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/cloud-admin.css" >
+    <link rel="stylesheet" type="text/css"  href="{{ STATIC_URL }}css/themes/default.css" id="skin-switcher" >
+    <link rel="stylesheet" type="text/css"  href="{{ STATIC_URL }}css/responsive.css" >
+
+    <link href="{{ STATIC_URL }}font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <!-- DATE RANGE PICKER -->
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}js/bootstrap-daterangepicker/daterangepicker-bs3.css" />
+    <!-- SELECT2 -->
+	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}js/select2/select2.min.css" />
+    <!-- ANIMATE -->
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/animatecss/animate.min.css" />
+    <!-- COLORBOX -->
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}js/colorbox/colorbox.min.css" />
+
+    <!-- WIZARD -->
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}js/bootstrap-wizard/wizard.css" />
+
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}js/datatables/media/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}js/datatables/media/assets/css/datatables.min.css">
+
+    <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+    <link rel="stylesheet" href="{{ STATIC_URL }}js/jquery-upload/css/jquery.fileupload.css">
+	<link rel="stylesheet" href="{{ STATIC_URL }}js/jquery-upload/css/jquery.fileupload-ui.css">
+
+    <!-- FONTS -->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700' rel='stylesheet' type='text/css'>
 </head>
 <body>
-
-<nav class="navbar navbar-default">
-    <div class="container-fluid">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header">
-            <a class="navbar-brand" href="/task.html">自动化测试管理平台</a>
+<!-- HEADER -->
+<header class="navbar clearfix" id="header">
+    <div class="container">
+        <div class="navbar-brand">
+            <!-- COMPANY LOGO -->
+            <a href="index.html">
+                <img src="{{ STATIC_URL }}img/logo/logo.png" alt="Cloud Admin Logo" class="img-responsive" height="30" width="120">
+            </a>
+            <!-- /COMPANY LOGO -->
+            <!-- TEAM STATUS FOR MOBILE -->
+            <div class="visible-xs">
+                <a href="#" class="team-status-toggle switcher btn dropdown-toggle">
+                    <i class="fa fa-users"></i>
+                </a>
+            </div>
+            <!-- /TEAM STATUS FOR MOBILE -->
+            <!-- SIDEBAR COLLAPSE -->
+            <div id="sidebar-collapse" class="sidebar-collapse btn">
+                <i class="fa fa-bars"
+                   data-icon1="fa fa-bars"
+                   data-icon2="fa fa-bars" ></i>
+            </div>
+            <!-- /SIDEBAR COLLAPSE -->
         </div>
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav">
-                <li {% ifequal active 'task' %}class="active"{% endifequal %}><a href="/task.html">任务</a></li>
-                <li {% ifequal active 'report' %}class="active"{% endifequal %}><a href="/report.html">报表</a></li>
-                <li {% ifequal active 'case' %}class="active"{% endifequal %}><a href="/case.html">用例</a></li>
-                <li {% ifequal active 'machine' %}class="active"{% endifequal %}><a href="/machine.html">测试机</a></li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                {% if request.user.is_authenticated %}
-                    <li><a href="/logout.html">{{ request.user }} | 退出</a></li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">管理入口 <span class="caret"></span></a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a href="/suite.html">套件管理</a></li>
-                            <li><a href="/script.html">脚本管理</a></li>
-                        </ul>
-                    </li>
-                {% else %}
-                    <li>
-                        <button type="button" class="btn btn-link" data-toggle="modal" data-target="#myModal" style="padding: 15px; text-decoration: none">登录</button>
-                    </li>
-                    <!--<li><a href="/login.html">登录</a></li>
-                    <!-- Modal -->
-                    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <form method="post" action="login.html">
-                                    {% csrf_token %}
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                        <h4 class="modal-title" id="myModalLabel">Login Manager</h4>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="form-group">
-                                            <label >用户名</label>
-                                            <input type="username" class="form-control" name="username"  placeholder="Your name">
-                                        </div>
-                                        <div class="form-group">
-                                            <label >密码</label>
-                                            <input type="password" class="form-control" name="password">
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                                        <button type="submit" class="btn btn-success">登录</button>
-                                    </div>
-                                </form>
-                            </div>
+        <!-- NAVBAR LEFT -->
+        <ul class="nav navbar-nav pull-left hidden-xs" id="navbar-left">
+            <li class="dropdown">
+                <a href="/task" class="dropdown-toggle">
+                    <i class="fa fa-tasks"></i>
+                    <span class="name">任务</span>
+                </a>
+            </li>
+            <li class="dropdown">
+                <a href="/report" class="dropdown-toggle">
+                    <i class="fa  fa-dashboard"></i>
+                    <span class="name">报表</span>
+                </a>
+            </li>
+            <li class="dropdown">
+                <a href="/case" class="dropdown-toggle">
+                    <i class="fa fa-suitcase"></i>
+                    <span class="name">用例</span>
+                </a>
+            </li>
+            <li class="dropdown">
+                <a href="/machine" class="dropdown-toggle">
+                    <i class="fa fa-desktop"></i>
+                    <span class="name">测试机</span>
+                </a>
+            </li>
+        </ul>
+        <!-- /NAVBAR LEFT -->
+        <!-- BEGIN TOP NAVIGATION MENU -->
+        <ul class="nav navbar-nav pull-right">
+            {% if not request.user.is_authenticated %}
+                <li class="dropdown pull-right">
+                    <a href="/login" class="dropdown-toggle">
+                        <span class="name">登录</span>
+                    </a>
+                </li>
+            {% else %}
+                <!-- BEGIN USER LOGIN DROPDOWN -->
+                <li class="dropdown user pull-right" id="header-user">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <img alt="" src="{{ STATIC_URL }}img/avatars/avatar3.jpg" />
+                        <span class="username">{{ request.user }}</span>
+                        <i class="fa fa-angle-down"></i>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/suite"><i class="fa fa-rocket"></i> 套件管理</a></li>
+                        <li><a href="/script"><i class="fa fa-file-text"></i> 脚本管理</a></li>
+                        <li><a href="/logout"><i class="fa fa-power-off"></i> 退出登录</a></li>
+                    </ul>
+                </li>
+                <!-- END USER LOGIN DROPDOWN -->
+            {% endif %}
+        </ul>
+        <!-- END TOP NAVIGATION MENU -->
+    </div>
+</header>
+<!--/HEADER -->
+
+<!-- PAGE -->
+<section id="page">
+
+    {% block page %}
+        <!-- SIDEBAR -->
+        <div id="sidebar" class="sidebar">
+            {% block sidebar %}
+            {% endblock %}
+        </div>
+        <!-- /SIDEBAR -->
+
+
+        <div id="main-content">
+            <!-- /SAMPLE BOX CONFIGURATION MODAL FORM-->
+            <div class="container">
+                <div class="row">
+                    <div id="content" class="col-lg-12">
+
+                        <div class="header">
+                            {% block header %}
+                            {% endblock %}
                         </div>
+
+                        <div class="content">
+                            {% block content %}
+                            {% endblock %}
+                        </div>
+
                     </div>
-                {% endif %}
-            </ul>
-        </div><!-- /.navbar-collapse -->
-    </div><!-- /.container-fluid -->
-</nav>
-<div class="content">
-    {% block content %}
+                    <!-- /CONTENT-->
+                </div>
+            </div>
+        </div>
     {% endblock %}
-</div>
+</section>
+<!--/PAGE -->
+
+<!-- JAVASCRIPTS -->
+<!-- Placed at the end of the document so the pages load faster -->
+<!-- JQUERY -->
+<script src="{{ STATIC_URL }}js/jquery/jquery-2.0.3.min.js"></script>
+<!-- JQUERY UI-->
+<script src="{{ STATIC_URL }}js/jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom.min.js"></script>
+<!-- BOOTSTRAP -->
+<script src="{{ STATIC_URL }}bootstrap-dist/js/bootstrap.min.js"></script>
+<!-- DATE RANGE PICKER -->
+<script src="{{ STATIC_URL }}js/bootstrap-daterangepicker/moment.min.js"></script>
+
+<script src="{{ STATIC_URL }}js/bootstrap-daterangepicker/daterangepicker.min.js"></script>
+<!-- SLIMSCROLL -->
+<script type="text/javascript" src="{{ STATIC_URL }}js/jQuery-slimScroll-1.3.0/jquery.slimscroll.min.js"></script><script type="text/javascript" src="{{ STATIC_URL }}js/jQuery-slimScroll-1.3.0/slimScrollHorizontal.min.js"></script>
+<!-- BLOCK UI -->
+<script type="text/javascript" src="{{ STATIC_URL }}js/jQuery-BlockUI/jquery.blockUI.min.js"></script>
+<!-- SELECT2 -->
+<script type="text/javascript" src="{{ STATIC_URL }}js/select2/select2.min.js"></script>
+<!-- UNIFORM -->
+<script type="text/javascript" src="{{ STATIC_URL }}js/uniform/jquery.uniform.min.js"></script>
+<!-- WIZARD -->
+<script src="{{ STATIC_URL }}js/bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
+<!-- WIZARD -->
+<script src="{{ STATIC_URL }}js/jquery-validate/jquery.validate.min.js"></script>
+<script src="{{ STATIC_URL }}js/jquery-validate/additional-methods.min.js"></script>
+<!-- ISOTOPE -->
+<script type="text/javascript" src="{{ STATIC_URL }}js/isotope/jquery.isotope.min.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}js/isotope/imagesloaded.pkgd.min.js"></script>
+<!-- COLORBOX -->
+<script type="text/javascript" src="{{ STATIC_URL }}js/colorbox/jquery.colorbox.min.js"></script>
+<!-- COOKIE -->
+<script type="text/javascript" src="{{ STATIC_URL }}js/jQuery-Cookie/jquery.cookie.min.js"></script>
+<!-- CUSTOM SCRIPT -->
+<script src="{{ STATIC_URL }}js/script.js"></script>
+<script>
+    jQuery(document).ready(function() {
+        App.setPage("gallery");  //Set current page
+        App.init(); //Initialise plugins and elements
+    });
+</script>
+<!-- /JAVASCRIPTS -->
+
 </body>
 </html>

@@ -1,78 +1,109 @@
 {% extends "layout.html" %}
-{% block content %}
-    <h4>主机列表:</h4>
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th>主机名称</th>
-            <th>状态</th>
-            <th>创建时间</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% if machines %}
-            {% for machine in machines %}
-                <tr>
-                    <td><a href="{% url 'machine_view' machine.id %}">{{ machine.name }}</a></td>
-                    <td>
-                        {% if machine.status == 1 %}
-                            <span class="label label-success">{{ machine.get_status_display }}</span>
-                        {% else %}
-                            <span class="label label-danger">{{ machine.get_status_display }}</span>
-                        {% endif %}
-                    </td>
-                    <td>{{ machine.createdAt|date:'Y-m-d H:i:s' }}</td>
-                </tr>
-            {% endfor %}
-        {% else %}
-            <tr>
-                <td>没有找到数据.</td>
-            </tr>
+{% block sidebar %}
+    <div class="sidebar-menu nav-collapse">
+        <div class="divide-20"></div>
+        <!-- SEARCH BAR -->
+        <div id="search-bar">
+            <input class="search" type="text" placeholder="Search"><i class="fa fa-search search-icon"></i>
+        </div>
+        <!-- /SEARCH BAR -->
+        {%  if suites %}
+            <!-- SIDEBAR MENU -->
+            <ul>
+                {% for suite in suites %}
+                    <li>
+                        <a class="" href="{% url 'case_list_index' suite.id %}">
+                            <i class="fa fa-bookmark"></i>
+                            <span class="menu-text">{{ suite.name }}</span>
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+            <!-- /SIDEBAR MENU -->
         {% endif %}
-        </tbody>
-        <tfoot>
-        <tr>
-            <td colspan='12'></td>
-        </tr>
-        </tfoot>
-    </table>
-    {% if request.user.is_authenticated %}
-        <!-- Button trigger modal -->
-        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">
-            添加主机
-        </button>
+    </div>
+{% endblock %}
 
-        <!-- Modal -->
-        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form method="post">
-                        {% csrf_token %}
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title" id="myModalLabel">Machine Manager</h4>
-                        </div>
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <label >名称</label>
-                                <input type="username" class="form-control" name="name"  placeholder="Machine name">
-                            </div>
-                            <div class="form-group">
-                                <label>主机地址</label>
-                                <input type="username" class="form-control" name="address"  placeholder="Machine address">
-                            </div>
-                            <div class="form-group">
-                                <label >描述</label>
-                                <textarea class="form-control" name="description" rows="6" placeholder="Machine description"></textarea>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                            <button type="submit" class="btn btn-success">提交</button>
-                        </div>
-                    </form>
+{% block header %}
+    <!-- PAGE HEADER-->
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-header" style="padding-top: 15px">
+                <div class="clearfix">
+                    {% if p_suite %}
+                        <h3 class="content-title pull-left">{{ p_suite.name }}</h3>
+                    {% endif %}
                 </div>
             </div>
         </div>
-    {% endif %}
+    </div>
+    <!-- /PAGE HEADER -->
+{% endblock %}
+
+
+{% block content %}
+    <!-- BOX -->
+    <div class="box border blue">
+        <div class="box-title">
+            <h4><i class="fa fa-hand-o-up"></i>主机列表</h4>
+            <div class="tools">
+                <a href="#box-config" data-toggle="modal" class="config">
+                    <i class="fa fa-cog"></i>
+                </a>
+                <a href="javascript:;" class="reload">
+                    <i class="fa fa-refresh"></i>
+                </a>
+                <a href="javascript:;" class="collapse">
+                    <i class="fa fa-chevron-up"></i>
+                </a>
+                <a href="javascript:;" class="remove">
+                    <i class="fa fa-times"></i>
+                </a>
+            </div>
+        </div>
+        <div class="box-body">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>主机名称</th>
+                    <th>状态</th>
+                    <th>创建时间</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% if machines %}
+                    {% for machine in machines %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td><a href="{% url 'machine_view' machine.id %}">{{ machine.name }}</a></td>
+                            <td>
+                                {% if machine.status == 1 %}
+                                    <span class="label label-success">{{ machine.get_status_display }}</span>
+                                {% else %}
+                                    <span class="label label-danger">{{ machine.get_status_display }}</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ machine.createdAt|date:'Y-m-d H:i:s' }}</td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td>没有找到数据.</td>
+                    </tr>
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- /BOX -->
+
+    <div>
+        {% if p_suite %}
+            <a href="{% url 'case_create' p_suite.id %}">
+        {% endif %}
+        <button class="btn btn-primary"><i class="fa fa-file-text fa-fw"></i> 新建</button>
+        </a>
+    </div>
+
 {% endblock %}

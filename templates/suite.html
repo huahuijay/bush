@@ -1,66 +1,71 @@
 {% extends "layout.html" %}
-{% block content %}
-    <h4>套件列表:</h4>
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th>套件名称</th>
-            <th>创建时间</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% if suites %}
-            {% for suite in suites %}
-                <tr>
-                    <td><a href="{% url 'suite_view' suite.id %}">{{ suite.name }}</a></td>
-                    <td>{{ suite.createdAt|date:'Y-m-d H:i:s' }}</td>
-                </tr>
-            {% endfor %}
-        {% else %}
-            <tr>
-                <td>没有找到数据.</td>
-            </tr>
-        {% endif %}
-        </tbody>
-        <tfoot>
-        <tr>
-            <td colspan='12'></td>
-        </tr>
-        </tfoot>
-    </table>
-    {% if request.user.is_authenticated %}
-        <!-- Button trigger modal -->
-        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">
-            添加套件
-        </button>
+{% block page %}
+    <div class="col-lg-12">
+    <div>
+        <a href="{% url 'suite_create' %}">
+            <button class="btn btn-primary"><i class="fa fa-file-text fa-fw"></i> 新建</button>
+        </a>
+    </div>
+    {% if suites %}
+        {% for suite in suites %}
+            <!-- BOX -->
+            <div class="box border blue ">
+                <div class="box-title">
+                    <h4><i class="fa fa-bars"></i>{{ suite.name }}</h4>
+                    <div class="tools">
+                        <a href="#box-config" data-toggle="modal" class="config">
+                            <i class="fa fa-cog"></i>
+                        </a>
+                        <a href="javascript:;" class="reload">
+                            <i class="fa fa-refresh"></i>
+                        </a>
+                        <a href="javascript:;" class="collapse">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a href="javascript:;" class="remove">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="box-body big">
+                    <h4>套件描述</h4>
+                    <dl class="dl-horizontal">
+                        <dt>套件名称</dt>
+                        <dd>{{ suite.name }}</dd>
+                        <dt>描述</dt>
+                        <dd>{{ suite.description }}</dd>
+                        <dt>创建时间</dt>
+                        <dd>{{ suite.createdAt|date:'Y-m-d H:i:s' }}</dd>
+                        <dt>修改时间</dt>
+                        <dd>{{ suite.modifyAt|date:'Y-m-d H:i:s' }}</dd>
+                    </dl>
+                </div>
+            </div>
+            <!-- /BOX -->
+        {% endfor %}
 
-        <!-- Modal -->
-        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form method="post">
-                        {% csrf_token %}
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title" id="myModalLabel">Suite manager</h4>
-                        </div>
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <label >名称</label>
-                                <input type="username" class="form-control" name="name"  placeholder="Suite name">
-                            </div>
-                            <div class="form-group">
-                                <label >描述</label>
-                                <textarea class="form-control" name="description" rows="6" placeholder="Suite description"></textarea>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                            <button type="submit" class="btn btn-success">提交</button>
-                        </div>
-                    </form>
+    {% else %}
+        <!-- BOX -->
+        <div class="box border blue">
+            <div class="box-title">
+                <h4><i class="fa fa-bars"></i>没有找到套件.</h4>
+                <div class="tools">
+                    <a href="#box-config" data-toggle="modal" class="config">
+                        <i class="fa fa-cog"></i>
+                    </a>
+                    <a href="javascript:;" class="reload">
+                        <i class="fa fa-refresh"></i>
+                    </a>
+                    <a href="javascript:;" class="collapse">
+                        <i class="fa fa-chevron-up"></i>
+                    </a>
+                    <a href="javascript:;" class="remove">
+                        <i class="fa fa-times"></i>
+                    </a>
                 </div>
             </div>
         </div>
+        <!-- /BOX -->
     {% endif %}
+</div>
 {% endblock %}

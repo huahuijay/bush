@@ -12,7 +12,7 @@ import random
 
 random_num = random.randint(0, 100)
 print sys.argv[:]
-time.sleep(2)
+time.sleep(30)
 
 if len(sys.argv) > 1 and sys.argv[1] == 'litian':
     deb_location = sys.argv[2]
