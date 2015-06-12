@@ -1,115 +1,113 @@
 {% extends "layout.html" %}
-{% block content %}
-    <ol class="breadcrumb">
-        <li><a href="/task.html">All</a></li>
-        <li>{{ p_task.name }}</li>
-    </ol>
-    <div class="detail block">
-        <small>任务类型</small>
-        <small>功能测试</small>
-        <small>任务名称</small>
-        <small>main</small>
-    </div>
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th>任务名称</th>
-            <th>所属套件</th>
-            <th>描述</th>
-            <th>创建时间</th>
-            <th>修改时间</th>
-            {% if request.user.is_authenticated %}
-                <th>操作</th>
-            {% endif %}
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>{{ p_task.name }}</td>
-            <td><a href="{% url 'suite_view' p_task.suite.id %}">{{ p_task.suite.name }}</a></td>
-            <td>{{ p_task.description }}</td>
-            <td>{{ p_task.createdAt|date:'Y-m-d H:i:s' }}</td>
-            <td>{{ p_task.modifyAt|date:'Y-m-d H:i:s' }}</td>
-            {% if request.user.is_authenticated %}
-                <td><a href="{% url 'task_edit' p_task.id %}">修改</a> {% if child_cases%} | <a href="{% url 'task_trigger' p_task.id %}">执行</a> {% endif %}</td>
-            {% endif %}
-        </tr>
-        </tbody>
-        <tfoot>
-        <tr>
-            <td colspan='12'></td>
-        </tr>
-        </tfoot>
-    </table>
-    <h4>用例列表:</h4>
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th>用例名称</th>
-            <th>创建时间</th>
-            {% if request.user.is_authenticated %}
-                <th>操作</th>
-            {% endif %}
-        </tr>
-        </thead>
-        <tbody>
-        {% if child_cases%}
-        {% for child_case in child_cases %}
-        <tr>
-            <td><a href="{% url 'case_view' child_case.case.id %}">{{ child_case.case.name }}</a></td>
-            <td>{{ child_case.createdAt|date:'Y-m-d H:i:s' }}</td>
-            {% if request.user.is_authenticated %}
-                <td><a href="{% url 'task_delete' p_task.id child_case.case.id %}">删除</a></td>
-            {% endif %}
-        </tr>
-        {% endfor %}
-        {% else %}
-            <tr>
-            <td>没有找到数据.</td>
-        </tr>
+{% block sidebar %}
+    <div class="sidebar-menu nav-collapse">
+        <div class="divide-20"></div>
+        <!-- SEARCH BAR -->
+        <div id="search-bar">
+            <input class="search" type="text" placeholder="Search"><i class="fa fa-search search-icon"></i>
+        </div>
+        <!-- /SEARCH BAR -->
+        {%  if suites %}
+            <!-- SIDEBAR MENU -->
+            <ul>
+                {% for suite in suites %}
+                    <li>
+                        <a class="" href="{% url 'task_list_index' suite.id %}">
+                            <i class="fa fa-bookmark"></i>
+                            <span class="menu-text">{{ suite.name }}</span>
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+            <!-- /SIDEBAR MENU -->
         {% endif %}
-        </tbody>
-        <tfoot>
-        <tr>
-            <td colspan='12'></td>
-        </tr>
-        </tfoot>
-    </table>
-    {% if request.user.is_authenticated %}
-    {% if cases %}
-    <!-- Button trigger modal -->
-    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">
-        添加用例
-    </button>
+    </div>
+{% endblock %}
 
-    <!-- Modal -->
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <form method="post">
-                    {% csrf_token %}
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="myModalLabel">Task Manager</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label >用例</label>
-                            <select name = "case" class="form-control">
-                                {% for case in cases %}
-                                    <option value="{{ case.id }}" >{{ case.name }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                        <button type="submit" class="btn btn-success">提交</button>
-                    </div>
-                </form>
+{% block header %}
+    <!-- PAGE HEADER-->
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-header" style="padding-top: 15px">
+                <div class="clearfix">
+                    <h3 class="content-title pull-left">{{ p_task.suite.name }}</h3>
+                </div>
             </div>
         </div>
     </div>
-    {% endif %}
-    {% endif %}
+    <!-- /PAGE HEADER -->
+{% endblock %}
+
+
+{% block content %}
+    <!-- BOX -->
+    <div class="box border blue">
+        <div class="box-title">
+            <h4><i class="fa fa-bars"></i>{{ p_task.name }}</h4>
+            <div class="tools">
+                <a href="javascript:;" class="collapse">
+                    <i class="fa fa-chevron-up"></i>
+                </a>
+                <a href="javascript:;" class="remove">
+                    <i class="fa fa-times"></i>
+                </a>
+            </div>
+        </div>
+        <div class="box-body big">
+            <h4>任务描述</h4>
+            <dl class="dl-horizontal">
+                <dt>用例名称</dt>
+                <dd>{{ p_task.name }}</dd>
+                <dt>描述</dt>
+                <dd>{{ p_task.description }}</dd>
+                <dt>创建时间</dt>
+                <dd>{{ p_task.createdAt|date:'Y-m-d H:i:s' }}</dd>
+                <dt>修改时间</dt>
+                <dd>{{ p_task.modifyAt|date:'Y-m-d H:i:s' }}</dd>
+            </dl>
+        </div>
+    </div>
+    <!-- /BOX -->
+
+    <!-- BOX -->
+    <div class="box border orange">
+        <div class="box-title">
+            <h4><i class="fa fa-bars"></i>运行结果</h4>
+            <div class="tools">
+                <a href="javascript:;" class="collapse">
+                    <i class="fa fa-chevron-up"></i>
+                </a>
+                <a href="javascript:;" class="remove">
+                    <i class="fa fa-times"></i>
+                </a>
+            </div>
+        </div>
+        <div class="box-body big">
+            <h4>任务描述</h4>
+            <dl class="dl-horizontal">
+                <dt>用例名称</dt>
+                <dd>{{ p_task.name }}</dd>
+                <dt>描述</dt>
+                <dd>{{ p_task.description }}</dd>
+                <dt>创建时间</dt>
+                <dd>{{ p_task.createdAt|date:'Y-m-d H:i:s' }}</dd>
+                <dt>修改时间</dt>
+                <dd>{{ p_task.modifyAt|date:'Y-m-d H:i:s' }}</dd>
+            </dl>
+        </div>
+    </div>
+    <!-- /BOX -->
+    <p class="btn-toolbar">
+        {% if p_task %}
+            <a href="{% url 'task_edit' p_task.id %}">
+        {% endif %}
+        <button class="btn btn-info"><i class="fa fa-edit"></i> 修改</button>
+        </a>
+
+        {% if p_task %}
+            <a href="{% url 'task_delete' p_task.id %}">
+        {% endif %}
+        <button class="btn btn-danger"><i class="fa fa-trash-o"></i> 删除</button>
+        </a>
+    </p>
 {% endblock %}

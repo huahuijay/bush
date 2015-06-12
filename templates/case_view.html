@@ -1,46 +1,97 @@
 {% extends "layout.html" %}
+{% block sidebar %}
+    <div class="sidebar-menu nav-collapse">
+        <div class="divide-20"></div>
+        <!-- SEARCH BAR -->
+        <div id="search-bar">
+            <input class="search" type="text" placeholder="Search"><i class="fa fa-search search-icon"></i>
+        </div>
+        <!-- /SEARCH BAR -->
+        {%  if suites %}
+            <!-- SIDEBAR MENU -->
+            <ul>
+                {% for suite in suites %}
+                    <li>
+                        <a class="" href="{% url 'case_list_index' suite.id %}">
+                            <i class="fa fa-bookmark"></i>
+                            <span class="menu-text">{{ suite.name }}</span>
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+            <!-- /SIDEBAR MENU -->
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block header %}
+    <!-- PAGE HEADER-->
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-header" style="padding-top: 15px">
+                <div class="clearfix">
+                    {% if case %}
+                        <h3 class="content-title pull-left">{{ case.suite.name }}</h3>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /PAGE HEADER -->
+{% endblock %}
+
+
 {% block content %}
-    <ol class="breadcrumb">
-        <li><a href="/case.html">All</a></li>
-        <li>{{ case.name }}</li>
-    </ol>
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th>用例</th>
-            <th>套件</th>
-            <th>重要性</th>
-            <th>命令</th>
-            <th>脚本</th>
-            <th>参数</th>
-            <th>描述</th>
-            <th>创建时间</th>
-            <th>修改时间</th>
-            {% if request.user.is_authenticated %}
-                <th>操作</th>
-            {% endif %}
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>{{ case.name }}</td>
-            <td><a href="{% url 'suite_view' case.suite.id %}">{{ case.suite.name }}</a></td>
-            <td>{{ case.get_level_display }}</td>
-            <td>{{ case.command }}</td>
-            <td>{{ case.script }}</td>
-            <td>{{ case.param }}</td>
-            <td>{{ case.description }}</td>
-            <td>{{ case.createdAt|date:'Y-m-d H:i:s' }}</td>
-            <td>{{ case.modifyAt|date:'Y-m-d H:i:s' }}</td>
-            {% if request.user.is_authenticated %}
-                <td><a href="{% url 'case_edit' case.id %}">修改</a> | <a href="{% url 'case_delete' case.id %}">删除</a></td>
-            {% endif %}
-        </tr>
-        </tbody>
-        <tfoot>
-        <tr>
-            <td colspan='12'></td>
-        </tr>
-        </tfoot>
-    </table>
+
+    <!-- BOX -->
+    <div class="box border blue">
+        <div class="box-title">
+            <h4><i class="fa fa-bars"></i>{{ case.name }}</h4>
+            <div class="tools">
+                <a href="javascript:;" class="collapse">
+                    <i class="fa fa-chevron-up"></i>
+                </a>
+                <a href="javascript:;" class="remove">
+                    <i class="fa fa-times"></i>
+                </a>
+            </div>
+        </div>
+        <div class="box-body big">
+            <h4>用例描述</h4>
+            <dl class="dl-horizontal">
+                <dt>用例名称</dt>
+                <dd>{{ case.name }}</dd>
+                <dt>套件名称</dt>
+                <dd>{{ case.suite.name }}</dd>
+                <dt>重要性</dt>
+                <dd>{{ case.get_level_display }}</dd>
+                <dt>命令</dt>
+                <dd>{{ case.command }}</dd>
+                <dt>脚本</dt>
+                <dd>{{ case.script }}</dd>
+                <dt>参数</dt>
+                <dd>{{ case.param }}</dd>
+                <dt>描述</dt>
+                <dd>{{ case.description }}</dd>
+                <dt>创建时间</dt>
+                <dd>{{ case.createdAt|date:'Y-m-d H:i:s' }}</dd>
+                <dt>修改时间</dt>
+                <dd>{{ case.modifyAt|date:'Y-m-d H:i:s' }}</dd>
+            </dl>
+        </div>
+    </div>
+    <!-- /BOX -->
+
+    <p class="btn-toolbar">
+        {% if case %}
+            <a href="{% url 'case_edit' case.id %}">
+        {% endif %}
+        <button class="btn btn-info"><i class="fa fa-edit"></i> 修改</button>
+        </a>
+        {% if case %}
+            <a href="{% url 'case_delete' case.id %}">
+        {% endif %}
+        <button class="btn btn-danger"><i class="fa fa-trash-o"></i> 删除</button>
+        </a>
+    </p>
 {% endblock %}

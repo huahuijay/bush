@@ -1,10 +1,24 @@
 {% extends "layout.html" %}
-{% block content %}
-<ol class="breadcrumb">
-        <li><a href="/script.html">All</a></li>
-        <li>{{ g_name }}</li>
-    </ol>
-<pre>
-        {{ script_text }}
-</pre>
+{% block page %}
+    <!-- BOX -->
+    <div class="box border blue" style="margin: 15px">
+        <div class="box-title">
+            <h4><i class="fa fa-code"></i>{{ g_name }}</h4>
+            <div class="tools">
+                <a href="javascript:;" class="collapse">
+                    <i class="fa fa-chevron-up"></i>
+                </a>
+                <a href="javascript:;" class="remove">
+                    <i class="fa fa-times"></i>
+                </a>
+            </div>
+        </div>
+        <div class="box-body">
+            <pre class="prettyprint linenums">
+                <code>
+                    {{ script_text }}
+                </code>
+            </pre>
+        </div>
+    </div>
 {% endblock %}

@@ -23,8 +23,12 @@ def login_view(request):
         user = authenticate(username=request.POST['username'], password=request.POST['password'])
         if user:
             login(request, user)
-            return redirect(request.META.get("HTTP_REFERER", reverse("task_list")))
-    return redirect(request.META.get("HTTP_REFERER", reverse("task_list")))
+            return redirect(reverse("task_list"))
+        else:
+            return render(request, "login.html", locals())
+
+    else:
+        return render(request, "login.html", locals())
 
 def logout_view(request):
     logout(request)
@@ -45,20 +49,46 @@ def suite_list(request):
 
     return render(request, "suite.html", locals())
 
-def suite_view(request, pk):
-    p_suite = Suite.objects.get(id=pk)
-    cases = Case.objects.filter(suite=p_suite)
-    tasks = Task.objects.filter(suite=p_suite)
-    return render(request, "suite_view.html", locals())
+def suite_create(request):
+    if request.method == "POST":
+        p_name = request.POST['name']
+        p_description = request.POST['description']
+        if p_name == "" or p_description == "":
+            error = "数据不能为空"
+        else:
+            Suite(name=p_name, description=p_description, createdAt=now()).save()
+        return redirect(reverse("suite_list"))
+    return render(request, "suite_create.html", locals())
 
 def case_list(request):
-    active = "case"
-    error = None
+    p_suite = None
     cases = None
+    suites = None
+
+    if Suite.objects.exists():
+        p_suite = Suite.objects.all().order_by('id')[0]
+        suites = Suite.objects.all()
+        cases = Case.objects.filter(suite=p_suite)
+    return render(request, "case.html", locals())
+
+
+def case_list_index(request, pk):
+    p_suite = None
+    suites = None
+    cases = None
+    if Suite.objects.exists():
+        suites = Suite.objects.all()
+        p_suite = Suite.objects.get(id=pk)
+        cases = Case.objects.filter(suite=p_suite).order_by('id')
+    return render(request, "case.html", locals())
+
+def case_create(request, pk):
+    p_suite = Suite.objects.get(id=pk)
+    suites = Suite.objects.all()
     if request.method == "POST":
         p_name = request.POST['name']
         p_level = request.POST['level']
-        p_suite = request.POST['suite']
+        p_suite = Suite.objects.get(id=pk)
         p_command = request.POST['command']
         p_script = request.POST['script']
         p_param = request.POST['param']
@@ -66,17 +96,17 @@ def case_list(request):
         if p_name == "" or p_command == "" or p_description == "":
             error = "数据不能为空"
         else:
-            Case(name=p_name, suite=Suite.objects.get(id=p_suite),  level=p_level, command=p_command,
+            Case(name=p_name, suite=p_suite,  level=p_level, command=p_command,
                  script=p_script, param=p_param, description=p_description, createdAt=now()).save()
-
-    if Case.objects.exists():
-        cases = Case.objects.all()
-    suites = Suite.objects.all()
-    return render(request, "case.html", locals())
+            return redirect(reverse("case_list_index", kwargs={"pk": pk}))
+    return render(request, "case_create.html", locals())
 
 def case_view(request, pk):
-    active = "case"
-    case = Case.objects.get(id=pk)
+    case = None
+    suites = None
+    if Suite.objects.exists():
+        case = Case.objects.get(id=pk)
+        suites = Suite.objects.all()
     return render(request, "case_view.html", locals())
 
 def case_delete(request, pk):
@@ -84,8 +114,10 @@ def case_delete(request, pk):
     return redirect(reverse("case_list"))
 
 def case_edit(request, pk):
-    active = "case"
+    suites = None
+    case = None
     case = Case.objects.get(id=pk)
+
     if request.method == "POST":
         p_name = request.POST['name']
         p_level = request.POST['level']
@@ -105,25 +137,52 @@ def case_edit(request, pk):
             case.modifyAt = now()
             case.save()
             return redirect(reverse("case_view", kwargs={"pk": pk}))
-    return render(request, "case_edit.html", locals())
+    else:
+        if Suite.objects.exists():
+            suites = Suite.objects.all()
+        return render(request, "case_edit.html", locals())
 
 def task_list(request):
-    active = 'task'
-    tasks = Task.objects.all()
+    p_suite = None
+    suites = None
+    tasks = None
+    if Suite.objects.exists():
+        p_suite = Suite.objects.all().order_by('id')[0]
+        suites = Suite.objects.all()
+        tasks = Task.objects.filter(suite=p_suite)
+    return render(request, "task.html", locals())
+
+def task_list_index(request, pk):
+    p_suite = None
+    suites = None
+    tasks = None
+    if Suite.objects.exists():
+        p_suite = Suite.objects.get(id=pk)
+        suites = Suite.objects.all()
+        tasks = Task.objects.filter(suite=p_suite).order_by('id')
+    return render(request, "task.html", locals())
+
+def task_create(request, pk):
+    p_suite = Suite.objects.get(id=pk)
     suites = Suite.objects.all()
+    cases = Case.objects.filter(suite=p_suite).order_by('id')
     if request.method == "POST":
         p_name = request.POST['name']
-        p_suite = request.POST['suite']
         p_description = request.POST['description']
         if p_name == "" or p_description == "":
             error = "数据不能为空"
         else:
-            Task(name=p_name, suite=Suite.objects.get(id=p_suite), description=p_description, createdAt=now()).save()
-    return render(request, "task.html", locals())
+            Task(name=p_name, suite=p_suite, description=p_description, createdAt=now()).save()
+            return redirect(reverse("task_list_index", kwargs={"pk": pk}))
+    return render(request, "task_create.html", locals())
 
 def task_view(request, pk):
-    active = 'task'
+    suites = None
     p_task = Task.objects.get(id=pk)
+    p_cases = Task_Case.objects.filter(task=p_task)
+
+    if Suite.objects.exists():
+        suites = Suite.objects.all()
     if request.method == "POST":
         p_id = request.POST['case']
         p_case = Case.objects.get(id=p_id)
@@ -136,8 +195,13 @@ def task_view(request, pk):
     return render(request, "task_view.html", locals())
 
 def task_edit(request, pk):
-    active = 'task'
-    p_task = Task.objects.get(id=pk)
+    suites = None
+    p_task = None
+    p_cases = None
+    if Suite.objects.exists():
+        suites = Suite.objects.all()
+        p_task = Task.objects.get(id=pk)
+        p_task_cases = Task_Case.objects.filter(task=p_task)
     if request.method == "POST":
         p_name = request.POST['name']
         p_description = request.POST['description']
@@ -164,15 +228,28 @@ def task_trigger(request, pk):
     #         Report(case=p_case, )
     return redirect(reverse("task_view", kwargs={"pk": pk}))
 
-def task_delete(request, pk_task, pk_case):
-    p_task = Task.objects.get(id=pk_task)
-    p_case = Case.objects.get(id=pk_case)
-    Task_Case.objects.filter(task=p_task).get(case=p_case).delete()
-    return redirect(reverse("task_view", kwargs={"pk": pk_task}))
+def task_delete(request, pk):
+    p_task = Task.objects.get(id=pk)
+    Task_Case.objects.filter(task=p_task).delete()
+    Task.objects.get(id=pk).delete()
+    return redirect(reverse("task_list"))
 
+
+def task_case_create(request):
+    pass
+
+def task_case_delete(request):
+    #Task_Case.objects.filter(task=p_task).get(case=p_case).delete()
+    pass
 
 def machine_list(request):
-    active = 'machine'
+    suites = None
+    p_suite = None
+    machines = None
+    if Suite.objects.exists():
+        suites = Suite.objects.all()
+        p_suite = Suite.objects.all().order_by('id')[0]
+        machines = Machine.objects.filter(suite=p_suite).order_by('id')
     if request.method == "POST":
         p_name = request.POST['name']
         p_description = request.POST['description']
@@ -181,14 +258,19 @@ def machine_list(request):
             error = "数据不能为空"
         else:
             Machine(name=p_name, description=p_description, address=p_address, createdAt=now()).save()
-    machines = Machine.objects.all()
-    print machines[0].status
-    suites = Suite.objects.all()
     return render(request, "machine.html", locals())
 
+def machine_list_index(request, pk):
+    p_suite = None
+    suites = None
+    machines = None
+    if Suite.objects.exists():
+        p_suite = Suite.objects.get(id=pk)
+        suites = Suite.objects.all()
+        machines = Machine.objects.filter(suite=p_suite).order_by('id')
+    return render(request, "machine.html", locals())
 
 def machine_view(request, pk):
-    active = 'machine'
     p_machine = Machine.objects.get(id=pk)
     # p = threading.Thread(target=staf_obj.detect_device, args=(p_machine.address, ))
     # p.start()
@@ -202,9 +284,27 @@ def machine_view(request, pk):
     # p_machine.save()
     return render(request, "machine_view.html", locals())
 
+def machine_create(request, pk):
+    suites = Suite.objects.all()
+    p_suite = Suite.objects.get(id=pk)
+    if request.method == "POST":
+        p_name = request.POST['name']
+        p_description = request.POST['description']
+        p_address = request.POST['address']
+        if p_name == "" or p_description == "":
+            error = "数据不能为空"
+        else:
+            Machine(name=p_name, suite=p_suite, description=p_description, address=p_address, createdAt=now()).save()
+            return redirect(reverse("machine_list_index", kwargs={"pk": pk}))
+    return render(request, "machine_create.html", locals())
+
 def machine_edit(request, pk):
-    active = 'machine'
-    p_machine = Machine.objects.get(id=pk)
+    suites = None
+    p_suite = None
+
+    if Suite.objects.exists():
+        suites = Suite.objects.all()
+        p_machine = Machine.objects.get(id=pk)
     if request.method == "POST":
         p_name = request.POST['name']
         p_address = request.POST['address']
@@ -218,8 +318,8 @@ def machine_edit(request, pk):
             p_machine.modifyAt = now()
             p_machine.save()
             return redirect(reverse("machine_view", kwargs={"pk": pk}))
-
-    return render(request, "machine_edit.html", locals())
+    else:
+        return render(request, "machine_edit.html", locals())
 
 def machine_delete(request, pk):
     Machine.objects.get(id=pk).delete()
@@ -252,7 +352,9 @@ def script_add(request):
         return redirect(reverse("script_view"))
 
 def report_list(request):
-    active = 'report'
+    suites = None
+    if Suite.objects.exists():
+        suites = Suite.objects.all()
     reports = Report.objects.all()
     return render(request, "report.html", locals())
 

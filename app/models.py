@@ -52,7 +52,7 @@ class Task_Case(models.Model):
     createdAt = models.DateTimeField("创建的时间", auto_now_add=True)
 
 class Machine(models.Model):
-    #suite = models.ForeignKey(Suite)
+    suite = models.ForeignKey(Suite)
     name = models.CharField("主机名称", max_length=255, unique=True)
     description = models.TextField('主机描述', blank=True, null=True)
     address = models.IPAddressField('IP')
