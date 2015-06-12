@@ -1,24 +1,44 @@
 {% extends "layout.html" %}
 {% block page %}
-    <div class="col-lg-12">
-    <div>
-        <a href="{% url 'suite_create' %}">
-            <button class="btn btn-primary"><i class="fa fa-file-text fa-fw"></i> 新建</button>
-        </a>
-    </div>
-    {% if suites %}
-        {% for suite in suites %}
+    <div class="col-lg-12" style="margin-top: 15px">
+        {% if suites %}
+            {% for suite in suites %}
+                <!-- BOX -->
+                <div class="box border blue ">
+                    <div class="box-title">
+                        <h4><i class="fa fa-bars"></i>{{ suite.name }}</h4>
+                        <div class="tools">
+                            <a href="javascript:;" class="collapse">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a href="javascript:;" class="remove">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="box-body big">
+                        <h4>套件描述</h4>
+                        <dl class="dl-horizontal">
+                            <dt>套件名称</dt>
+                            <dd>{{ suite.name }}</dd>
+                            <dt>描述</dt>
+                            <dd>{{ suite.description }}</dd>
+                            <dt>创建时间</dt>
+                            <dd>{{ suite.createdAt|date:'Y-m-d H:i:s' }}</dd>
+                            <dt>修改时间</dt>
+                            <dd>{{ suite.modifyAt|date:'Y-m-d H:i:s' }}</dd>
+                        </dl>
+                    </div>
+                </div>
+                <!-- /BOX -->
+            {% endfor %}
+
+        {% else %}
             <!-- BOX -->
-            <div class="box border blue ">
+            <div class="box border blue">
                 <div class="box-title">
-                    <h4><i class="fa fa-bars"></i>{{ suite.name }}</h4>
+                    <h4><i class="fa fa-bars"></i>没有找到套件.</h4>
                     <div class="tools">
-                        <a href="#box-config" data-toggle="modal" class="config">
-                            <i class="fa fa-cog"></i>
-                        </a>
-                        <a href="javascript:;" class="reload">
-                            <i class="fa fa-refresh"></i>
-                        </a>
                         <a href="javascript:;" class="collapse">
                             <i class="fa fa-chevron-up"></i>
                         </a>
@@ -27,45 +47,12 @@
                         </a>
                     </div>
                 </div>
-                <div class="box-body big">
-                    <h4>套件描述</h4>
-                    <dl class="dl-horizontal">
-                        <dt>套件名称</dt>
-                        <dd>{{ suite.name }}</dd>
-                        <dt>描述</dt>
-                        <dd>{{ suite.description }}</dd>
-                        <dt>创建时间</dt>
-                        <dd>{{ suite.createdAt|date:'Y-m-d H:i:s' }}</dd>
-                        <dt>修改时间</dt>
-                        <dd>{{ suite.modifyAt|date:'Y-m-d H:i:s' }}</dd>
-                    </dl>
-                </div>
             </div>
             <!-- /BOX -->
-        {% endfor %}
+        {% endif %}
 
-    {% else %}
-        <!-- BOX -->
-        <div class="box border blue">
-            <div class="box-title">
-                <h4><i class="fa fa-bars"></i>没有找到套件.</h4>
-                <div class="tools">
-                    <a href="#box-config" data-toggle="modal" class="config">
-                        <i class="fa fa-cog"></i>
-                    </a>
-                    <a href="javascript:;" class="reload">
-                        <i class="fa fa-refresh"></i>
-                    </a>
-                    <a href="javascript:;" class="collapse">
-                        <i class="fa fa-chevron-up"></i>
-                    </a>
-                    <a href="javascript:;" class="remove">
-                        <i class="fa fa-times"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-        <!-- /BOX -->
-    {% endif %}
-</div>
+        <a href="{% url 'suite_create' %}">
+            <button class="btn btn-primary"><i class="fa fa-file-text fa-fw"></i> 新建</button>
+        </a>
+    </div>
 {% endblock %}

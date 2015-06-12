@@ -1,18 +1,22 @@
 {% extends "layout.html" %}
 {% block sidebar %}
     <div class="sidebar-menu nav-collapse">
-        <!-- SIDEBAR MENU -->
-        <ul>
-            {% if p_suite %}
-                <li>
-                    <a class="" href="{% url 'task_list_index' p_suite.id %}">
-                        <i class="fa fa-bookmark"></i>
-                        <span class="menu-text">{{ p_suite.name }}</span>
-                    </a>
-                </li>
-            {% endif %}
-        </ul>
-        <!-- /SIDEBAR MENU -->
+        <!-- /SEARCH BAR -->
+        {%  if suites %}
+            <!-- SIDEBAR MENU -->
+            <ul>
+                {% for suite in suites %}
+                    <li>
+                        <a class="" href="{% url 'case_list_index' suite.id %}">
+                            <i class="fa fa-bookmark"></i>
+                            <span class="menu-text">{{ suite.name }}</span>
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+            <!-- /SIDEBAR MENU -->
+        {% endif %}
+        <!-- /SEARCH BAR -->
     </div>
 {% endblock %}
 
@@ -40,12 +44,6 @@
         <div class="box-title">
             <h4><i class="fa fa-bars"></i>新建用例</h4>
             <div class="tools hidden-xs">
-                <a href="#box-config" data-toggle="modal" class="config">
-                    <i class="fa fa-cog"></i>
-                </a>
-                <a href="javascript:;" class="reload">
-                    <i class="fa fa-refresh"></i>
-                </a>
                 <a href="javascript:;" class="collapse">
                     <i class="fa fa-chevron-up"></i>
                 </a>

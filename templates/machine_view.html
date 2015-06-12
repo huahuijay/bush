@@ -1,46 +1,96 @@
-{% extends "layout.bak.html" %}
+{% extends "layout.html" %}
+{% block sidebar %}
+    <div class="sidebar-menu nav-collapse">
+        <div class="divide-20"></div>
+        <!-- SEARCH BAR -->
+        <div id="search-bar">
+            <input class="search" type="text" placeholder="Search"><i class="fa fa-search search-icon"></i>
+        </div>
+        <!-- /SEARCH BAR -->
+        {%  if suites %}
+            <!-- SIDEBAR MENU -->
+            <ul>
+                {% for suite in suites %}
+                    <li>
+                        <a class="" href="{% url 'machine_list_index' suite.id %}">
+                            <i class="fa fa-bookmark"></i>
+                            <span class="menu-text">{{ suite.name }}</span>
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+            <!-- /SIDEBAR MENU -->
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block header %}
+    <!-- PAGE HEADER-->
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-header" style="padding-top: 15px">
+                <div class="clearfix">
+                    {% if machine %}
+                        <h3 class="content-title pull-left">{{ machine.suite.name }}</h3>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /PAGE HEADER -->
+{% endblock %}
+
 {% block content %}
-    <ol class="breadcrumb">
-        <li><a href="/machine.html">All</a></li>
-        <li>{{ p_machine.name }}</li>
-    </ol>
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th>主机名称</th>
-            <th>状态</th>
-            <th>主机地址</th>
-            <th>描述</th>
-            <th>创建时间</th>
-            <th>修改时间</th>
-            {% if request.user.is_authenticated %}
-                <th>操作</th>
-            {% endif %}
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>{{ p_machine.name }}</td>
-            <td>
-                {% if p_machine.status == 1 %}
-                    <span class="label label-success">{{ p_machine.get_status_display }}</span>
-                {% else %}
-                    <span class="label label-danger">{{ p_machine.get_status_display }}</span>
-                {% endif %}
-            </td>
-            <td>{{ p_machine.address }}</td>
-            <td>{{ p_machine.description }}</td>
-            <td>{{ p_machine.createdAt|date:'Y-m-d H:i:s' }}</td>
-            <td>{{ p_machine.modifyAt|date:'Y-m-d H:i:s' }}</td>
-            {% if request.user.is_authenticated %}
-                <td><a href="{% url 'machine_edit' p_machine.id %}">修改</a> | <a href="{% url 'machine_delete' p_machine.id %}">删除</a></td>
-            {% endif %}
-        </tr>
-        </tbody>
-        <tfoot>
-        <tr>
-            <td colspan='12'></td>
-        </tr>
-        </tfoot>
-    </table>
+
+    <!-- BOX -->
+    <div class="box border blue">
+        <div class="box-title">
+            <h4><i class="fa fa-bars"></i>{{ case.name }}</h4>
+            <div class="tools">
+                <a href="javascript:;" class="collapse">
+                    <i class="fa fa-chevron-up"></i>
+                </a>
+                <a href="javascript:;" class="remove">
+                    <i class="fa fa-times"></i>
+                </a>
+            </div>
+        </div>
+        <div class="box-body big">
+            <h4>用例描述</h4>
+            <dl class="dl-horizontal">
+                <dt>主机名称</dt>
+                <dd>{{ machine.name }}</dd>
+                <dt>状态</dt>
+                <dd>
+                    {% if p_machine.status == 1 %}
+                        <span class="label label-success">{{ p_machine.get_status_display }}</span>
+                    {% else %}
+                        <span class="label label-danger">{{ p_machine.get_status_display }}</span>
+                    {% endif %}
+                </dd>
+                <dt>描述</dt>
+                <dd>{{ machine.description }}</dd>
+                <dt>创建时间</dt>
+                <dd>{{ machine.createdAt|date:'Y-m-d H:i:s' }}</dd>
+                <dt>修改时间</dt>
+                <dd>{{ machine.modifyAt|date:'Y-m-d H:i:s' }}</dd>
+            </dl>
+        </div>
+    </div>
+    <!-- /BOX -->
+
+    <p class="btn-toolbar">
+        {% if machine %}
+            <a href="{% url 'machine_edit' machine.id %}">
+        {% endif %}
+        <button class="btn btn-info"><i class="fa fa-edit"></i> 修改</button>
+        </a>
+
+        {% if machine %}
+            <a href="{% url 'machine_delete' machine.id %}">
+        {% endif %}
+        <button class="btn btn-danger"><i class="fa fa-trash-o"></i> 删除</button>
+        </a>
+    </p>
+
 {% endblock %}
