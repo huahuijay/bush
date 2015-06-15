@@ -46,10 +46,10 @@ urlpatterns = [
     #url(r'machine/edit/(?P<pk>\d+).html$', views.machine_edit, name="machine_edit"),
     #url(r'script/del/(?P<pk>\d+).html$', views.script_delete, name="script_delete"),
 
-    url(r'report$', views.report_list, name="report_list"),
-    url(r'report/view/(?P<pk>\d+)$', views.report_view, name="report_view"),
-    # url(r'machine/edit/(?P<pk>\d+).html$', views.machine_edit, name="machine_edit"),
-    # url(r'machine/del/(?P<pk>\d+).html$', views.machine_delete, name="machine_delete"),
+    url(r'report$', views.report_suite_list, name="report_suite_list"),
+    url(r'report/(?P<pk>\d+)$', views.report_suite_list_index, name="report_suite_list_index"),
+    url(r'report/task/(?P<pk>\d+)$', views.report_task_list, name="report_task_list"),
+
 
     url(r'demo_celery.html$', views.demo_celery, name="demo_celery"),
 

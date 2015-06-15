@@ -351,15 +351,31 @@ def script_add(request):
         open(script_path + p_file.name, 'wb').write(p_file.read())
         return redirect(reverse("script_view"))
 
-def report_list(request):
+def report_suite_list(request):
+    p_suite = None
     suites = None
+    tasks = None
     if Suite.objects.exists():
+        p_suite = Suite.objects.all().order_by('id')[0]
         suites = Suite.objects.all()
-    reports = Report.objects.all()
+        tasks = Task.objects.filter(suite=p_suite)
     return render(request, "report.html", locals())
 
-def report_view(request, pk):
-    pass
+def report_suite_list_index(request, pk):
+    p_suite = None
+    suites = None
+    tasks = None
+    if Suite.objects.exists():
+        p_suite = Suite.objects.get(id=pk)
+        suites = Suite.objects.all()
+        tasks = Task.objects.filter(suite=p_suite)
+    return render(request, "report.html", locals())
+
+def report_task_list(request, pk):
+    reports = None
+    p_task = Task.objects.get(id=pk)
+    reports = Report.objects.filter(task=p_task)
+    return render(request, "report.html", locals())
 
 def demo_celery(request):
     print 123
