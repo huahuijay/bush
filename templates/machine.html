@@ -93,11 +93,11 @@
     <!-- /BOX -->
 
     <div>
-        {% if p_suite %}
+        {% if request.user.is_authenticated %}
             <a href="{% url 'machine_create' p_suite.id %}">
+                <button class="btn btn-primary"><i class="fa fa-file-text fa-fw"></i> 新建</button>
+            </a>
         {% endif %}
-        <button class="btn btn-primary"><i class="fa fa-file-text fa-fw"></i> 新建</button>
-        </a>
     </div>
 
 {% endblock %}

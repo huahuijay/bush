@@ -68,3 +68,16 @@ class Report(models.Model):
     result = models.IntegerField('结果', choices=((1, 'pass'), (2, 'fail'), (3, 'running'), (4, 'finish')), default=3)
     createdAt = models.DateTimeField("创建的时间", auto_now_add=True)
     #completedAt = models.DateTimeField("完成的时间", blank=True, null=True)
+
+
+class Task_Report(models.Model):
+    task = models.ForeignKey(Task)
+    result = models.IntegerField('结果', choices=((1, 'pass'), (2, 'fail'), (3, 'running'), (4, 'finish')), default=3)
+    createdAt = models.DateTimeField("创建的时间", auto_now_add=True)
+    #completedAt = models.DateTimeField("完成的时间", blank=True, null=True)
+
+class Case_Report(models.Model):
+    case_report = models.ForeignKey(Task_Report)
+    case = models.ForeignKey(Case)
+    result = models.IntegerField('结果', choices=((1, 'pass'), (2, 'fail'), (3, 'running'), (4, 'finish')), default=3)
+    #completedAt = models.DateTimeField("完成的时间", blank=True, null=True)

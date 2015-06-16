@@ -28,7 +28,7 @@ urlpatterns = [
     url(r'task/del/(?P<pk>\d+)$', views.task_delete, name="task_delete"),
     url(r'task/trigger/(?P<pk>\d+)$', views.task_trigger, name="task_trigger"),
 
-    url(r'task_case/del/(?P<pk>\d+)$', views.task_case_delete, name="task_case_delete"),
+    url(r'task_case/del/(?P<pk_task>\d+)/(?P<pk_case>\d+)$', views.task_case_delete, name="task_case_delete"),
 
 
     url(r'machine$', views.machine_list, name="machine_list"),
@@ -45,8 +45,8 @@ urlpatterns = [
     #url(r'machine/edit/(?P<pk>\d+).html$', views.machine_edit, name="machine_edit"),
     #url(r'script/del/(?P<pk>\d+).html$', views.script_delete, name="script_delete"),
 
-    url(r'report$', views.report_suite_list, name="report_suite_list"),
-    url(r'report/(?P<pk>\d+)$', views.report_suite_list_index, name="report_suite_list_index"),
+    url(r'report$', views.report_list, name="report_list"),
+    url(r'report/(?P<pk>\d+)$', views.report_list_index, name="report_list_index"),
     url(r'report/task/(?P<pk>\d+)$', views.report_task_list, name="report_task_list"),
 
 

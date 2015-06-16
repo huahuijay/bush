@@ -12,7 +12,7 @@
             <ul>
                 {% for suite in suites %}
                     <li>
-                        <a class="" href="{% url 'case_list_index' suite.id %}">
+                        <a class="" href="{% url 'report_list_index' suite.id %}">
                             <i class="fa fa-bookmark"></i>
                             <span class="menu-text">{{ suite.name }}</span>
                         </a>
@@ -45,7 +45,7 @@
     <!-- BOX -->
     <div class="box border blue">
         <div class="box-title">
-            <h4><i class="fa fa-hand-o-up"></i>主机列表</h4>
+            <h4><i class="fa fa-hand-o-up"></i>任务列表</h4>
             <div class="tools">
                 <a href="javascript:;" class="collapse">
                     <i class="fa fa-chevron-up"></i>
@@ -60,25 +60,21 @@
                 <thead>
                 <tr>
                     <th>#</th>
-                    <th>主机名称</th>
+                    <th>任务名称</th>
                     <th>状态</th>
                     <th>创建时间</th>
                 </tr>
                 </thead>
                 <tbody>
-                {% if machines %}
-                    {% for machine in machines %}
+                {% if p_tasks %}
+                    {% for task in p_tasks %}
                         <tr>
                             <td>{{ forloop.counter }}</td>
-                            <td><a href="{% url 'machine_view' machine.id %}">{{ machine.name }}</a></td>
+                            <td><a href="{% url 'task_view' task.id %}">{{ task.name }}</a></td>
                             <td>
-                                {% if machine.status == 1 %}
-                                    <span class="label label-success">{{ machine.get_status_display }}</span>
-                                {% else %}
-                                    <span class="label label-danger">{{ machine.get_status_display }}</span>
-                                {% endif %}
+
                             </td>
-                            <td>{{ machine.createdAt|date:'Y-m-d H:i:s' }}</td>
+                            <td>{{ task.createdAt|date:'Y-m-d H:i:s' }}</td>
                         </tr>
                     {% endfor %}
                 {% else %}

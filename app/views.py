@@ -145,21 +145,21 @@ def case_edit(request, pk):
 def task_list(request):
     p_suite = None
     suites = None
-    tasks = None
+    p_tasks = None
     if Suite.objects.exists():
         p_suite = Suite.objects.all().order_by('id')[0]
         suites = Suite.objects.all()
-        tasks = Task.objects.filter(suite=p_suite)
+        p_tasks = Task.objects.filter(suite=p_suite)
     return render(request, "task.html", locals())
 
 def task_list_index(request, pk):
     p_suite = None
     suites = None
-    tasks = None
+    p_tasks = None
     if Suite.objects.exists():
         p_suite = Suite.objects.get(id=pk)
         suites = Suite.objects.all()
-        tasks = Task.objects.filter(suite=p_suite).order_by('id')
+        p_tasks = Task.objects.filter(suite=p_suite).order_by('id')
     return render(request, "task.html", locals())
 
 def task_create(request, pk):
@@ -210,19 +210,18 @@ def task_edit(request, pk):
     if Suite.objects.exists():
         suites = Suite.objects.all()
         p_task = Task.objects.get(id=pk)
+        p_cases = Case.objects.filter(suite=p_task.suite)
         p_task_cases = Task_Case.objects.filter(task=p_task)
     if request.method == "POST":
         p_name = request.POST['name']
         p_description = request.POST['description']
+        p_num = request.POST['num']
         if p_name == "" or p_description == "":
             error = "数据不能为空"
-        else:
-            p_task.name = p_name
-            p_task.description = p_description
-            p_task.modifyAt = now()
-            p_task.save()
-            return redirect(reverse("task_view", kwargs={"pk": pk}))
-
+        for num in range(0, int(p_num)):
+            case_id = request.POST['case'+str(num)]
+            p_case = Case.objects.get(id=case_id)
+            Task_Case(task=p_task, case=p_case, createdAt=now()).save()
     return render(request, "task_edit.html", locals())
 
 def task_trigger(request, pk):
@@ -243,9 +242,11 @@ def task_delete(request, pk):
     Task.objects.get(id=pk).delete()
     return redirect(reverse("task_list"))
 
-def task_case_delete(request):
-    #Task_Case.objects.filter(task=p_task).get(case=p_case).delete()
-    pass
+def task_case_delete(request, pk_task, pk_case):
+    p_task = Task.objects.get(id=pk_task)
+    p_case = Case.objects.get(id=pk_case)
+    Task_Case.objects.filter(task=p_task).get(case=p_case).delete()
+    return redirect(reverse("task_edit", kwargs={"pk": pk_task}))
 
 def machine_list(request):
     suites = None
@@ -277,6 +278,8 @@ def machine_list_index(request, pk):
 
 def machine_view(request, pk):
     p_machine = Machine.objects.get(id=pk)
+    suites = Suite.objects.all()
+    p_suite = Suite.objects.get(id=pk)
     # p = threading.Thread(target=staf_obj.detect_device, args=(p_machine.address, ))
     # p.start()
     # time.sleep(0.5)
@@ -356,25 +359,24 @@ def script_add(request):
         open(script_path + p_file.name, 'wb').write(p_file.read())
         return redirect(reverse("script_view"))
 
-def report_suite_list(request):
+def report_list(request):
     p_suite = None
     suites = None
-    tasks = None
+    p_tasks = None
     if Suite.objects.exists():
         p_suite = Suite.objects.all().order_by('id')[0]
         suites = Suite.objects.all()
-        tasks = Task.objects.filter(suite=p_suite)
+        p_tasks = Task.objects.filter(suite=p_suite)
     return render(request, "report.html", locals())
 
-def report_suite_list_index(request, pk):
+def report_list_index(request, pk):
     p_suite = None
     suites = None
-    #tasks = None
-    #p_suite = Suite.objects.all().order_by('id')[0]
+    p_tasks = None
     if Suite.objects.exists():
         p_suite = Suite.objects.get(id=pk)
         suites = Suite.objects.all()
-        tasks = Task.objects.filter(suite=p_suite)
+        p_tasks = Task.objects.filter(suite=p_suite)
     return render(request, "report.html", locals())
 
 def report_task_list(request, pk):
@@ -385,6 +387,6 @@ def report_task_list(request, pk):
 
 def demo_celery(request):
     print 123
-    from tasks import add
+    #from tasks import add
     add.delay(2, 2)
     print 778

@@ -37,10 +37,13 @@
 {% block content %}
     <form id="wizForm" class="form-horizontal" method="post">
         {% csrf_token %}
+
+        <input type="text" name="num" id="num" hidden="true" value="0">
+
         <!-- BOX -->
         <div class="box border blue" id="formWizard">
             <div class="box-title">
-                <h4><i class="fa fa-bars"></i>新建任务</h4>
+                <h4><i class="fa fa-bars"></i>修改任务</h4>
                 <div class="tools hidden-xs">
                     <a href="javascript:;" class="collapse">
                         <i class="fa fa-chevron-up"></i>
@@ -86,7 +89,7 @@
         <!-- /BOX -->
 
         <div id="formWizard" class="box border purple">
-            <div class="box-title">
+            <div class="box-title" id="case">
                 <h4><i class="fa fa-suitcase"></i>用例列表</h4>
                 <div class="tools">
                     <a href="javascript:;" class="collapse">
@@ -122,7 +125,7 @@
                                 <dt>修改时间</dt>
                                 <dd>{{ p_task_case.case.modifyAt|date:'Y-m-d H:i:s' }}</dd>
                             </dl>
-                            <a href="#">删除</a>
+                            <a href="{% url 'task_case_delete' p_task_case.task.id p_task_case.case.id %}">删除</a>
                         </div>
                     </div>
                     <!-- /PAGERS -->
@@ -140,17 +143,23 @@
                                 <h4 class="modal-title" id="myModalLabel">Modal title</h4>
                             </div>
                             <div class="modal-body">
-                                ...
+                                <div class="form-group">
+                                    <label >用例</label>
+                                    <select name = "case" id= "sel" class="form-control">
+                                        {% for case in p_cases %}
+                                            <option value="{{ case.id }}" >{{ case.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary">Save changes</button>
+                                <button type="button" id="save" class="btn btn-primary">Save changes</button>
                             </div>
                         </div>
                     </div>
                 </div>
                 <!-- Modal -->
-
             </div>
         </div>
         <div class="col-md-12">
@@ -160,4 +169,21 @@
                 <button type="submit" class="btn btn-success submitBtn"> 提交 <i class="fa fa-arrow-circle-right"></i></button>
         </div>
     </form>
+
+    <script type="text/javascript">
+        $(function(){
+            //document.write("Hello World!")
+            $('#save').on('click', function(){
+                var num = parseInt($('#num').val())
+                //console.log('target元素绑定了click事件');
+                $("<input readonly='true' type='text' name='"+'case'+num+"' value='"+$('#sel').val()+"'/>").insertAfter($('#case'));
+                $("#num").attr("value",num+1);//填充内容
+                var num = parseInt($('#num').val())
+                alert(num);
+                $('#myModal').modal('hide')
+            });
+        })
+
+    </script>
+
 {% endblock %}

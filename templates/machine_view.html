@@ -45,7 +45,7 @@
     <!-- BOX -->
     <div class="box border blue">
         <div class="box-title">
-            <h4><i class="fa fa-bars"></i>{{ case.name }}</h4>
+            <h4><i class="fa fa-bars"></i>{{ p_machine.name }}</h4>
             <div class="tools">
                 <a href="javascript:;" class="collapse">
                     <i class="fa fa-chevron-up"></i>
@@ -56,10 +56,7 @@
             </div>
         </div>
         <div class="box-body big">
-            <h4>用例描述</h4>
             <dl class="dl-horizontal">
-                <dt>主机名称</dt>
-                <dd>{{ machine.name }}</dd>
                 <dt>状态</dt>
                 <dd>
                     {% if p_machine.status == 1 %}
@@ -69,28 +66,26 @@
                     {% endif %}
                 </dd>
                 <dt>描述</dt>
-                <dd>{{ machine.description }}</dd>
+                <dd>{{ p_machine.description }}</dd>
                 <dt>创建时间</dt>
-                <dd>{{ machine.createdAt|date:'Y-m-d H:i:s' }}</dd>
+                <dd>{{ p_machine.createdAt|date:'Y-m-d H:i:s' }}</dd>
                 <dt>修改时间</dt>
-                <dd>{{ machine.modifyAt|date:'Y-m-d H:i:s' }}</dd>
+                <dd>{{ p_machine.modifyAt|date:'Y-m-d H:i:s' }}</dd>
             </dl>
         </div>
     </div>
     <!-- /BOX -->
 
     <p class="btn-toolbar">
-        {% if machine %}
-            <a href="{% url 'machine_edit' machine.id %}">
-        {% endif %}
-        <button class="btn btn-info"><i class="fa fa-edit"></i> 修改</button>
-        </a>
+        {% if request.user.is_authenticated %}
+            <a href="{% url 'machine_edit' p_machine.id %}">
+                <button class="btn btn-info"><i class="fa fa-edit"></i> 修改</button>
+            </a>
 
-        {% if machine %}
-            <a href="{% url 'machine_delete' machine.id %}">
+            <a href="{% url 'machine_delete' p_machine.id %}">
+                <button class="btn btn-danger"><i class="fa fa-trash-o"></i> 删除</button>
+            </a>
         {% endif %}
-        <button class="btn btn-danger"><i class="fa fa-trash-o"></i> 删除</button>
-        </a>
     </p>
 
 {% endblock %}

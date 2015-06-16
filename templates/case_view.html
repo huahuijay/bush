@@ -57,12 +57,7 @@
             </div>
         </div>
         <div class="box-body big">
-            <h4>用例描述</h4>
             <dl class="dl-horizontal">
-                <dt>用例名称</dt>
-                <dd>{{ case.name }}</dd>
-                <dt>套件名称</dt>
-                <dd>{{ case.suite.name }}</dd>
                 <dt>重要性</dt>
                 <dd>{{ case.get_level_display }}</dd>
                 <dt>命令</dt>
@@ -83,15 +78,12 @@
     <!-- /BOX -->
 
     <p class="btn-toolbar">
-        {% if case %}
+        {% if request.user.is_authenticated %}
             <a href="{% url 'case_edit' case.id %}">
+                <button class="btn btn-info"><i class="fa fa-edit"></i> 修改</button>
+            </a>
+            <button class="btn btn-danger"><i class="fa fa-trash-o"></i> 删除</button>
+            </a>
         {% endif %}
-        <button class="btn btn-info"><i class="fa fa-edit"></i> 修改</button>
-        </a>
-        {% if case %}
-            <a href="{% url 'case_delete' case.id %}">
-        {% endif %}
-        <button class="btn btn-danger"><i class="fa fa-trash-o"></i> 删除</button>
-        </a>
     </p>
 {% endblock %}
