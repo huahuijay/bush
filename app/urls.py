@@ -28,7 +28,6 @@ urlpatterns = [
     url(r'task/del/(?P<pk>\d+)$', views.task_delete, name="task_delete"),
     url(r'task/trigger/(?P<pk>\d+)$', views.task_trigger, name="task_trigger"),
 
-    url(r'task_case/create/(?P<pk>\d+)$', views.task_case_create, name="task_case_create"),
     url(r'task_case/del/(?P<pk>\d+)$', views.task_case_delete, name="task_case_delete"),
 
 

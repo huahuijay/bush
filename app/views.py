@@ -169,11 +169,18 @@ def task_create(request, pk):
     if request.method == "POST":
         p_name = request.POST['name']
         p_description = request.POST['description']
+        p_num = request.POST['num']
         if p_name == "" or p_description == "":
             error = "数据不能为空"
         else:
             Task(name=p_name, suite=p_suite, description=p_description, createdAt=now()).save()
-            return redirect(reverse("task_list_index", kwargs={"pk": pk}))
+            p_task = Task.objects.get(name=p_name)
+        for num in range(0, int(p_num)):
+            case_id = request.POST['case'+str(num)]
+            p_case = Case.objects.get(id=case_id)
+            Task_Case(task=p_task, case=p_case, createdAt=now()).save()
+
+        return redirect(reverse("task_list_index", kwargs={"pk": pk}))
     return render(request, "task_create.html", locals())
 
 def task_view(request, pk):
@@ -183,6 +190,8 @@ def task_view(request, pk):
 
     if Suite.objects.exists():
         suites = Suite.objects.all()
+        p_task = Task.objects.get(id=pk)
+        p_task_cases = Task_Case.objects.filter(task=p_task)
     if request.method == "POST":
         p_id = request.POST['case']
         p_case = Case.objects.get(id=p_id)
@@ -233,10 +242,6 @@ def task_delete(request, pk):
     Task_Case.objects.filter(task=p_task).delete()
     Task.objects.get(id=pk).delete()
     return redirect(reverse("task_list"))
-
-
-def task_case_create(request):
-    pass
 
 def task_case_delete(request):
     #Task_Case.objects.filter(task=p_task).get(case=p_case).delete()
@@ -364,7 +369,8 @@ def report_suite_list(request):
 def report_suite_list_index(request, pk):
     p_suite = None
     suites = None
-    tasks = None
+    #tasks = None
+    #p_suite = Suite.objects.all().order_by('id')[0]
     if Suite.objects.exists():
         p_suite = Suite.objects.get(id=pk)
         suites = Suite.objects.all()

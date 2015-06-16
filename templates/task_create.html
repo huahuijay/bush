@@ -40,6 +40,7 @@
 
 {% block content %}
     <form id="wizForm" class="form-horizontal" method="post">
+    <input type="text" name="num" id="num" hidden="true" value="0">
         {% csrf_token %}
         <!-- BOX -->
         <div class="box border blue" id="formWizard">
@@ -72,13 +73,13 @@
                                 <div class="form-group">
                                     <label class="control-label col-md-3">名称 <span class="required">*</span></label>
                                     <div class="col-md-4">
-                                        <input type="text" class="form-control" name="name" placeholder="Please provide your name"/>
+                                        <input type="text" class="form-control" name="name" required placeholder="Please provide your name"/>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-md-3">描述 <span class="required">*</span></label>
                                     <div class="col-md-4">
-                                        <textarea class="form-control" name="description" placeholder="Please provide phone number" rows="6" ></textarea>
+                                        <textarea class="form-control" name="description" required placeholder="Please provide phone number" rows="6" ></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -90,7 +91,7 @@
         <!-- /BOX -->
 
         <div id="formWizard" class="box border purple">
-            <div class="box-title">
+            <div class="box-title" id="case">
                 <h4><i class="fa fa-suitcase"></i>用例列表</h4>
                 <div class="tools">
                     <a href="javascript:;" class="collapse">
@@ -101,7 +102,6 @@
                     </a>
                 </div>
             </div>
-
 
             <div class="box-body">
                 <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
@@ -117,11 +117,18 @@
                                 <h4 class="modal-title" id="myModalLabel">Modal title</h4>
                             </div>
                             <div class="modal-body">
-                                ...
+                                <div class="form-group">
+                                    <label >用例</label>
+                                    <select name = "case" id= "sel" class="form-control">
+                                        {% for case in cases %}
+                                            <option value="{{ case.id }}" >{{ case.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary">Save changes</button>
+                                <button type="button" id="save" class="btn btn-primary">Save changes</button>
                             </div>
                         </div>
                     </div>
@@ -137,4 +144,22 @@
             <button type="submit" class="btn btn-success submitBtn"> 提交 <i class="fa fa-arrow-circle-right"></i></button>
         </div>
     </form>
+
+    <script type="text/javascript">
+        $(function(){
+            //document.write("Hello World!")
+            $('#save').on('click', function(){
+                var num = parseInt($('#num').val())
+                //console.log('target元素绑定了click事件');
+                $("<input readonly='true' type='text' name='"+'case'+num+"' value='"+$('#sel').val()+"'/>").insertAfter($('#case'));
+                $("#num").attr("value",num+1);//填充内容
+                var num = parseInt($('#num').val())
+                //alert(num);
+                //alert($('#sel').val());
+                $('#myModal').modal('hide')
+            });
+        })
+
+    </script>
+
 {% endblock %}
