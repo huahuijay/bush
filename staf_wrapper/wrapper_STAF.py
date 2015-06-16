@@ -3,7 +3,7 @@
 from PySTAF import *
 # from PySTAFMon import *
 # from PySTAFLog import *
-import time
+from django.conf import settings
 
 
 # following is a sample of format of test result
@@ -82,21 +82,26 @@ class STAFWrapper(object):
         else:
             return 2
 
-    def execute(self, xml_name):
+    def execute(self, xml_name, location='10.3.3.22'):
+        self.handle.submit('local', 'fs', 'COPY DIRECTORY {} TODIRECTORY /home/test/media/ TOMACHINE {} RECURSE KEEPEMPTYDIRECTORIES'.format(settings.MEDIA_ROOT, location))
         xml_location = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'media', 'case', xml_name)
-        result = self.handle.submit('local', 'stax',
+        result = self.handle.submit('{}'.format(location), 'stax',
                                          'execute file {0}.xml'.format(xml_location))
         if result.rc != STAFResult.Ok:
             raise Exception, 'Error on execute stax task, RC: %d, Result: %s' % (result.rc, result.result)
         return result.result
 
-    def query(self, job_id):
-        self.result = self.handle.submit('local', 'stax',
+    def query(self, job_id, location='10.3.3.22'):
+        self.result = self.handle.submit('{}'.format(location), 'stax',
                                          'get result job {0} details'.format(job_id)).resultContext.getRootObject()
         if type(self.result) is dict:
             return 0
         else:
             return 1
+
+    def get_machine_info(self, IP='local', info='sys_bit'):
+        result = self.handle.submit('{end_point}'.format(end_point=IP), 'PROCESS', 'START SHELL COMMAND "uname -m" WAIT STDERRTOSTDOUT RETURNSTDOUT')
+        return result.resultContext.getRootObject()['fileList'][0]['data']
 
     def unregister(self):
         try:
@@ -109,7 +114,8 @@ class STAFWrapper(object):
 
 def test():
     staf_obj = STAFWrapper()
-    staf_obj.detect_device('10.3.3.22')
+    result = staf_obj.handle.submit('local', 'PROCESS', 'START SHELL COMMAND "uname -m" WAIT STDERRTOSTDOUT RETURNSTDOUT')
+    print '123'
 
 
 

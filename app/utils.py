@@ -10,7 +10,7 @@ xml_content = '''            <loop from="0" to="0">
                 <testcase name="'{case.name}'">
                     <sequence>
                         <stafcmd>
-                            <location>'local'</location>
+                            <location>'10.3.30.79'</location>
                             <service>'event'</service>
                             <request>'generate type monitor subtype properties property status=running property case_name={case.name} property task_name={task_name}'</request>
                         </stafcmd>
@@ -26,7 +26,7 @@ xml_content = '''            <loop from="0" to="0">
                             </else>
                         </if>
                         <stafcmd>
-                            <location>'local'</location>
+                            <location>'10.3.30.79'</location>
                             <service>'event'</service>
                             <request>'generate type monitor subtype properties property status=finish property case_name={case.name} property task_name={task_name}'</request>
                         </stafcmd>
@@ -39,7 +39,7 @@ xml_content_ending = '''        <loop from="0" to="0">
                 <testcase name="'last_case'">
                     <sequence>
                         <stafcmd>
-                            <location>'local'</location>
+                            <location>'10.3.30.79'</location>
                             <service>'event'</service>
                             <request>'generate type monitor subtype endoftest'</request>
                         </stafcmd>
@@ -61,7 +61,8 @@ tmp_handle_global = None
 
 def generate_xml(task_name, task_cases):
     proj_name = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    script_path = os.path.join(proj_name, 'media/script')
+    # script_path = os.path.join(proj_name, 'media/script')
+    script_path = '/home/test/media/script'
     xml_path = settings.MEDIA_ROOT + settings.CASE_DIR
     xml_name = '.'.join([task_name, 'xml'])
     # cases = Suite.objects.get(id=p_suite).case_set.all()
