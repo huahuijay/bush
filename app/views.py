@@ -179,6 +179,8 @@ def task_create(request, pk):
             case_id = request.POST['case'+str(num)]
             p_case = Case.objects.get(id=case_id)
             Task_Case(task=p_task, case=p_case, createdAt=now()).save()
+            child_cases = Task_Case.objects.filter(task=p_task)
+            generate_xml(p_task.name, child_cases)
 
         return redirect(reverse("task_list_index", kwargs={"pk": pk}))
     return render(request, "task_create.html", locals())
@@ -226,15 +228,15 @@ def task_edit(request, pk):
 
 def task_trigger(request, pk):
     p_task = Task.objects.get(id=pk)
-    exec_handle = staf_obj.execute(p_task.name)
-    print exec_handle
-    tasks.monitor.delay(staf_obj, exec_handle)
-    # tasks.monitor(staf_obj, exec_handle)
-    # cases = Task_Case.objects.filter(p_task)
-    # if cases:
-    #     for p_case in cases:
-    #         Report(case=p_case, )
-    return redirect(reverse("task_view", kwargs={"pk": pk}))
+    task_name = p_task.name
+    exec_handle = staf_obj.execute(task_name)
+    task_report = Task_Report(task=p_task)
+    task_report.save()
+    p_task_report = Task_Report.objects.get(id=task_report.id)
+    tasks.monitor.delay(staf_obj, exec_handle, p_task_report)
+    task_report = Task_Report.objects.all().order_by('-createdAt')[0]
+    case_reports = task_report.case_report_set.all()
+    return redirect(reverse("task_view", kwargs={"case_reports": case_reports}))
 
 def task_delete(request, pk):
     p_task = Task.objects.get(id=pk)
