@@ -7,6 +7,7 @@ import utils
 import time
 import os
 from models import *
+import tasks
 
 
 class ProjectStafResource(Resource):
@@ -62,6 +63,7 @@ class ProjectStafResource(Resource):
     def trigger_deb(self, request, **kwargs):
         if kwargs['mode'] == u'non-blocking':
             exec_handle = self.staf_obj.execute(kwargs['task_name'])
+            tasks.monitor.delay(self.staf_obj, exec_handle)
             return self.create_response(request, {"key": exec_handle})
         else:
             raise
