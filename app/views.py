@@ -187,10 +187,9 @@ def task_create(request, pk):
 
 def task_view(request, pk):
     suites = None
-    task_report_num = None
-    task_report = None
     p_task = Task.objects.get(id=pk)
     p_cases = Task_Case.objects.filter(task=p_task)
+
     if Suite.objects.exists():
         suites = Suite.objects.all()
         p_task = Task.objects.get(id=pk)
@@ -204,12 +203,6 @@ def task_view(request, pk):
     child_cases = Task_Case.objects.filter(task=p_task)
 
     cases = Case.objects.filter(suite=p_task.suite).exclude(task_case__in=child_cases.values_list("id", flat=True))
-    if Task_Report.objects.exists():
-        task_report_num = Task_Report.objects.filter(task=p_task)
-        task_report = Task_Report.objects.filter(task=p_task).order_by('-id')[0]
-    machine = Machine.objects.get(suite=p_task.suite)
-
-
     return render(request, "task_view.html", locals())
 
 def task_edit(request, pk):
@@ -235,8 +228,10 @@ def task_edit(request, pk):
 
 def task_trigger(request, pk):
     p_task = Task.objects.get(id=pk)
+    # assume the first machine is ok!
+    machine_ip = p_task.suite.machine_set.all()[0].address
     task_name = p_task.name
-    exec_handle = staf_obj.execute(task_name)
+    exec_handle = staf_obj.execute(task_name, machine_ip)
     task_report = Task_Report(task=p_task)
     task_report.save()
     p_task_report = Task_Report.objects.get(id=task_report.id)
@@ -288,16 +283,6 @@ def machine_list_index(request, pk):
 def machine_view(request, pk):
     p_machine = Machine.objects.get(id=pk)
     suites = Suite.objects.all()
-    # p = threading.Thread(target=staf_obj.detect_device, args=(p_machine.address, ))
-    # p.start()
-    # time.sleep(0.5)
-    # if p.is_alive():
-    #     status = 2
-    # else:
-    #     status = staf_obj.detect_ret_value
-    # # status = staf_obj.detect_device(p_machine.address)
-    # p_machine.status = status
-    # p_machine.save()
     return render(request, "machine_view.html", locals())
 
 def machine_create(request, pk):

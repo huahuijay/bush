@@ -10,7 +10,7 @@ xml_content = '''            <loop from="0" to="0">
                 <testcase name="'{case.name}'">
                     <sequence>
                         <stafcmd>
-                            <location>'10.3.30.79'</location>
+                            <location>'10.3.30.207'</location>
                             <service>'event'</service>
                             <request>'generate type monitor subtype properties property status=running property case_name={case.name} property task_name={task_name}'</request>
                         </stafcmd>
@@ -26,7 +26,7 @@ xml_content = '''            <loop from="0" to="0">
                             </else>
                         </if>
                         <stafcmd>
-                            <location>'10.3.30.79'</location>
+                            <location>'10.3.30.207'</location>
                             <service>'event'</service>
                             <request>'generate type monitor subtype properties property status=finish property case_name={case.name} property task_name={task_name}'</request>
                         </stafcmd>
@@ -39,7 +39,7 @@ xml_content_ending = '''        <loop from="0" to="0">
                 <testcase name="'last_case'">
                     <sequence>
                         <stafcmd>
-                            <location>'10.3.30.79'</location>
+                            <location>'10.3.30.207'</location>
                             <service>'event'</service>
                             <request>'generate type monitor subtype endoftest'</request>
                         </stafcmd>

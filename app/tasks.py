@@ -21,6 +21,7 @@ def monitor(staf_obj, exec_handle, p_task_report):
     while True:
         result = staf_obj.handle.submit('local', 'queue', 'get wait')
         property_dict = result.resultContext.getRootObject()
+        print property_dict
         try:
             status = property_dict['message']['propertyMap']['status']
             if status == 'running':
@@ -49,6 +50,7 @@ def monitor(staf_obj, exec_handle, p_task_report):
         if property_dict['message']['subtype'] == 'endoftest':
             time.sleep(3)
             if staf_obj.query(job_id=exec_handle) == 0:
+                print staf_obj.result
                 test_attributes = staf_obj.result['testcaseList']
                 xml_file = staf_obj.result['xmlFileName']
                 for test_attribute in test_attributes:

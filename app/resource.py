@@ -67,8 +67,9 @@ class ProjectStafResource(Resource):
         task_report = Task_Report(task=p_task)
         task_report.save()
         p_task_report = Task_Report.objects.get(id=task_report.id)
+        machine_ip = p_task.suite.machine_set.all()[0].address
         if kwargs['mode'] == u'non-blocking':
-            exec_handle = self.staf_obj.execute(task_name)
+            exec_handle = self.staf_obj.execute(task_name, machine_ip)
             tasks.monitor.delay(self.staf_obj, exec_handle, p_task_report)
             return self.create_response(request, {'handle': exec_handle, 'task_name': task_name})
         else:
