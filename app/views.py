@@ -214,6 +214,7 @@ def task_edit(request, pk):
         p_task = Task.objects.get(id=pk)
         p_cases = Case.objects.filter(suite=p_task.suite)
         p_task_cases = Task_Case.objects.filter(task=p_task)
+        generate_xml(p_task.name, p_task_cases)
     if request.method == "POST":
         p_name = request.POST['name']
         p_description = request.POST['description']
