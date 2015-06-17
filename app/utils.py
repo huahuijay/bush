@@ -64,7 +64,7 @@ xml_content_ending = '''        <loop from="0" to="0">
                         <stafcmd>
                             <location>'local'</location>
                             <service>'fs'</service>
-                            <request>'COPY DIRECTORY /home/test/log/ TODIRECTORY /home/chale/log/{0} TOMACHINE 10.3.30.207 RECURSE KEEPEMPTYDIRECTORIES'</request>
+                            <request>'COPY DIRECTORY /home/test/log/ TODIRECTORY {{STAF/Env/HOME}}/log/{0} TOMACHINE 10.3.30.207 RECURSE KEEPEMPTYDIRECTORIES'</request>
                         </stafcmd>
                         <tcstatus result="'pass'"/>
                     </sequence>
