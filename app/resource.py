@@ -3,11 +3,11 @@ from tastypie.resources import Resource
 from tastypie.utils import trailing_slash
 
 from staf_wrapper import wrapper_STAF
-import utils
-import time
-import os
 from models import *
+from utils import *
+
 import tasks
+
 
 
 class ProjectStafResource(Resource):
@@ -68,6 +68,8 @@ class ProjectStafResource(Resource):
         task_report.save()
         p_task_report = Task_Report.objects.get(id=task_report.id)
         machine_ip = p_task.suite.machine_set.all()[0].address
+        child_cases = Task_Case.objects.filter(task=p_task)
+        generate_xml(p_task.name, child_cases, task_report.id)
         if kwargs['mode'] == u'non-blocking':
             exec_handle = self.staf_obj.execute(task_name, machine_ip)
             tasks.monitor.delay(self.staf_obj, exec_handle, p_task_report)

@@ -70,13 +70,15 @@
                         <tr>
                             <td>{{ forloop.counter }}</td>
                             <td>
-                                {% if task_report.status == 1 %}
+                            {% ifequal task_report.result 1 %}
                                     <span class="label label-success">{{ task_report.get_result_display }}</span>
-                                {% else task_report.status == 2%}
+                            {% endifequal %}
+                            {% ifequal task_report.result 2 %}
                                     <span class="label label-danger">{{ task_report.get_result_display }}</span>
-                                {% else task_report.status == 3%}
+                            {% endifequal %}
+                            {% ifequal task_report.result 3 %}
                                     <span class="label label-info">{{ task_report.get_result_display }}</span>
-                                {% endif %}
+                            {% endifequal %}
                             </td>
                             <td>{{ task_report.createdAt|date:'Y-m-d H:i:s' }}</td>
                         </tr>

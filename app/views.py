@@ -387,6 +387,18 @@ def report_task_list(request, pk):
     suites = Suite.objects.all()
     p_task = Task.objects.get(id=pk)
     task_reports = Task_Report.objects.filter(task=p_task).order_by('id')
+    for task_report in task_reports:
+        print task_report.get_result_display()
+        print task_report.result
+    return render(request, "report_task.html", locals())
+
+def report_task_list(request, pk):
+    suites = Suite.objects.all()
+    p_task = Task.objects.get(id=pk)
+    task_reports = Task_Report.objects.filter(task=p_task).order_by('id')
+    for task_report in task_reports:
+        print task_report.get_result_display()
+        print task_report.result
     return render(request, "report_task.html", locals())
 
 def demo_celery(request):
