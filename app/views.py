@@ -187,9 +187,10 @@ def task_create(request, pk):
 
 def task_view(request, pk):
     suites = None
+    task_report_num = None
+    task_report = None
     p_task = Task.objects.get(id=pk)
     p_cases = Task_Case.objects.filter(task=p_task)
-
     if Suite.objects.exists():
         suites = Suite.objects.all()
         p_task = Task.objects.get(id=pk)
@@ -203,6 +204,12 @@ def task_view(request, pk):
     child_cases = Task_Case.objects.filter(task=p_task)
 
     cases = Case.objects.filter(suite=p_task.suite).exclude(task_case__in=child_cases.values_list("id", flat=True))
+    if Task_Report.objects.exists():
+        task_report_num = Task_Report.objects.filter(task=p_task)
+        task_report = Task_Report.objects.filter(task=p_task).order_by('-id')[0]
+    machine = Machine.objects.get(suite=p_task.suite)
+
+
     return render(request, "task_view.html", locals())
 
 def task_edit(request, pk):
@@ -281,7 +288,6 @@ def machine_list_index(request, pk):
 def machine_view(request, pk):
     p_machine = Machine.objects.get(id=pk)
     suites = Suite.objects.all()
-    p_suite = Suite.objects.get(id=pk)
     # p = threading.Thread(target=staf_obj.detect_device, args=(p_machine.address, ))
     # p.start()
     # time.sleep(0.5)
@@ -369,6 +375,14 @@ def report_list(request):
         p_suite = Suite.objects.all().order_by('id')[0]
         suites = Suite.objects.all()
         p_tasks = Task.objects.filter(suite=p_suite)
+        if p_tasks:
+            for p_task in p_tasks:
+                #script_add()
+                pass
+            pass
+    if Task_Report.objects.exists():
+        #task_report_num = Task_Report.objects.
+        task_report = Task_Report.objects.filter(task=p_task).order_by('-id')[0]
     return render(request, "report.html", locals())
 
 def report_list_index(request, pk):

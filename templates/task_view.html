@@ -120,7 +120,7 @@
     <!-- BOX -->
     <div class="box border orange">
         <div class="box-title">
-            <h4><i class="fa fa-gavel"></i>运行结果</h4>
+            <h4><i class="fa fa-gavel"></i>最新运行结果</h4>
             <div class="tools">
                 <a href="javascript:;" class="collapse">
                     <i class="fa fa-chevron-up"></i>
@@ -131,18 +131,18 @@
             </div>
         </div>
         <div class="box-body big">
-            <!--
+            {% if task_report_num %}
             <dl class="dl-horizontal">
-                <dt>用例名称</dt>
-                <dd>{{ p_task.name }}</dd>
-                <dt>描述</dt>
-                <dd>{{ p_task.description }}</dd>
+                <dt>运行次数</dt>
+                <dd>{{ task_report_num.count}}</dd>
                 <dt>创建时间</dt>
-                <dd>{{ p_task.createdAt|date:'Y-m-d H:i:s' }}</dd>
-                <dt>修改时间</dt>
-                <dd>{{ p_task.modifyAt|date:'Y-m-d H:i:s' }}</dd>
-            </dl>
-            -->
+                <dd>{{ task_report.createdAt|date:'Y-m-d H:i:s' }}</dd>
+                <dt>运行状态</dt>
+                <dd>{{ task_report.get_result_display|date:'Y-m-d H:i:s' }}</dd>
+                <dt>运行环境</dt>
+                <dd>{{ machine.name }}</dd>
+                </dl>
+            {% endif %}
         </div>
     </div>
     <!-- /BOX -->
