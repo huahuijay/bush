@@ -4,6 +4,24 @@ xml_content_starting = '''<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 	<defaultcall function="func_test"/>
 	<function name="func_test">
         <sequence>
+            <loop from="0" to="0">
+                <testcase name="'last_case'">
+                    <sequence>
+                        <process>
+                            <location>'local'</location>
+                            <command>'rm'</command>
+                            <parms>'-rf /home/test/log'</parms>
+                        </process>
+                        <stafcmd>
+                            <location>'local'</location>
+                            <service>'fs'</service>
+                            <request>'CREATE DIRECTORY /home/test/log FULLPATH'</request>
+                        </stafcmd>
+
+                        <tcstatus result="'pass'"/>
+                    </sequence>
+                </testcase>
+            </loop>
 '''
 
 xml_content = '''            <loop from="0" to="0">
@@ -17,7 +35,7 @@ xml_content = '''            <loop from="0" to="0">
                         <process>
                             <location>'local'</location>
                             <command>'{case.command}'</command>
-                            <parms>'{script_path}/{case.script} {case.param}'</parms>
+                            <parms>'{script_path}/{case.script} {case.name} {case.param}'</parms>
                         </process>
                         <if expr="RC == 0">
                             <tcstatus result="'pass'"/>
@@ -43,6 +61,11 @@ xml_content_ending = '''        <loop from="0" to="0">
                             <service>'event'</service>
                             <request>'generate type monitor subtype endoftest'</request>
                         </stafcmd>
+                        <stafcmd>
+                            <location>'local'</location>
+                            <service>'fs'</service>
+                            <request>'COPY DIRECTORY /home/test/log/ TODIRECTORY {{STAF/Env/HOME}}/log/{0} TOMACHINE 10.3.30.207 RECURSE KEEPEMPTYDIRECTORIES'</request>
+                        </stafcmd>
                         <tcstatus result="'pass'"/>
                     </sequence>
                 </testcase>
@@ -59,7 +82,7 @@ from django.conf import settings
 tmp_handle_global = None
 
 
-def generate_xml(task_name, task_cases):
+def generate_xml(task_name, task_cases, folder_name):
     proj_name = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     # script_path = os.path.join(proj_name, 'media/script')
     script_path = '/home/test/media/script'
@@ -76,4 +99,4 @@ def generate_xml(task_name, task_cases):
         for task_case in task_cases:
             xml_content_towrite = xml_content.format(case=task_case.case, script_path=script_path, task_name=task_name)
             xml_handle.write(xml_content_towrite)
-        xml_handle.write(xml_content_ending)
+        xml_handle.write(xml_content_ending.format(folder_name))

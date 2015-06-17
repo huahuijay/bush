@@ -179,8 +179,8 @@ def task_create(request, pk):
             case_id = request.POST['case'+str(num)]
             p_case = Case.objects.get(id=case_id)
             Task_Case(task=p_task, case=p_case, createdAt=now()).save()
-            child_cases = Task_Case.objects.filter(task=p_task)
-            generate_xml(p_task.name, child_cases)
+            # child_cases = Task_Case.objects.filter(task=p_task)
+            # generate_xml(p_task.name, child_cases)
 
         return redirect(reverse("task_list_index", kwargs={"pk": pk}))
     return render(request, "task_create.html", locals())
@@ -198,8 +198,8 @@ def task_view(request, pk):
         p_id = request.POST['case']
         p_case = Case.objects.get(id=p_id)
         Task_Case(case=p_case, task=p_task).save()
-        child_cases = Task_Case.objects.filter(task=p_task)
-        generate_xml(p_task.name, child_cases)
+        # child_cases = Task_Case.objects.filter(task=p_task)
+        # generate_xml(p_task.name, child_cases)
     child_cases = Task_Case.objects.filter(task=p_task)
 
     cases = Case.objects.filter(suite=p_task.suite).exclude(task_case__in=child_cases.values_list("id", flat=True))
@@ -234,10 +234,13 @@ def task_trigger(request, pk):
     # assume the first machine is ok!
     machine_ip = p_task.suite.machine_set.all()[0].address
     task_name = p_task.name
-    exec_handle = staf_obj.execute(task_name, machine_ip)
+    child_cases = Task_Case.objects.filter(task=p_task)
+
     task_report = Task_Report(task=p_task)
     task_report.save()
     p_task_report = Task_Report.objects.get(id=task_report.id)
+    generate_xml(p_task.name, child_cases, task_report.id)
+    exec_handle = staf_obj.execute(task_name, machine_ip)
     tasks.monitor.delay(staf_obj, exec_handle, p_task_report)
     task_report = Task_Report.objects.all().order_by('-createdAt')[0]
     case_reports = task_report.case_report_set.all()
