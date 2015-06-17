@@ -71,9 +71,11 @@
                             <td>{{ forloop.counter }}</td>
                             <td>
                                 {% if task_report.status == 1 %}
-                                    <span class="label label-success">{{ task_report.get_status_display }}</span>
-                                {% else %}
-                                    <span class="label label-danger">{{ task_report.get_status_display }}</span>
+                                    <span class="label label-success">{{ task_report.get_result_display }}</span>
+                                {% else task_report.status == 2%}
+                                    <span class="label label-danger">{{ task_report.get_result_display }}</span>
+                                {% else task_report.status == 3%}
+                                    <span class="label label-info">{{ task_report.get_result_display }}</span>
                                 {% endif %}
                             </td>
                             <td>{{ task_report.createdAt|date:'Y-m-d H:i:s' }}</td>
