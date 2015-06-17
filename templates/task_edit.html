@@ -71,13 +71,13 @@
                                 <div class="form-group">
                                     <label class="control-label col-md-3">名称 <span class="required">*</span></label>
                                     <div class="col-md-4">
-                                        <input type="text" class="form-control" name="name" placeholder="Please provide your name" value="{{ p_task.name }}"/>
+                                        <input type="text" class="form-control" name="name" placeholder="Please provide name" value="{{ p_task.name }}"/>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-md-3">描述 <span class="required">*</span></label>
                                     <div class="col-md-4">
-                                        <textarea class="form-control" name="description" placeholder="Please provide phone number" rows="6">{{ p_task.description }}</textarea>
+                                        <textarea class="form-control" name="description" placeholder="Please provide description" rows="6">{{ p_task.description }}</textarea>
                                     </div>
                                 </div>
                             </div>
@@ -100,8 +100,7 @@
                     </a>
                 </div>
             </div>
-
-            <div class="box-body">
+            <div class="box-body big">
                 {% for p_task_case in p_task_cases %}
                     <!-- PAGERS -->
                     <div class="box border green">
@@ -140,7 +139,7 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                                <h4 class="modal-title" id="myModalLabel">用例列表</h4>
                             </div>
                             <div class="modal-body">
                                 <div class="form-group">
@@ -153,8 +152,8 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                <button type="button" id="save" class="btn btn-primary">Save changes</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                                <button type="button" id="save" class="btn btn-primary">添加</button>
                             </div>
                         </div>
                     </div>
@@ -163,7 +162,7 @@
             </div>
         </div>
         <div class="col-md-12">
-                <a href="#" class="btn btn-default prevBtn">
+                <a href="{% url 'task_view' p_task.id %}" class="btn btn-default prevBtn">
                     <i class="fa fa-arrow-circle-left"></i> 返回
                 </a>
                 <button type="submit" class="btn btn-success submitBtn"> 提交 <i class="fa fa-arrow-circle-right"></i></button>
@@ -179,7 +178,6 @@
                 $("<input readonly='true' type='text' name='"+'case'+num+"' value='"+$('#sel').val()+"'/>").insertAfter($('#case'));
                 $("#num").attr("value",num+1);//填充内容
                 var num = parseInt($('#num').val())
-                alert(num);
                 $('#myModal').modal('hide')
             });
         })

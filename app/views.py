@@ -207,14 +207,13 @@ def task_view(request, pk):
 
 def task_edit(request, pk):
     suites = None
-    p_task = None
     p_cases = None
+    p_task_cases = None
+    p_task = Task.objects.get(id=pk)
+    p_task_cases = Task_Case.objects.filter(task=p_task)
     if Suite.objects.exists():
         suites = Suite.objects.all()
-        p_task = Task.objects.get(id=pk)
         p_cases = Case.objects.filter(suite=p_task.suite)
-        p_task_cases = Task_Case.objects.filter(task=p_task)
-        generate_xml(p_task.name, p_task_cases)
     if request.method == "POST":
         p_name = request.POST['name']
         p_description = request.POST['description']
@@ -225,6 +224,9 @@ def task_edit(request, pk):
             case_id = request.POST['case'+str(num)]
             p_case = Case.objects.get(id=case_id)
             Task_Case(task=p_task, case=p_case, createdAt=now()).save()
+        p_task_cases = Task_Case.objects.filter(task=p_task)
+        generate_xml(p_task.name, p_task_cases)
+
     return render(request, "task_edit.html", locals())
 
 def task_trigger(request, pk):
@@ -361,14 +363,11 @@ def report_list(request):
         p_suite = Suite.objects.all().order_by('id')[0]
         suites = Suite.objects.all()
         p_tasks = Task.objects.filter(suite=p_suite)
-        if p_tasks:
-            for p_task in p_tasks:
-                #script_add()
-                pass
-            pass
-    if Task_Report.objects.exists():
+    #if Task_Report.objects.exists():
         #task_report_num = Task_Report.objects.
-        task_report = Task_Report.objects.filter(task=p_task).order_by('-id')[0]
+    #    task_reports = Task_Report.objects.filter(task=p_task)
+    #    if task_reports:
+    #        task_report = task_reports.order_by('-id')[0]
     return render(request, "report.html", locals())
 
 def report_list_index(request, pk):
@@ -382,10 +381,10 @@ def report_list_index(request, pk):
     return render(request, "report.html", locals())
 
 def report_task_list(request, pk):
-    reports = None
+    suites = Suite.objects.all()
     p_task = Task.objects.get(id=pk)
-    reports = Report.objects.filter(task=p_task)
-    return render(request, "report.html", locals())
+    task_reports = Task_Report.objects.filter(task=p_task).order_by('id')
+    return render(request, "report_task.html", locals())
 
 def demo_celery(request):
     print 123

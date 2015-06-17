@@ -68,19 +68,19 @@
                                 <div class="form-group">
                                     <label class="control-label col-md-3">名称 <span class="required">*</span></label>
                                     <div class="col-md-4">
-                                        <input type="text" class="form-control" name="name" value="{{ p_machine.name }}" placeholder="Please provide your name"/>
+                                        <input type="text" class="form-control" name="name" value="{{ p_machine.name }}" placeholder="Please provide name"/>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-md-3">地址  </label>
                                     <div class="col-md-4">
-                                        <input type="text" class="form-control" name="address" value="{{ p_machine.address }}" placeholder="Please provide your name"/>
+                                        <input type="text" class="form-control" name="address" value="{{ p_machine.address }}" placeholder="Please provide address"/>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-md-3">描述 <span class="required">*</span></label>
                                     <div class="col-md-4">
-                                        <textarea class="form-control" name="description" placeholder="Please provide phone number" rows="6" >{{ p_machine.description }}</textarea>
+                                        <textarea class="form-control" name="description" placeholder="Please provide description" rows="6" >{{ p_machine.description }}</textarea>
                                     </div>
                                 </div>
                             </div>
@@ -90,7 +90,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="col-md-offset-3 col-md-9">
-                                    <a href="#" class="btn btn-default prevBtn">
+                                    <a href="{% url 'machine_view' p_machine.id %}" class="btn btn-default prevBtn">
                                         <i class="fa fa-arrow-circle-left"></i> 返回
                                     </a>
                                     <button type="submit" class="btn btn-success submitBtn">提交 <i class="fa fa-arrow-circle-right"></i></button>

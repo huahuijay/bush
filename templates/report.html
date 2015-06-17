@@ -70,7 +70,7 @@
                     {% for task in p_tasks %}
                         <tr>
                             <td>{{ forloop.counter }}</td>
-                            <td><a href="{% url 'task_view' task.id %}">{{ task.name }}</a></td>
+                            <td><a href="{% url 'report_task_list' task.id %}">{{ task.name }}</a></td>
                             <td>
 
                             </td>
