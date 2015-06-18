@@ -48,8 +48,6 @@ def monitor(staf_obj, exec_handle, p_task_report, machine_ip):
             pass
 
         if property_dict['message']['subtype'] == 'endoftest':
-            p_task_report.result = 4
-            p_task_report.save()
             time.sleep(3)
 
             if staf_obj.query(job_id=exec_handle, location=machine_ip) == 0:

@@ -1,4 +1,4 @@
-xml_content_starting = '''<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+xml_content_starting = u'''<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE stax SYSTEM "stax.dtd">
 <stax>
 	<defaultcall function="func_test"/>
@@ -24,11 +24,11 @@ xml_content_starting = '''<?xml version="1.0" encoding="UTF-8" standalone="no"?>
             </loop>
 '''
 
-xml_content = '''            <loop from="0" to="0">
+xml_content = u'''            <loop from="0" to="0">
                 <testcase name="'{case.name}'">
                     <sequence>
                         <stafcmd>
-                            <location>'local'</location>
+                            <location>'10.3.30.207'</location>
                             <service>'event'</service>
                             <request>'generate type monitor subtype properties property status=running property case_name={case.name} property task_name={task_name}'</request>
                         </stafcmd>
@@ -44,7 +44,7 @@ xml_content = '''            <loop from="0" to="0">
                             </else>
                         </if>
                         <stafcmd>
-                            <location>'local'</location>
+                            <location>'10.3.30.207'</location>
                             <service>'event'</service>
                             <request>'generate type monitor subtype properties property status=finish property case_name={case.name} property task_name={task_name}'</request>
                         </stafcmd>
@@ -53,18 +53,18 @@ xml_content = '''            <loop from="0" to="0">
             </loop>
 '''
 
-xml_content_ending = '''        <loop from="0" to="0">
+xml_content_ending = u'''        <loop from="0" to="0">
                 <testcase name="'last_case'">
                     <sequence>
                         <stafcmd>
-                            <location>'local'</location>
+                            <location>'10.3.30.207'</location>
                             <service>'event'</service>
                             <request>'generate type monitor subtype endoftest'</request>
                         </stafcmd>
                         <stafcmd>
                             <location>'local'</location>
                             <service>'fs'</service>
-                            <request>'COPY DIRECTORY /home/test/log/ TODIRECTORY {{STAF/Env/HOME}}/log/{0} TOMACHINE local RECURSE KEEPEMPTYDIRECTORIES'</request>
+                            <request>'COPY DIRECTORY /home/test/log/ TODIRECTORY {{STAF/Env/HOME}}/log/{0} TOMACHINE 10.3.30.207 RECURSE KEEPEMPTYDIRECTORIES'</request>
                         </stafcmd>
                         <tcstatus result="'pass'"/>
                     </sequence>
@@ -98,5 +98,6 @@ def generate_xml(task_name, task_cases, folder_name):
         xml_handle.write(xml_content_starting)
         for task_case in task_cases:
             xml_content_towrite = xml_content.format(case=task_case.case, script_path=script_path, task_name=task_name)
+            xml_content_towrite = xml_content_towrite.encode('utf')
             xml_handle.write(xml_content_towrite)
         xml_handle.write(xml_content_ending.format(folder_name))

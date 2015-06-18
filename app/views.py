@@ -393,17 +393,18 @@ def report_list_index(request, pk):
 def report_task_list(request, pk):
     suites = Suite.objects.all()
     p_task = Task.objects.get(id=pk)
-    task_reports = Task_Report.objects.filter(task=p_task).order_by('-id')
+    task_reports = Task_Report.objects.filter(task=p_task).order_by('id')
     return render(request, "report_task.html", locals())
 
 def report_task_view(request, pk):
     suites = Suite.objects.all()
     p_task_report = Task_Report.objects.get(id=pk)
-    case_reports = p_task_report.case_report_set.all().order_by('-id')
+    case_reports = p_task_report.case_report_set.all().order_by('id')
     return render(request, "report_view.html", locals())
+
 
 def demo_celery(request):
     print 123
     #from tasks import add
-    #add.delay(2, 2)
+    add.delay(2, 2)
     print 778
