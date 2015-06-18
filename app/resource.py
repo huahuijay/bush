@@ -72,7 +72,7 @@ class ProjectStafResource(Resource):
         generate_xml(p_task.name, child_cases, task_report.id)
         if kwargs['mode'] == u'non-blocking':
             exec_handle = self.staf_obj.execute(task_name, machine_ip)
-            tasks.monitor.delay(self.staf_obj, exec_handle, p_task_report)
+            tasks.monitor.delay(self.staf_obj, exec_handle, p_task_report, machine_ip)
             return self.create_response(request, {'handle': exec_handle, 'task_name': task_name})
         else:
             raise
