@@ -241,7 +241,7 @@ def task_trigger(request, pk):
     p_task_report = Task_Report.objects.get(id=task_report.id)
     generate_xml(p_task.name, child_cases, task_report.id)
     exec_handle = staf_obj.execute(task_name, machine_ip)
-    tasks.monitor.delay(staf_obj, exec_handle, p_task_report)
+    tasks.monitor.delay(staf_obj, exec_handle, p_task_report, machine_ip)
     task_report = Task_Report.objects.all().order_by('-createdAt')[0]
     case_reports = task_report.case_report_set.all()
     return redirect(reverse("task_view", kwargs={"case_reports": case_reports}))
@@ -387,9 +387,6 @@ def report_task_list(request, pk):
     suites = Suite.objects.all()
     p_task = Task.objects.get(id=pk)
     task_reports = Task_Report.objects.filter(task=p_task).order_by('id')
-    for task_report in task_reports:
-        print task_report.get_result_display()
-        print task_report.result
     return render(request, "report_task.html", locals())
 
 def report_task_view(request, pk):
