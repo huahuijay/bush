@@ -6,21 +6,17 @@ import os
 import time
 import random
 
-
-# while True:
-#     time.sleep(20)
-
 random_num = random.randint(0, 100)
 print sys.argv[:]
 time.sleep(3)
 log_handle = open('/home/test/log/{}.log'.format(sys.argv[1]), 'w')
 
-if len(sys.argv) > 1 and sys.argv[1] == 'litian':
-    deb_location = sys.argv[2]
+if len(sys.argv) > 1 and sys.argv[2] == 'litian':
+    deb_location = sys.argv[3]
     basename = os.path.basename(deb_location)
     os.system('wget {0} -O /tmp/{1}'.format(deb_location, basename))
     log_name = str(time.time())
-    sys.exit(os.system('lintian -v /tmp/{0}'.format(basename)))
+    sys.exit(os.system('lintian -v /tmp/{0} > /home/test/log/{1}.log'.format(basename, sys.argv[1])))
 
 
 else:
