@@ -202,6 +202,10 @@ def task_view(request, pk):
         # generate_xml(p_task.name, child_cases)
     child_cases = Task_Case.objects.filter(task=p_task)
 
+    task_reports = Task_Report.objects.filter(task=p_task)
+    if task_reports:
+        task_report = Task_Report.objects.filter(task=p_task).order_by('-id')[0]
+        machine = Machine.objects.get(suite=p_task.suite)
     cases = Case.objects.filter(suite=p_task.suite).exclude(task_case__in=child_cases.values_list("id", flat=True))
     return render(request, "task_view.html", locals())
 
@@ -220,31 +224,34 @@ def task_edit(request, pk):
         p_num = request.POST['num']
         if p_name == "" or p_description == "":
             error = "数据不能为空"
+        p_task.name = p_name
+        p_task.description = p_description
+        p_task.save()
         for num in range(0, int(p_num)):
             case_id = request.POST['case'+str(num)]
             p_case = Case.objects.get(id=case_id)
             Task_Case(task=p_task, case=p_case, createdAt=now()).save()
         p_task_cases = Task_Case.objects.filter(task=p_task)
-        generate_xml(p_task.name, p_task_cases)
 
     return render(request, "task_edit.html", locals())
 
 def task_trigger(request, pk):
     p_task = Task.objects.get(id=pk)
     # assume the first machine is ok!
-    machine_ip = p_task.suite.machine_set.all()[0].address
+    p_machine = p_task.suite.machine_set.all()[0]
+    machine_ip = p_machine.address
     task_name = p_task.name
     child_cases = Task_Case.objects.filter(task=p_task)
 
-    task_report = Task_Report(task=p_task)
+    task_report = Task_Report(task=p_task, machine=p_machine)
     task_report.save()
     p_task_report = Task_Report.objects.get(id=task_report.id)
     generate_xml(p_task.name, child_cases, task_report.id)
     exec_handle = staf_obj.execute(task_name, machine_ip)
-    tasks.monitor.delay(staf_obj, exec_handle, p_task_report)
+    tasks.monitor.delay(staf_obj, exec_handle, p_task_report, machine_ip)
     task_report = Task_Report.objects.all().order_by('-createdAt')[0]
     case_reports = task_report.case_report_set.all()
-    return redirect(reverse("task_view", kwargs={"case_reports": case_reports}))
+    return redirect(reverse("report_task_list", kwargs={"pk": pk}))
 
 def task_delete(request, pk):
     p_task = Task.objects.get(id=pk)
@@ -386,19 +393,7 @@ def report_list_index(request, pk):
 def report_task_list(request, pk):
     suites = Suite.objects.all()
     p_task = Task.objects.get(id=pk)
-    task_reports = Task_Report.objects.filter(task=p_task).order_by('id')
-    for task_report in task_reports:
-        print task_report.get_result_display()
-        print task_report.result
-    return render(request, "report_task.html", locals())
-
-def report_task_list(request, pk):
-    suites = Suite.objects.all()
-    p_task = Task.objects.get(id=pk)
-    task_reports = Task_Report.objects.filter(task=p_task).order_by('id')
-    for task_report in task_reports:
-        print task_report.get_result_display()
-        print task_report.result
+    task_reports = Task_Report.objects.filter(task=p_task).order_by('-id')
     return render(request, "report_task.html", locals())
 
 def demo_celery(request):

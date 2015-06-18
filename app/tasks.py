@@ -17,7 +17,7 @@ def loop_machine_status():
         machine.save()
 
 @task()
-def monitor(staf_obj, exec_handle, p_task_report):
+def monitor(staf_obj, exec_handle, p_task_report, machine_IP):
     while True:
         result = staf_obj.handle.submit('local', 'queue', 'get wait')
         property_dict = result.resultContext.getRootObject()
@@ -50,7 +50,7 @@ def monitor(staf_obj, exec_handle, p_task_report):
             p_task_report.result = 4
             p_task_report.save()
             time.sleep(3)
-            if staf_obj.query(job_id=exec_handle) == 0:
+            if staf_obj.query(job_id=exec_handle,location=machine_IP) == 0:
                 if staf_obj.result['testcaseTotals']['numFails'] == '0':
                     p_task_report.result = 1 # pass
                     p_task_report.save()

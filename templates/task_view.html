@@ -100,6 +100,7 @@
                         </div>
                         <div class="box-body">
                             <dl class="dl-horizontal">
+                                <dt>描述</dt>
                                 <dd>{{ p_task_case.case.description }}</dd>
                                 <dt>创建时间</dt>
                                 <dd>{{ p_task_case.case.createdAt|date:'Y-m-d H:i:s' }}</dd>
@@ -120,7 +121,7 @@
     <!-- BOX -->
     <div class="box border orange">
         <div class="box-title">
-            <h4><i class="fa fa-gavel"></i>最新运行结果</h4>
+            <h4><i class="fa fa-gavel"></i>运行结果</h4>
             <div class="tools">
                 <a href="javascript:;" class="collapse">
                     <i class="fa fa-chevron-up"></i>
@@ -131,17 +132,30 @@
             </div>
         </div>
         <div class="box-body big">
-            {% if task_report_num %}
-            <dl class="dl-horizontal">
-                <dt>运行次数</dt>
-                <dd>{{ task_report_num.count}}</dd>
-                <dt>创建时间</dt>
-                <dd>{{ task_report.createdAt|date:'Y-m-d H:i:s' }}</dd>
-                <dt>运行状态</dt>
-                <dd>{{ task_report.get_result_display|date:'Y-m-d H:i:s' }}</dd>
-                <dt>运行环境</dt>
+            {% if task_reports %}
+                <dl class="dl-horizontal">
+                    <dt>运行次数</dt>
+                    <dd>{{ task_reports.count}}</dd>
+                </dl>
+                <h4>最新状态</h4>
+                <dl class="dl-horizontal">
+                    <dt>创建时间</dt>
+                    <dd>{{ task_report.createdAt|date:'Y-m-d H:i:s' }}</dd>
+                    <dt>运行状态</dt>
+                    {% ifequal task_report.result 1 %}
+                        <dd><span class="label label-success">{{ task_report.get_result_display }}</span></dd>
+                    {% endifequal %}
+                    {% ifequal task_report.result 2 %}
+                        <dd><span class="label label-danger">{{ task_report.get_result_display }}</span></dd>
+                    {% endifequal %}
+                    {% ifequal task_report.result 3 %}
+                        <dd><span class="label label-info">{{ task_report.get_result_display }}</span></dd>
+                    {% endifequal %}
+                    <dt>运行环境</dt>
                 <dd>{{ machine.name }}</dd>
                 </dl>
+            {% else %}
+                无数据
             {% endif %}
         </div>
     </div>

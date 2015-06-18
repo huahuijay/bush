@@ -61,7 +61,7 @@
                 <tr>
                     <th>#</th>
                     <th>任务名称</th>
-                    <th>状态</th>
+                    <!--<th>状态</th>-->
                     <th>创建时间</th>
                 </tr>
                 </thead>
@@ -71,9 +71,7 @@
                         <tr>
                             <td>{{ forloop.counter }}</td>
                             <td><a href="{% url 'report_task_list' task.id %}">{{ task.name }}</a></td>
-                            <td>
-
-                            </td>
+                            <!--<td></td>-->
                             <td>{{ task.createdAt|date:'Y-m-d H:i:s' }}</td>
                         </tr>
                     {% endfor %}
