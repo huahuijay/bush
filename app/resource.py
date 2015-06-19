@@ -64,7 +64,9 @@ class ProjectStafResource(Resource):
     def trigger_deb(self, request, **kwargs):
         p_task = Task.objects.get(id=int(kwargs['task_id']))
         task_name = p_task.name
-        task_report = Task_Report(task=p_task)
+        # assume the first machine is ok!
+        p_machine = p_task.suite.machine_set.all()[0]
+        task_report = Task_Report(task=p_task, machine_ip=p_machine)
         task_report.save()
         p_task_report = Task_Report.objects.get(id=task_report.id)
         machine_ip = p_task.suite.machine_set.all()[0].address
