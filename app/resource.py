@@ -21,7 +21,7 @@ class ProjectStafResource(Resource):
             # following is new APIs
             url(r"^trigger_deb/(?P<mode>.+)/(?P<task_id>.+?)$", self.wrap_view('trigger_deb'), name='trigger_deb'),
             url(r"^trigger_iso/(?P<mode>.+)/(?P<task_name>.+?)$", self.wrap_view('trigger_iso'), name='trigger_iso'),
-            url(r"^get_result/(?P<staf_handle_key>.+/?)?$", self.wrap_view('get_result'), name='get_result'),
+            url(r"^get_result/(?P<staf_handle_key>.+?)/(?P<machine_ip>.+?)/$", self.wrap_view('get_result'), name='get_result'),
             url(r"^query_task/(?P<suite_id>.+?)/?$", self.wrap_view('query_task'), name='query_task'),
             url(r"^query_suite/?$", self.wrap_view('query_suite'), name='query_suite'),
         ]
@@ -73,7 +73,9 @@ class ProjectStafResource(Resource):
         if kwargs['mode'] == u'non-blocking':
             exec_handle = self.staf_obj.execute(task_name, machine_ip)
             tasks.monitor.delay(self.staf_obj, exec_handle, p_task_report, machine_ip)
-            return self.create_response(request, {'handle': exec_handle, 'task_name': task_name})
+            return self.create_response(request, {'handle': exec_handle,
+                                                  'task_name': task_name,
+                                                  'machine_ip': machine_ip})
         else:
             raise
 
@@ -82,12 +84,13 @@ class ProjectStafResource(Resource):
 
     def get_result(self, request, **kwargs):
         staf_handle_key = kwargs['staf_handle_key']
-        if self._query(staf_handle_key) == 'on-going':
+        machine_ip = kwargs['machine_ip']
+        if self._query(staf_handle_key,machine_ip) == 'on-going':
             return self.create_response(request, {"key": 'on-going'})
         return self.create_response(request, self.staf_obj.result)
 
-    def _query(self, exec_handle):
-        if self.staf_obj.query(job_id=exec_handle) == 0:
+    def _query(self, exec_handle, machine_ip):
+        if self.staf_obj.query(job_id=exec_handle, location=machine_ip) == 0:
             return 'has-done'
         else:
             return 'on-going'
