@@ -65,11 +65,10 @@ class ProjectStafResource(Resource):
         p_task = Task.objects.get(id=int(kwargs['task_id']))
         task_name = p_task.name
         # assume the first machine is ok!
-        p_machine = p_task.suite.machine_set.all()[0]
-        task_report = Task_Report(task=p_task, machine_ip=p_machine)
+        machine_ip = p_task.suite.machine_set.all()[0].address
+        task_report = Task_Report(task=p_task, machine=p_task.suite.machine_set.all()[0])
         task_report.save()
         p_task_report = Task_Report.objects.get(id=task_report.id)
-        machine_ip = p_task.suite.machine_set.all()[0].address
         child_cases = Task_Case.objects.filter(task=p_task)
         generate_xml(p_task.name, child_cases, task_report.id)
         if kwargs['mode'] == u'non-blocking':
