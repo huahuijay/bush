@@ -21,11 +21,10 @@ class Suite(models.Model):
     description = models.TextField('套件描述', blank=True, null=True)
     createdAt = models.DateTimeField("创建的时间")
     modifyAt = models.DateTimeField("修改的时间", auto_now_add=True)
+    suites = models.ManyToManyField('self')
 
 class Case(models.Model):
-    #user = models.ForeignKey(User)
-    #progect_group = models.ForeignKey(ProjectGroup)
-    suite = models.ForeignKey(Suite)
+    suites = models.ManyToManyField(Suite)
     name = models.CharField("用例名称", max_length=255, unique=True)
     description = models.TextField('用例描述', blank=True, null=True)
     level = models.IntegerField('用例等级', choices=((1, '低'), (2, '中'), (3, '高')))
@@ -48,11 +47,11 @@ class Task(models.Model):
 
 class Task_Case(models.Model):
     case = models.ForeignKey(Case)
-    task = models.ForeignKey(Task)
+    task = models.ForeignKey(Suite)
     createdAt = models.DateTimeField("创建的时间", auto_now_add=True)
 
 class Machine(models.Model):
-    suite = models.ForeignKey(Suite)
+    # suite = models.ForeignKey(Suite)
     name = models.CharField("主机名称", max_length=255, unique=True)
     description = models.TextField('主机描述', blank=True, null=True)
     address = models.IPAddressField('IP')
@@ -61,7 +60,7 @@ class Machine(models.Model):
     modifyAt = models.DateTimeField("修改的时间", auto_now_add=True)
 
 class Task_Report(models.Model):
-    task = models.ForeignKey(Task)
+    task = models.ForeignKey(Suite)
     machine = models.ForeignKey(Machine)
     result = models.IntegerField('结果', choices=((1, 'pass'), (2, 'fail'), (3, 'running'), (4, 'finish')), default=3)
     createdAt = models.DateTimeField("创建的时间", auto_now_add=True)
