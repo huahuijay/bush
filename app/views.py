@@ -23,7 +23,7 @@ def login_view(request):
         user = authenticate(username=request.POST['username'], password=request.POST['password'])
         if user:
             login(request, user)
-            return redirect(reverse("task_list"))
+            return redirect(reverse("suite_list"))
         else:
             return render(request, "login.html", locals())
 
