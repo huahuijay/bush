@@ -117,7 +117,14 @@ def suite_edit(request, pk):
     return render(request, "suite_edit.html", locals())
 
 def suite_delete(request, pk):
-    pass
+    Suite.objects.get(id=pk).delete()
+    return redirect(reverse("suite_list"))
+
+def suite_case_delete(request, pk_suite, pk_case):
+    p_suite = Suite.objects.get(id=pk_suite)
+    p_case = Case.objects.get(id=pk_case)
+    p_suite.cases.remove(p_case)
+    return redirect(reverse("task_edit", kwargs={"pk": pk_task}))
 
 def case_list(request):
     # p_suite = None
