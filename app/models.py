@@ -15,16 +15,10 @@ from django.db import models
 #     passwordtoken_expires = models.DateTimeField("找回密码Token有效期限", null=True, blank=True)
 
 
-class Suite(models.Model):
-    #user = models.ForeignKey(User)
-    name = models.CharField('套件名称', max_length=255, unique=True)
-    description = models.TextField('套件描述', blank=True, null=True)
-    createdAt = models.DateTimeField("创建的时间")
-    modifyAt = models.DateTimeField("修改的时间", auto_now_add=True)
-    suites = models.ManyToManyField('self')
+
 
 class Case(models.Model):
-    suites = models.ManyToManyField(Suite)
+    # suites = models.ManyToManyField(Suite)
     name = models.CharField("用例名称", max_length=255, unique=True)
     description = models.TextField('用例描述', blank=True, null=True)
     level = models.IntegerField('用例等级', choices=((1, '低'), (2, '中'), (3, '高')))
@@ -33,6 +27,15 @@ class Case(models.Model):
     param = models.TextField('参数', max_length=255, null=True)
     createdAt = models.DateTimeField("创建的时间")
     modifyAt = models.DateTimeField("修改的时间", auto_now_add=True)
+
+class Suite(models.Model):
+    #user = models.ForeignKey(User)
+    name = models.CharField('套件名称', max_length=255, unique=True)
+    description = models.TextField('套件描述', blank=True, null=True)
+    createdAt = models.DateTimeField("创建的时间")
+    modifyAt = models.DateTimeField("修改的时间", auto_now_add=True)
+    cases = models.ManyToManyField(Case, blank=True, null=True)
+    suites = models.ManyToManyField('self', blank=True, null=True)
 
 class Task(models.Model):
     #user = models.ForeignKey(User)

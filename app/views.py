@@ -15,6 +15,7 @@ import time
 
 import utils
 import tasks
+import pprint
 
 # Create your views here.
 
@@ -23,7 +24,7 @@ def login_view(request):
         user = authenticate(username=request.POST['username'], password=request.POST['password'])
         if user:
             login(request, user)
-            return redirect(reverse("task_list"))
+            return redirect(reverse("suite_list"))
         else:
             return render(request, "login.html", locals())
 
@@ -57,19 +58,20 @@ def suite_create(request):
     if request.method == "POST":
         p_name = request.POST['name']
         p_description = request.POST['description']
-        p_suites = request.POST['catgory']
+        #p_suites = request.POST['catgory']
         if p_name == "" or p_description == "":
             error = "数据不能为空"
         else:
             suite = Suite(name=p_name, description=p_description, createdAt=now())
             suite.save()
-            for p_suite in p_suites:
-                suite.suites.add(Suite.objects.get(name=p_suite))
+            # for p_suite in p_suites:
+            #     suite.suites.add(Suite.objects.get(name=p_suite))
         return redirect(reverse("suite_list"))
     return render(request, "suite_create.html", locals())
 
 def suite_view(request, pk):
-    pass
+    suite = Suite.objects.get(pk = pk)
+    return render(request, "suite_view.html", {"suite":suite})
 
 def suite_edit(request, pk):
     pass
@@ -78,34 +80,34 @@ def suite_delete(request, pk):
     pass
 
 def case_list(request):
-    p_suite = None
-    cases = None
-    suites = None
+    # p_suite = None
+    # cases = None
+    # suites = None
 
-    if Suite.objects.exists():
-        p_suite = Suite.objects.all().order_by('id')[0]
-        suites = Suite.objects.all()
-        cases = Case.objects.filter(suite=p_suite)
+    # if Suite.objects.exists():
+        # p_suite = Suite.objects.all().order_by('id')[0]
+        # suites = Suite.objects.all()
+    cases = Case.objects.all()
     return render(request, "case.html", locals())
 
 
 def case_list_index(request, pk):
-    p_suite = None
-    suites = None
-    cases = None
-    if Suite.objects.exists():
-        suites = Suite.objects.all()
-        p_suite = Suite.objects.get(id=pk)
-        cases = Case.objects.filter(suite=p_suite).order_by('id')
+    # p_suite = None
+    # suites = None
+    # cases = None
+    # if Suite.objects.exists():
+    # suites = Suite.objects.all()
+    # p_suite = Suite.objects.get(id=pk)
+    cases = Case.objects.all().order_by('id')
     return render(request, "case.html", locals())
 
 def case_create(request):
     # p_suite = Suite.objects.get(id=pk)
-    suites = Suite.objects.all()
+    # suites = Suite.objects.all()
     if request.method == "POST":
         p_name = request.POST['name']
         p_level = request.POST['level']
-        p_suites = request.POST['suites']
+        # p_suites = request.POST['suites']
         # p_suite = Suite.objects.get(id=pk)
         p_command = request.POST['command']
         p_script = request.POST['script']
@@ -114,12 +116,12 @@ def case_create(request):
         if p_name == "" or p_command == "" or p_description == "":
             error = "数据不能为空"
         else:
-            for p_suite in p_suites:
-                case = Case(name=p_name, level=p_level, command=p_command,
+            # for p_suite in p_suites:
+            case = Case(name=p_name, level=p_level, command=p_command,
                  script=p_script, param=p_param, description=p_description, createdAt=now())
-                case.save()
-                case.suites.add(p_suite)
-            return redirect(reverse("case_list_index", kwargs={"pk": pk}))
+            case.save()
+                # case.suites.add(p_suite)
+            return redirect(reverse("case_list_index", kwargs={"pk": case.pk}))
     return render(request, "case_create.html", locals())
 
 def case_view(request, pk):

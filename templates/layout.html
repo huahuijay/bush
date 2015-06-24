@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
-    <title>Cloud Admin | Gallery</title>
+    <title>STAF</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -61,32 +61,38 @@
             <!-- /SIDEBAR COLLAPSE -->
         </div>
         <!-- NAVBAR LEFT -->
-        <ul class="nav navbar-nav pull-left hidden-xs" id="navbar-left">
-            <li class="dropdown">
-                <a href="/task" class="dropdown-toggle">
-                    <i class="fa fa-tasks"></i>
-                    <span class="name">任务</span>
-                </a>
-            </li>
-            <li class="dropdown">
-                <a href="/report" class="dropdown-toggle">
-                    <i class="fa  fa-dashboard"></i>
-                    <span class="name">报表</span>
-                </a>
-            </li>
-            <li class="dropdown">
-                <a href="/case" class="dropdown-toggle">
-                    <i class="fa fa-suitcase"></i>
-                    <span class="name">用例</span>
-                </a>
-            </li>
-            <li class="dropdown">
-                <a href="/machine" class="dropdown-toggle">
-                    <i class="fa fa-desktop"></i>
-                    <span class="name">测试机</span>
-                </a>
-            </li>
-        </ul>
+{#        <ul class="nav navbar-nav pull-left hidden-xs" id="navbar-left">#}
+{#            <li class="dropdown">#}
+{#                <a href={% url 'suite_list' %} class="dropdown-toggle">#}
+{#                    <i class="fa fa-tasks"></i>#}
+{#                    <span class="name">套件</span>#}
+{#                </a>#}
+{#            </li>#}
+{#            <li class="dropdown">#}
+{#                <a href={% url 'case_list' %} class="dropdown-toggle">#}
+{#                    <i class="fa fa-suitcase"></i>#}
+{#                    <span class="name">用例</span>#}
+{#                </a>#}
+{#            </li>#}
+{#            <li class="dropdown">#}
+{#                <a href={% url 'script_list' %} class="dropdown-toggle">#}
+{#                    <i class="fa fa-suitcase"></i>#}
+{#                    <span class="name">脚本</span>#}
+{#                </a>#}
+{#            </li>#}
+{#            <li class="dropdown">#}
+{#                <a href={% url 'report_list' %} class="dropdown-toggle">#}
+{#                    <i class="fa  fa-dashboard"></i>#}
+{#                    <span class="name">报表</span>#}
+{#                </a>#}
+{#            </li>#}
+{#            <li class="dropdown">#}
+{#                <a href={% url 'machine_list' %} class="dropdown-toggle">#}
+{#                    <i class="fa fa-desktop"></i>#}
+{#                    <span class="name">测试机</span>#}
+{#                </a>#}
+{#            </li>#}
+{#        </ul>#}
         <!-- /NAVBAR LEFT -->
         <!-- BEGIN TOP NAVIGATION MENU -->
         <ul class="nav navbar-nav pull-right">
@@ -105,8 +111,8 @@
                         <i class="fa fa-angle-down"></i>
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a href="/suite"><i class="fa fa-rocket"></i> 套件管理</a></li>
-                        <li><a href="/script"><i class="fa fa-file-text"></i> 脚本管理</a></li>
+{#                        <li><a href="/suite"><i class="fa fa-rocket"></i> 套件管理</a></li>#}
+{#                        <li><a href="/script"><i class="fa fa-file-text"></i> 脚本管理</a></li>#}
                         <li><a href="/logout"><i class="fa fa-power-off"></i> 退出登录</a></li>
                     </ul>
                 </li>
@@ -120,16 +126,62 @@
 
 <!-- PAGE -->
 <section id="page">
-
     {% block page %}
         <!-- SIDEBAR -->
         <div id="sidebar" class="sidebar">
-            {% block sidebar %}
-            {% endblock %}
+            <div class="sidebar-menu nav-collapse">
+                <div class="divide-20"></div>
+                <!-- SEARCH BAR -->
+                <div id="search-bar">
+                    <input class="search" type="text" placeholder="Search"><i class="fa fa-search search-icon"></i>
+                </div>
+                <!-- /SEARCH BAR -->
+{#                {%  if suites %}#}
+                    <!-- SIDEBAR MENU -->
+                    <ul>
+{#                        <li>#}
+{#                            <a class="" href="{% url 'case_list_index' suite.id %}">#}
+{#                                <i class="fa fa-bookmark"></i>#}
+{#                                <span class="menu-text">{{ suite.name }}</span>#}
+{#                            </a>#}
+{#                        </li>#}
+                        <li class="dropdown">
+                            <a href={% url 'suite_list' %} class="dropdown-toggle">
+                                <i class="fa fa-tasks"></i>
+                                <span class="name">套件</span>
+                            </a>
+                        </li>
+                        <li class="dropdown">
+                            <a href={% url 'case_list' %} class="dropdown-toggle">
+                                <i class="fa fa-suitcase"></i>
+                                <span class="name">用例</span>
+                            </a>
+                        </li>
+                        <li class="dropdown">
+                            <a href={% url 'script_list' %} class="dropdown-toggle">
+                                <i class="fa fa-suitcase"></i>
+                                <span class="name">脚本</span>
+                            </a>
+                        </li>
+                        <li class="dropdown">
+                            <a href={% url 'report_list' %} class="dropdown-toggle">
+                                <i class="fa  fa-dashboard"></i>
+                                <span class="name">报表</span>
+                            </a>
+                        </li>
+                        <li class="dropdown">
+                            <a href={% url 'machine_list' %} class="dropdown-toggle">
+                                <i class="fa fa-desktop"></i>
+                                <span class="name">测试机</span>
+                            </a>
+                        </li>
+                    </ul>
+                    <!-- /SIDEBAR MENU -->
+{#                {% endif %}#}
+                <!-- /SEARCH BAR -->
+            </div>
         </div>
         <!-- /SIDEBAR -->
-
-
         <div id="main-content">
             <!-- /SAMPLE BOX CONFIGURATION MODAL FORM-->
             <div class="container">
@@ -140,7 +192,6 @@
                             {% block header %}
                             {% endblock %}
                         </div>
-
                         <div class="content">
                             {% block content %}
                             {% endblock %}

@@ -18,7 +18,7 @@ urlpatterns = [
 
     url(r'^case$', views.case_list, name="case_list"),
     url(r'^case/(?P<pk>\d+)$', views.case_list_index, name="case_list_index"),
-    url(r'^case/create/(?P<pk>\d+)$', views.case_create, name="case_create"),
+    url(r'^case/create $', views.case_create, name="case_create"),
     url(r'^case/view/(?P<pk>\d+)$', views.case_view, name="case_view"),
     url(r'^case/edit/(?P<pk>\d+)$', views.case_edit, name="case_edit"),
     url(r'^case/del/(?P<pk>\d+)$', views.case_delete, name="case_delete"),

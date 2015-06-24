@@ -1,42 +1,42 @@
 {% extends "layout.html" %}
-{% block sidebar %}
-    <div class="sidebar-menu nav-collapse">
-        <div class="divide-20"></div>
-        <!-- SEARCH BAR -->
-        <div id="search-bar">
-            <input class="search" type="text" placeholder="Search"><i class="fa fa-search search-icon"></i>
-        </div>
-        <!-- /SEARCH BAR -->
-        {%  if suites %}
-            <!-- SIDEBAR MENU -->
-            <ul>
-                {% for suite in suites %}
-                    <li>
-                        <a class="" href="{% url 'machine_list_index' suite.id %}">
-                            <i class="fa fa-bookmark"></i>
-                            <span class="menu-text">{{ suite.name }}</span>
-                        </a>
-                    </li>
-                {% endfor %}
-            </ul>
-            <!-- /SIDEBAR MENU -->
-        {% endif %}
-    </div>
-{% endblock %}
+{#{% block sidebar %}#}
+{#    <div class="sidebar-menu nav-collapse">#}
+{#        <div class="divide-20"></div>#}
+{#        <!-- SEARCH BAR -->#}
+{#        <div id="search-bar">#}
+{#            <input class="search" type="text" placeholder="Search"><i class="fa fa-search search-icon"></i>#}
+{#        </div>#}
+{#        <!-- /SEARCH BAR -->#}
+{#        {%  if suites %}#}
+{#            <!-- SIDEBAR MENU -->#}
+{#            <ul>#}
+{#                {% for suite in suites %}#}
+{#                    <li>#}
+{#                        <a class="" href="{% url 'machine_list_index' suite.id %}">#}
+{#                            <i class="fa fa-bookmark"></i>#}
+{#                            <span class="menu-text">{{ suite.name }}</span>#}
+{#                        </a>#}
+{#                    </li>#}
+{#                {% endfor %}#}
+{#            </ul>#}
+{#            <!-- /SIDEBAR MENU -->#}
+{#        {% endif %}#}
+{#    </div>#}
+{#{% endblock %}#}
 
 {% block header %}
     <!-- PAGE HEADER-->
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="page-header" style="padding-top: 15px">
-                <div class="clearfix">
-                    {% if p_suite %}
-                        <h3 class="content-title pull-left">{{ p_suite.name }}</h3>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-    </div>
+{#    <div class="row">#}
+{#        <div class="col-sm-12">#}
+{#            <div class="page-header" style="padding-top: 15px">#}
+{#                <div class="clearfix">#}
+{#                    {% if p_suite %}#}
+{#                        <h3 class="content-title pull-left">{{ p_suite.name }}</h3>#}
+{#                    {% endif %}#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
     <!-- /PAGE HEADER -->
 {% endblock %}
 

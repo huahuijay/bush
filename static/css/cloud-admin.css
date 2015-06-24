@@ -1896,7 +1896,7 @@ textarea.input-lg {
   background-image: none;
   border: 1px solid transparent;
   white-space: nowrap;
-  padding: 6px 12px;
+  padding: 3px 8px;
   font-size: 14px;
   line-height: 1.428571429;
   border-radius: 4px;
@@ -6528,8 +6528,8 @@ fieldset[disabled] .btn-yellow.active {
 /*-----------------------------------------------------------------------------------*/
 .box {
   clear: both;
-  margin-top: 0px;
-  margin-bottom: 25px;
+  margin-top: 15px;
+  margin-bottom: 15px;
   padding: 0px;
 }
 .box .box-title {
@@ -6789,7 +6789,7 @@ fieldset[disabled] .btn-yellow.active {
 }
 .box.border > .box-title,
 .box.solid > .box-title {
-  padding: 8px 10px 2px;
+  padding: 6px 10px 6px;
   border-bottom: 1px solid #c4c4c4;
   min-height: 30px;
   background-color: #dbdbdb;
@@ -6800,11 +6800,11 @@ fieldset[disabled] .btn-yellow.active {
 .box.border > .box-title h4,
 .box.solid > .box-title h4 {
   display: inline-block;
-  font-size: 18px;
+  font-size: 24px;
   font-weight: 400;
   margin: 0;
   padding: 0;
-  margin-bottom: 7px;
+  margin-bottom: 0px;
 }
 .box.border > .box-title h4 i,
 .box.solid > .box-title h4 i {

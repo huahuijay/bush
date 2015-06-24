@@ -1,88 +1,91 @@
-{% extends "layout.bak.html" %}
+{% extends "layout.html" %}
+    {{ suite.name }}
+    {{ suite.description }}
+    {{ suite.suites }}
 {% block content %}
-    <ol class="breadcrumb">
-        <li><a href="/suite.html">All</a></li>
-        <li>{{ p_suite.name }}</li>
-    </ol>
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th>套件</th>
-            <th>描述</th>
-            <th>创建时间</th>
-            <th>修改时间</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>{{ p_suite.name }}</td>
-            <td>{{ p_suite.description }}</td>
-            <td>{{ p_suite.createdAt|date:'Y-m-d H:i:s' }}</td>
-            <td>{{ p_suite.modifyAt|date:'Y-m-d H:i:s' }}</td>
-        </tr>
-        </tbody>
-        <tfoot>
-        <tr>
-            <td colspan='12'></td>
-        </tr>
-        </tfoot>
-    </table>
-    <h4>任务列表:</h4>
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th>任务名称</th>
-            <th>创建时间</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% if tasks %}
-            {% for task in tasks %}
-                <tr>
-                    <td><a href="{% url 'task_view' task.id %}">{{ task.name }}</a></td>
-                    <td>{{ task.createdAt|date:'Y-m-d H:i:s' }}</td>
-                </tr>
-            {% endfor %}
-        {% else %}
-            <tr>
-                <td>没有找到数据.</td>
-            </tr>
-        {% endif %}
-        </tbody>
-        <tfoot>
-        <tr>
-            <td colspan='12'></td>
-        </tr>
-        </tfoot>
-    </table>
-    <h4>用例列表:</h4>
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th>用例名称</th>
-            <th>重要性</th>
-            <th>创建时间</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% if cases %}
-            {% for case in cases %}
-                <tr>
-                    <td><a href="{% url 'case_view' case.id %}">{{ case.name }}</a></td>
-                    <td>{{ case.get_level_display }}</td>
-                    <td>{{ case.createdAt|date:'Y-m-d H:i:s' }}</td>
-                </tr>
-            {% endfor %}
-        {% else %}
-            <tr>
-                <td>没有找到数据.</td>
-            </tr>
-        {% endif %}
-        </tbody>
-        <tfoot>
-        <tr>
-            <td colspan='12'></td>
-        </tr>
-        </tfoot>
-    </table>
-{% endblock %}
+{#    <ol class="breadcrumb">#}
+{#        <li><a href="/suite.html">All</a></li>#}
+{#        <li>{{ p_suite.name }}</li>#}
+{#    </ol>#}
+{#    <table class="table table-hover">#}
+{#        <thead>#}
+{#        <tr>#}
+{#            <th>套件</th>#}
+{#            <th>描述</th>#}
+{#            <th>创建时间</th>#}
+{#            <th>修改时间</th>#}
+{#        </tr>#}
+{#        </thead>#}
+{#        <tbody>#}
+{#        <tr>#}
+{#            <td>{{ p_suite.name }}</td>#}
+{#            <td>{{ p_suite.description }}</td>#}
+{#            <td>{{ p_suite.createdAt|date:'Y-m-d H:i:s' }}</td>#}
+{#            <td>{{ p_suite.modifyAt|date:'Y-m-d H:i:s' }}</td>#}
+{#        </tr>#}
+{#        </tbody>#}
+{#        <tfoot>#}
+{#        <tr>#}
+{#            <td colspan='12'></td>#}
+{#        </tr>#}
+{#        </tfoot>#}
+{#    </table>#}
+{#    <h4>任务列表:</h4>#}
+{#    <table class="table table-hover">#}
+{#        <thead>#}
+{#        <tr>#}
+{#            <th>任务名称</th>#}
+{#            <th>创建时间</th>#}
+{#        </tr>#}
+{#        </thead>#}
+{#        <tbody>#}
+{#        {% if tasks %}#}
+{#            {% for task in tasks %}#}
+{#                <tr>#}
+{#                    <td><a href="{% url 'task_view' task.id %}">{{ task.name }}</a></td>#}
+{#                    <td>{{ task.createdAt|date:'Y-m-d H:i:s' }}</td>#}
+{#                </tr>#}
+{#            {% endfor %}#}
+{#        {% else %}#}
+{#            <tr>#}
+{#                <td>没有找到数据.</td>#}
+{#            </tr>#}
+{#        {% endif %}#}
+{#        </tbody>#}
+{#        <tfoot>#}
+{#        <tr>#}
+{#            <td colspan='12'></td>#}
+{#        </tr>#}
+{#        </tfoot>#}
+{#    </table>#}
+{#    <h4>用例列表:</h4>#}
+{#    <table class="table table-hover">#}
+{#        <thead>#}
+{#        <tr>#}
+{#            <th>用例名称</th>#}
+{#            <th>重要性</th>#}
+{#            <th>创建时间</th>#}
+{#        </tr>#}
+{#        </thead>#}
+{#        <tbody>#}
+{#        {% if cases %}#}
+{#            {% for case in cases %}#}
+{#                <tr>#}
+{#                    <td><a href="{% url 'case_view' case.id %}">{{ case.name }}</a></td>#}
+{#                    <td>{{ case.get_level_display }}</td>#}
+{#                    <td>{{ case.createdAt|date:'Y-m-d H:i:s' }}</td>#}
+{#                </tr>#}
+{#            {% endfor %}#}
+{#        {% else %}#}
+{#            <tr>#}
+{#                <td>没有找到数据.</td>#}
+{#            </tr>#}
+{#        {% endif %}#}
+{#        </tbody>#}
+{#        <tfoot>#}
+{#        <tr>#}
+{#            <td colspan='12'></td>#}
+{#        </tr>#}
+{#        </tfoot>#}
+{#    </table>#}
+{#{% endblock %}#}
