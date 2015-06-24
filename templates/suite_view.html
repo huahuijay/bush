@@ -1,8 +1,74 @@
 {% extends "layout.html" %}
-    {{ suite.name }}
-    {{ suite.description }}
-    {{ suite.suites }}
+{% block header %}
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-header" >
+                <div class="clearfix">
+                    <h3 class="content-title pull-left"><a href="{% url 'suite_view' suite.pk %}">{{ suite.name }}</a></h3>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
 {% block content %}
+    <div class="box border blue">
+        <div class="box-title">
+            <h4><i class="fa fa-bars"></i> 套件内容 </h4>
+            {% if request.user.is_authenticated %}
+                <a href="{% url 'add_suite_list' suite.pk %}">
+                    <button class="btn btn-primary pull-right"><i class="fa fa-file-text fa-fw"></i>添加套件</button>
+                </a>
+                <a href="{% url 'add_case_list' suite.pk %}">
+                    <button class="btn btn-primary pull-right"><i class="fa fa-file-text fa-fw"></i>添加用例</button>
+                </a>
+{#                <a href="{% url 'suite_create' %}">#}
+{#                    <button class="btn btn-primary pull-right"><i class="fa fa-file-text fa-fw"></i>新建</button>#}
+{#                </a>#}
+            {% endif %}
+        </div>
+        <div class="box-body">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>名称</th>
+                        <th>类型</th>
+                        <th>描述</th>
+                        <th>创建时间</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% if suite.suites.all %}
+                    {% for c_suite in suite.suites.all %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td><a href="{% url 'suite_view' c_suite.id %}">{{ c_suite.name }}</a></td>
+                            <td>套间</td>
+                            <td>{{ c_suite.description }}</td>
+                            <td>{{ c_suite.createdAt | date:'Y-m-d H:i:s' }}</td>
+                            <td><a href="{% url 'remove_suite'  suite.pk c_suite.pk %}"><button class="btn btn-danger">从套件中移除</button></a></td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+                {% if suite.cases.all %}
+                    {% for case in suite.cases.all %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td><a href="{% url 'case_view' case.id %}">{{ case.name }}</a></td>
+                            <td>用例</td>
+                            <td>{{ case.description }}</td>
+                            <td>{{ case.createdAt | date:'Y-m-d H:i:s' }}</td>
+                            <td><a href="{% url 'remove_case' suite.pk case.pk %}"><button class="btn btn-danger">从套件中移除</button></a></td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+            </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+{#{% block content %}#}
 {#    <ol class="breadcrumb">#}
 {#        <li><a href="/suite.html">All</a></li>#}
 {#        <li>{{ p_suite.name }}</li>#}

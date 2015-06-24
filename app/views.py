@@ -73,8 +73,68 @@ def suite_view(request, pk):
     suite = Suite.objects.get(pk = pk)
     return render(request, "suite_view.html", {"suite":suite})
 
+def add_suite_view(request, pk):
+    a_suites = Suite.objects.all()
+    f_suites = Suite.objects.filter(pk=pk)
+    c_suite = f_suites[0].suites.all()
+
+    suites = [suite for suite in a_suites if ((suite not in f_suites) & (suite not in c_suite))]
+
+    return render(request, "suite_add.html", {"suites":suites,"f_suite":f_suites[0]})
+
+def add_suite(request,f_suite_pk, suite_pk):
+    f_suite = Suite.objects.filter(pk=f_suite_pk)[0]
+    suite = Suite.objects.filter(pk=suite_pk)[0]
+
+    f_suite.suites.add(suite)
+
+    a_suites = Suite.objects.all()
+    f_suites = Suite.objects.filter(pk=f_suite.pk)
+    c_suite = f_suites[0].suites.all()
+
+    suites = [suite for suite in a_suites if ((suite not in f_suites) & (suite not in c_suite))]
+
+    return render(request, "suite_add.html", {"suites":suites,"f_suite":f_suites[0]})
+
+def add_case_view(request, pk):
+    a_cases = Case.objects.all()
+    f_suites = Suite.objects.filter(pk=pk)
+    c_cases = f_suites[0].cases.all()
+
+    # pprint.pprint(a_cases,c_cases)
+
+    cases = [case for case in a_cases if (case not in c_cases)]
+
+    return render(request, "case_add.html", {"cases":cases,"f_suite":f_suites[0]})
+
+def add_case(request, f_suite_pk, case_pk):
+    f_suite = Suite.objects.filter(pk=f_suite_pk)[0]
+    case = Case.objects.filter(pk=case_pk)[0]
+
+    f_suite.cases.add(case)
+    f_suite.save()
+
+    a_cases = Case.objects.all()
+    f_suites = Suite.objects.filter(pk=f_suite_pk)
+    c_cases = f_suites[0].cases.all()
+
+    cases = [case for case in a_cases if (case not in c_cases)]
+
+    return render(request, "case_add.html", {"cases":cases,"f_suite":f_suites[0]})
+
 def suite_edit(request, pk):
-    pass
+    suite = Suite.objects.get(pk = pk)
+    return render(request, "suite_edit.html", {"suite":suite})
+
+def suite_remove(request,pk ,suite_pk):
+    suite = Suite.objects.get(pk = pk)
+    suite_del = Suite.objects.get(pk = suite_pk)
+
+    suite.suites.remove(suite_del)
+    suite.save()
+
+    suite = Suite.objects.get(pk = pk)
+    return render(request, "suite_view.html", {"suite":suite})
 
 def suite_delete(request, pk):
     pass
@@ -135,6 +195,16 @@ def case_view(request, pk):
 def case_delete(request, pk):
     Case.objects.get(id=pk).delete()
     return redirect(reverse("case_list"))
+
+def case_remove(request, pk, case_pk):
+    suite = Suite.objects.get(pk = pk)
+    case_del = Case.objects.get(pk = case_pk)
+
+    suite.cases.remove(case_del)
+    suite.save()
+
+    suite = Suite.objects.get(pk = pk)
+    return render(request, "suite_view.html", {"suite":suite})
 
 def case_edit(request, pk):
     suites = None

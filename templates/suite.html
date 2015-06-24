@@ -18,6 +18,7 @@
                             <th>套件名称</th>
                             <th>描述</th>
                             <th>创建时间</th>
+                            <th>操作</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -28,6 +29,17 @@
                                 <td><a href="{% url 'suite_view' suite.id %}">{{ suite.name }}</a></td>
                                 <td>{{ suite.description }}</td>
                                 <td>{{ suite.createdAt | date:'Y-m-d H:i:s' }}</td>
+                                <td>
+                                    {% if request.user.is_authenticated %}
+                                        <a href="{% url 'suite_create' %}">
+                                            <button class="btn btn-primary"><i class="fa fa-file-text fa-fw"></i>删除</button>
+                                        </a>
+                                    {% else %}
+                                        <a href="{% url 'login' %}">
+                                            <button class="btn btn-primary"><i class="fa fa-file-text fa-fw"></i>请登录</button>
+                                        </a>
+                                    {% endif %}
+                                </td>
                             </tr>
                         {% endfor %}
                     {% endif %}

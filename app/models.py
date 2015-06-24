@@ -28,6 +28,9 @@ class Case(models.Model):
     createdAt = models.DateTimeField("创建的时间")
     modifyAt = models.DateTimeField("修改的时间", auto_now_add=True)
 
+    def __str__(self):
+        return self.name
+
 class Suite(models.Model):
     #user = models.ForeignKey(User)
     name = models.CharField('套件名称', max_length=255, unique=True)
@@ -35,7 +38,10 @@ class Suite(models.Model):
     createdAt = models.DateTimeField("创建的时间")
     modifyAt = models.DateTimeField("修改的时间", auto_now_add=True)
     cases = models.ManyToManyField(Case, blank=True, null=True)
-    suites = models.ManyToManyField('self', blank=True, null=True)
+    suites = models.ManyToManyField('self', blank=True, null=True, symmetrical=False)
+
+    def __str__(self):
+        return self.name
 
 class Task(models.Model):
     #user = models.ForeignKey(User)
