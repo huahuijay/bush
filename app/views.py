@@ -150,7 +150,7 @@ def suite_remove(request,pk ,suite_pk):
 
 
 def suite_delete(request, pk):
-    Suite.objects.get(id=pk).delete()
+    Suite.objects.get(pk=pk).delete()
     return redirect(reverse("suite_list"))
 
 def suite_case_delete(request, pk_suite, pk_case):
