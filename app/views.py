@@ -124,7 +124,7 @@ def suite_case_delete(request, pk_suite, pk_case):
     p_suite = Suite.objects.get(id=pk_suite)
     p_case = Case.objects.get(id=pk_case)
     p_suite.cases.remove(p_case)
-    return redirect(reverse("task_edit", kwargs={"pk": pk_task}))
+    return redirect(reverse("suite_view", kwargs={"pk": pk_suite}))
 
 def case_list(request):
     # p_suite = None
