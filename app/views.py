@@ -102,7 +102,7 @@ def suite_edit(request, pk):
             error = "数据不能为空"
         p_suite.name = p_name
         p_suite.description = p_description
-        p_task.save()
+        p_suite.save()
         for num in range(0, int(p_num)):
             case_id = request.POST['case'+str(num)]
             p_case = Case.objects.get(id=case_id)
