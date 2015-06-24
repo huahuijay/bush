@@ -1,0 +1,22 @@
+{% extends 'layout.html' %}
+{% block header %}
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-header" >
+                <div class="clearfix">
+                    <h3 class="content-title pull-left"><a href="{% url 'suite_view' suite.pk %}">{{ suite.name }}</a></h3>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="box border blue" id="formWizard" style="margin: 15px">
+        <div class="box-title">
+            <h4><i class="fa fa-bars"></i>编辑套件</h4>
+        </div>
+        <div class="box-body form">
+        </div>
+    </div>
+{% endblock %}
