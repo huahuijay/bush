@@ -14,7 +14,7 @@ urlpatterns = [
     url(r'^suite/view/(?P<pk>\d+)$', views.suite_view, name="suite_view"),
     url(r'^suite/edit/(?P<pk>\d+)$', views.suite_edit, name="suite_edit"),
     url(r'^suite/del/(?P<pk>\d+)$', views.suite_delete, name="suite_del"),
-    #url(r'suite/view/(?P<pk>\d+)$', views.suite_view, name="suite_view"),
+    url(r'suite/del/(?P<pk_suite>\d+)/(?P<pk_case>\d+)$', views.suite_case_delete, name="suite_case_delete"),
 
     url(r'^case$', views.case_list, name="case_list"),
     url(r'^case/(?P<pk>\d+)$', views.case_list_index, name="case_list_index"),
