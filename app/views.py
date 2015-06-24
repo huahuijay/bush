@@ -90,7 +90,7 @@ def suite_edit(request, pk):
     p_cases = None
     p_task_cases = None
     p_suite = Suite.objects.get(id=pk)
-    p_task_cases = Task_Case.objects.filter(task=p_suite)
+    # p_task_cases = Suite.cases.all()
     # if Suite.objects.exists():
     #     suites = Suite.objects.all()
     #     p_cases = Case.objects.filter(suite=p_task.suite)
@@ -109,8 +109,10 @@ def suite_edit(request, pk):
         for num in range(0, int(p_num)):
             case_id = request.POST['case'+str(num)]
             p_case = Case.objects.get(id=case_id)
-            Task_Case(task=p_suite, case=p_case, createdAt=now()).save()
-        p_task_cases = Task_Case.objects.filter(task=p_suite)
+            p_suite.cases.add(p_case)
+            # Task_Case(task=p_suite, case=p_case, createdAt=now()).save()
+        # p_task_cases = Task_Case.objects.filter(task=p_suite)
+    p_task_cases = p_suite.cases.all()
 
     return render(request, "suite_edit.html", locals())
 
