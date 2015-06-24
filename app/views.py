@@ -10,10 +10,6 @@ from utils import generate_xml
 from staf_wrapper.wrapper_STAF import STAFWrapper,staf_obj
 
 import os
-import threading
-import time
-
-import utils
 import tasks
 import pprint
 
@@ -47,8 +43,8 @@ def suite_list(request):
         else:
             suite = Suite(name=p_name, description=p_description, createdAt=now())
             suite.save()
-            for p_suite in p_suites:
-                suite.suites.add(Suite.objects.get(name=p_suite))
+            # for p_suite in p_suites:
+            #     suite.suites.add(Suite.objects.get(name=p_suite))
     if Suite.objects.exists():
         suites = Suite.objects.all()
 
@@ -71,7 +67,23 @@ def suite_create(request):
 
 def suite_view(request, pk):
     suite = Suite.objects.get(pk = pk)
-    return render(request, "suite_view.html", {"suite":suite})
+    suites = None
+    p_suite = Suite.objects.get(id=pk)
+    p_cases = p_suite.cases.all()
+
+    if request.method == "POST":
+        p_id = request.POST['case']
+        p_case = Case.objects.get(id=p_id)
+        Task_Case(case=p_case, task=p_suite).save()
+
+    child_cases = Task_Case.objects.filter(task=p_suite)
+
+    task_reports = Task_Report.objects.filter(task=p_suite)
+    if task_reports:
+        task_report = Task_Report.objects.filter(task=p_suite).order_by('-id')[0]
+        machine = Machine.objects.all()[0]
+    # cases = Case.objects.filter(suite=p_suite).exclude(task_case__in=child_cases.values_list("id", flat=True))
+    return render(request, "suite_view.html", locals())
 
 def add_suite_view(request, pk):
     a_suites = Suite.objects.all()
@@ -136,8 +148,16 @@ def suite_remove(request,pk ,suite_pk):
     suite = Suite.objects.get(pk = pk)
     return render(request, "suite_view.html", {"suite":suite})
 
+
 def suite_delete(request, pk):
-    pass
+    Suite.objects.get(id=pk).delete()
+    return redirect(reverse("suite_list"))
+
+def suite_case_delete(request, pk_suite, pk_case):
+    p_suite = Suite.objects.get(id=pk_suite)
+    p_case = Case.objects.get(id=pk_case)
+    p_suite.cases.remove(p_case)
+    return redirect(reverse("suite_view", kwargs={"pk": pk_suite}))
 
 def case_list(request):
     # p_suite = None
@@ -347,7 +367,7 @@ def task_trigger(request, pk):
     machine_ip = p_machine.address
     task_name = p_suite.name
 
-    child_cases = p_suite.case_set.all()
+    child_cases = p_suite.cases.all()
     get_cases(p_suite.suites.all(), child_cases)
     child_cases = list(set(child_cases))
 
