@@ -97,12 +97,15 @@ def suite_edit(request, pk):
     if request.method == "POST":
         p_name = request.POST['name']
         p_description = request.POST['description']
+        p_suites = request.POST['suites']
         p_num = request.POST['num']
         if p_name == "" or p_description == "":
             error = "数据不能为空"
         p_suite.name = p_name
         p_suite.description = p_description
         p_suite.save()
+        for p_suite in p_suites:
+            p_suite.suites.add(Suite.objects.get(name=p_suite))
         for num in range(0, int(p_num)):
             case_id = request.POST['case'+str(num)]
             p_case = Case.objects.get(id=case_id)
@@ -312,7 +315,7 @@ def task_trigger(request, pk):
     machine_ip = p_machine.address
     task_name = p_suite.name
 
-    child_cases = p_suite.case_set.all()
+    child_cases = p_suite.cases.all()
     get_cases(p_suite.suites.all(), child_cases)
     child_cases = list(set(child_cases))
 
