@@ -71,12 +71,12 @@ def suite_view(request, pk):
     p_suite = Suite.objects.get(id=pk)
     p_cases = p_suite.cases.all()
 
-    if request.method == "POST":
-        p_id = request.POST['case']
-        p_case = Case.objects.get(id=p_id)
-        Task_Case(case=p_case, task=p_suite).save()
+    # if request.method == "POST":
+    #     p_id = request.POST['case']
+    #     p_case = Case.objects.get(id=p_id)
+    #     Task_Case(case=p_case, task=p_suite).save()
 
-    child_cases = Task_Case.objects.filter(task=p_suite)
+    # child_cases = Task_Case.objects.filter(task=p_suite)
 
     task_reports = Task_Report.objects.filter(task=p_suite)
     if task_reports:
@@ -85,28 +85,63 @@ def suite_view(request, pk):
     # cases = Case.objects.filter(suite=p_suite).exclude(task_case__in=child_cases.values_list("id", flat=True))
     return render(request, "suite_view.html", locals())
 
+def get_f_suite(suites, suites_list):
+    if not suites:
+        return
+    else:
+        for suite in suites:
+            suites_list.extend(suite.suite_set.all())
+            get_f_suite(suite.suite_set.all(), suites_list)
+
+def get_sub_suite(suites, suites_list):
+    if not suites:
+        return
+    else:
+        for suite in suites:
+            suites_list.extend(suite.suites.all())
+            get_sub_suite(suite.suites.all(), suites_list)
+
 def add_suite_view(request, pk):
     a_suites = Suite.objects.all()
     f_suites = Suite.objects.filter(pk=pk)
     c_suite = f_suites[0].suites.all()
 
-    suites = [suite for suite in a_suites if ((suite not in f_suites) & (suite not in c_suite))]
+    father_suites = f_suites[0].suite_set.all()
+    father_suites_list = list(father_suites)
 
-    return render(request, "suite_add.html", {"suites":suites,"f_suite":f_suites[0]})
+    get_f_suite(father_suites, father_suites_list)
+    father_suites_list = list(set(father_suites_list))
 
-def add_suite(request,f_suite_pk, suite_pk):
+
+    suites = [suite for suite in a_suites if ((suite not in f_suites) & (suite not in father_suites_list) & (suite not in c_suite))]
+
+    return render(request, "suite_add.html", {"suites": suites, "f_suite": f_suites[0]})
+
+def add_suite(request, f_suite_pk, suite_pk):
     f_suite = Suite.objects.filter(pk=f_suite_pk)[0]
     suite = Suite.objects.filter(pk=suite_pk)[0]
 
-    f_suite.suites.add(suite)
+    sub_suites = suite.suites.all()
+    sub_suites_list = list(sub_suites)
+
+    get_sub_suite(sub_suites, sub_suites_list)
+    sub_suites_list = list(set(sub_suites_list))
+
+    if f_suite not in sub_suites_list:
+        f_suite.suites.add(suite)
+    else:
+        # suites = Suite.objects.all()
+        # return render(request, "suite_add_404.html", {"suites": suites, "f_suite": f_suite})
+        print 123
+        # TBD: need to return a prompt that hint user this is the "Ring graph"
 
     a_suites = Suite.objects.all()
     f_suites = Suite.objects.filter(pk=f_suite.pk)
     c_suite = f_suites[0].suites.all()
 
-    suites = [suite for suite in a_suites if ((suite not in f_suites) & (suite not in c_suite))]
+    suites = [suite for suite in a_suites if ((suite not in f_suites) & (suite not in sub_suites_list) & (suite not in c_suite))]
 
-    return render(request, "suite_add.html", {"suites":suites,"f_suite":f_suites[0]})
+    return render(request, "suite_add.html", {"suites": suites, "f_suite": f_suites[0]})
 
 def add_case_view(request, pk):
     a_cases = Case.objects.all()
@@ -132,7 +167,7 @@ def add_case(request, f_suite_pk, case_pk):
 
     cases = [case for case in a_cases if (case not in c_cases)]
 
-    return render(request, "case_add.html", {"cases":cases,"f_suite":f_suites[0]})
+    return render(request, "case_add.html", {"cases": cases, "f_suite": f_suites[0]})
 
 def suite_edit(request, pk):
     suite = Suite.objects.get(pk = pk)

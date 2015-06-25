@@ -5,7 +5,7 @@ xml_content_starting = u'''<?xml version="1.0" encoding="UTF-8" standalone="no"?
 	<function name="func_test">
         <sequence>
             <loop from="0" to="0">
-                <testcase name="'last_case'">
+                <testcase name="'first_case'">
                     <sequence>
                         <process>
                             <location>'local'</location>

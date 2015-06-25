@@ -66,6 +66,33 @@
             </tbody>
             </table>
         </div>
+        <div class="box-body">
+            {% if task_reports %}
+                <dl class="table table-hover">
+                    <dt>运行次数</dt>
+                    <dd>{{ task_reports.count}}</dd>
+                </dl>
+                <h4>最新状态</h4>
+                <dl class="table table-hover">
+                    <dt>创建时间</dt>
+                    <dd>{{ task_report.createdAt|date:'Y-m-d H:i:s' }}</dd>
+                    <dt>运行状态</dt>
+                    {% ifequal task_report.result 1 %}
+                        <dd><span class="label label-success">{{ task_report.get_result_display }}</span></dd>
+                    {% endifequal %}
+                    {% ifequal task_report.result 2 %}
+                        <dd><span class="label label-danger">{{ task_report.get_result_display }}</span></dd>
+                    {% endifequal %}
+                    {% ifequal task_report.result 3 %}
+                        <dd><span class="label label-info">{{ task_report.get_result_display }}</span></dd>
+                    {% endifequal %}
+                    <dt>运行环境</dt>
+                <dd>{{ machine.name }}</dd>
+                </dl>
+            {% else %}
+                无数据
+            {% endif %}
+        </div>
     </div>
 {% endblock %}
 {#{% block content %}#}
