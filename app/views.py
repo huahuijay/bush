@@ -352,13 +352,13 @@ def case_edit(request, pk):
 #
 #     return render(request, "task_edit.html", locals())
 
-def get_cases(p_suites, child_cases):
+def get_cases(p_suites, child_cases_list):
     if not p_suites:
         return
     else:
         for p_suite in p_suites:
-            child_cases.append(p_suite.case_set.all())
-            get_cases(p_suite.suites.all(), child_cases)
+            child_cases_list.extend(p_suite.cases.all())
+            get_cases(p_suite.suites.all(), child_cases_list)
 
 def task_trigger(request, pk):
     p_suite = Suite.objects.get(id=pk)
@@ -368,8 +368,10 @@ def task_trigger(request, pk):
     task_name = p_suite.name
 
     child_cases = p_suite.cases.all()
-    get_cases(p_suite.suites.all(), child_cases)
-    child_cases = list(set(child_cases))
+    child_cases_list = list(child_cases)
+    get_cases(p_suite.suites.all(), child_cases_list)
+    child_cases = list(set(child_cases_list))
+
 
     task_report = Task_Report(task=p_suite, machine=p_machine)
     task_report.save()
@@ -498,28 +500,7 @@ def script_add(request):
         return redirect(reverse("script_view"))
 
 def report_list(request):
-    p_suite = None
-    suites = None
-    p_tasks = None
-    if Suite.objects.exists():
-        p_suite = Suite.objects.all().order_by('id')[0]
-        suites = Suite.objects.all()
-        p_tasks = Task.objects.filter(suite=p_suite)
-    #if Task_Report.objects.exists():
-        #task_report_num = Task_Report.objects.
-    #    task_reports = Task_Report.objects.filter(task=p_task)
-    #    if task_reports:
-    #        task_report = task_reports.order_by('-id')[0]
-    return render(request, "report.html", locals())
-
-def report_list_index(request, pk):
-    p_suite = None
-    suites = None
-    p_tasks = None
-    if Suite.objects.exists():
-        p_suite = Suite.objects.get(id=pk)
-        suites = Suite.objects.all()
-        p_tasks = Task.objects.filter(suite=p_suite)
+    suites = Suite.objects.order_by('id')
     return render(request, "report.html", locals())
 
 def report_task_list(request, pk):

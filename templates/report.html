@@ -60,19 +60,19 @@
                 <thead>
                 <tr>
                     <th>#</th>
-                    <th>任务名称</th>
+                    <th>套件名称</th>
                     <!--<th>状态</th>-->
                     <th>创建时间</th>
                 </tr>
                 </thead>
                 <tbody>
-                {% if p_tasks %}
-                    {% for task in p_tasks %}
+                {% if suites %}
+                    {% for suite in suites %}
                         <tr>
                             <td>{{ forloop.counter }}</td>
-                            <td><a href="{% url 'report_task_list' task.id %}">{{ task.name }}</a></td>
+                            <td><a href="{% url 'report_task_list' suite.id %}">{{ suite.name }}</a></td>
                             <!--<td></td>-->
-                            <td>{{ task.createdAt|date:'Y-m-d H:i:s' }}</td>
+                            <td>{{ suite.createdAt|date:'Y-m-d H:i:s' }}</td>
                         </tr>
                     {% endfor %}
                 {% else %}

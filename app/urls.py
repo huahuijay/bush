@@ -55,7 +55,7 @@ urlpatterns = [
     #url(r'script/del/(?P<pk>\d+).html$', views.script_delete, name="script_delete"),
 
     url(r'^report$', views.report_list, name="report_list"),
-    url(r'^report/(?P<pk>\d+)$', views.report_list_index, name="report_list_index"),
+    # url(r'^report/(?P<pk>\d+)$', views.report_list_index, name="report_list_index"),
     url(r'^report/task/(?P<pk>\d+)$', views.report_task_list, name="report_task_list"),
 
 

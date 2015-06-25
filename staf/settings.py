@@ -57,6 +57,7 @@ INSTALLED_APPS = (
     'app',
     'djcelery',
     'kombu.transport.django',
+    'mptt',
 )
 
 MIDDLEWARE_CLASSES = (

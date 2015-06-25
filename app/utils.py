@@ -28,7 +28,7 @@ xml_content = u'''            <loop from="0" to="0">
                 <testcase name="'{case.name}'">
                     <sequence>
                         <stafcmd>
-                            <location>'10.3.30.207'</location>
+                            <location>'10.3.30.137'</location>
                             <service>'event'</service>
                             <request>'generate type monitor subtype properties property status=running property case_name={case.name} property task_name={task_name}'</request>
                         </stafcmd>
@@ -44,7 +44,7 @@ xml_content = u'''            <loop from="0" to="0">
                             </else>
                         </if>
                         <stafcmd>
-                            <location>'10.3.30.207'</location>
+                            <location>'10.3.30.137'</location>
                             <service>'event'</service>
                             <request>'generate type monitor subtype properties property status=finish property case_name={case.name} property task_name={task_name}'</request>
                         </stafcmd>
@@ -57,14 +57,14 @@ xml_content_ending = u'''        <loop from="0" to="0">
                 <testcase name="'last_case'">
                     <sequence>
                         <stafcmd>
-                            <location>'10.3.30.207'</location>
+                            <location>'10.3.30.137'</location>
                             <service>'event'</service>
                             <request>'generate type monitor subtype endoftest'</request>
                         </stafcmd>
                         <stafcmd>
                             <location>'local'</location>
                             <service>'fs'</service>
-                            <request>'COPY DIRECTORY /home/test/log/ TODIRECTORY {{STAF/Env/HOME}}/log/{0} TOMACHINE 10.3.30.207 RECURSE KEEPEMPTYDIRECTORIES'</request>
+                            <request>'COPY DIRECTORY /home/test/log/ TODIRECTORY {{STAF/Env/HOME}}/log/{0} TOMACHINE 10.3.30.137 RECURSE KEEPEMPTYDIRECTORIES'</request>
                         </stafcmd>
                         <tcstatus result="'pass'"/>
                     </sequence>
@@ -82,7 +82,7 @@ from django.conf import settings
 tmp_handle_global = None
 
 
-def generate_xml(task_name, task_cases, folder_name):
+def generate_xml(task_name, cases, folder_name):
     proj_name = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     # script_path = os.path.join(proj_name, 'media/script')
     script_path = '/home/test/media/script'
@@ -96,8 +96,8 @@ def generate_xml(task_name, task_cases, folder_name):
         os.remove(xml_location)
     with open(xml_location, 'a+') as xml_handle:
         xml_handle.write(xml_content_starting)
-        for task_case in task_cases:
-            xml_content_towrite = xml_content.format(case=task_case.case, script_path=script_path, task_name=task_name)
+        for case in cases:
+            xml_content_towrite = xml_content.format(case=case, script_path=script_path, task_name=task_name)
             xml_content_towrite = xml_content_towrite.encode('utf')
             xml_handle.write(xml_content_towrite)
         xml_handle.write(xml_content_ending.format(folder_name))
