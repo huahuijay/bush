@@ -1,0 +1,49 @@
+{% extends 'layout.html' %}
+{% block header %}
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-header" >
+                <div class="clearfix">
+                    <h3 class="content-title pull-left"><a href="{% url 'suite_view' f_suite.pk %}">{{ f_suite.name }}</a></h3>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="box border blue">
+        <div class="box-title">
+            <h4><i class="fa fa-bars"></i> 添加套件 </h4>
+        </div>
+        <div class="box-body">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>名称</th>
+                        <th>描述</th>
+                        <th>创建时间</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% if suites %}
+                    {% for suite in suites %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td><a href="{% url 'suite_view' suite.id %}">{{ suite.name }}</a></td>
+                            <td>{{ suite.description }}</td>
+                            <td>{{ suite.createdAt | date:'Y-m-d H:i:s' }}</td>
+                            <td><a href={% url 'add_suite' f_suite.pk suite.pk %}><button class="btn btn-danger">添加</button></a></td>
+                            <td>
+                                <span class="label label-danger">hehe</span>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+            </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

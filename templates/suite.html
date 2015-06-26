@@ -42,6 +42,9 @@
                                     <a href="{% url 'task_trigger' suite.id %}">
                                         <button class="btn btn-primary"><i class="fa fa-file-text fa-fw"></i>触发</button>
                                     </a>
+                                    <a href="{% url 'suite_edit' suite.id %}">
+                                        <button class="btn btn-primary"><i class="fa fa-file-text fa-fw"></i>修改</button>
+                                    </a>
                                 </td>
                             </tr>
                         {% endfor %}

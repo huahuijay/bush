@@ -171,7 +171,19 @@ def add_case(request, f_suite_pk, case_pk):
 
 def suite_edit(request, pk):
     suite = Suite.objects.get(pk = pk)
-    return render(request, "suite_edit.html", {"suite":suite})
+    if request.method == "POST":
+        suites = Suite.objects.all()
+        p_name = request.POST.get('name')
+        p_description = request.POST.get('description')
+        if p_name == "" or p_description == "":
+            error = "数据不能为空"
+        else:
+            suite.name = p_name
+            suite.description = p_description
+            suite.save()
+            return render(request, "suite.html", locals())
+
+    return render(request, "suite_edit.html", locals())
 
 def suite_remove(request,pk ,suite_pk):
     suite = Suite.objects.get(pk = pk)
@@ -269,7 +281,7 @@ def case_edit(request, pk):
     if request.method == "POST":
         p_name = request.POST['name']
         p_level = request.POST['level']
-        p_suites = request.POST['suites']
+        # p_suites = request.POST['suites']
         p_command = request.POST['command']
         p_script = request.POST['script']
         p_param = request.POST['param']
@@ -285,9 +297,9 @@ def case_edit(request, pk):
             case.description = p_description
             case.modifyAt = now()
             case.save()
-            case.suites.clear()
-            for p_suite in p_suites:
-                case.suites.add(p_suite)
+        #    case.suites.clear()
+        #    for p_suite in p_suites:
+        #        case.suites.add(p_suite)
             return redirect(reverse("case_view", kwargs={"pk": pk}))
     else:
         if Suite.objects.exists():
