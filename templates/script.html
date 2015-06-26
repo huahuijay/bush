@@ -5,9 +5,12 @@
         <div class="box-title">
             <h4><i class="fa fa-hand-o-up"></i>脚本列表</h4>
             {% if request.user.is_authenticated %}
-                <a href="{% url 'case_create'%}">
+                <!--<a href="{% url 'case_create'%}">
                     <button class="btn btn-primary pull-right"><i class="fa fa-file-text fa-fw"></i>上传</button>
-                </a>
+                </a>-->
+                <button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#myModal">
+                    添加文件
+                </button>
             {% endif %}
         </div>
         <div class="box-body">
@@ -33,6 +36,29 @@
                 {% endif %}
                 </tbody>
             </table>
+        </div>
+    </div>
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="post" action="script" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Script Manager</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label >文件</label>
+                            <input type="file" class="form-control" name="name">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="submit" class="btn btn-success">提交</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
     <!-- /BOX -->
