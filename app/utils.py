@@ -28,7 +28,7 @@ xml_content = u'''            <loop from="0" to="0">
                 <testcase name="'{case.name}'">
                     <sequence>
                         <stafcmd>
-                            <location>'10.3.30.137'</location>
+                            <location>'10.3.31.1'</location>
                             <service>'event'</service>
                             <request>'generate type monitor subtype properties property status=running property case_name={case.name} property task_name={task_name}'</request>
                         </stafcmd>
@@ -44,7 +44,7 @@ xml_content = u'''            <loop from="0" to="0">
                             </else>
                         </if>
                         <stafcmd>
-                            <location>'10.3.30.137'</location>
+                            <location>'10.3.31.1'</location>
                             <service>'event'</service>
                             <request>'generate type monitor subtype properties property status=finish property case_name={case.name} property task_name={task_name}'</request>
                         </stafcmd>
@@ -57,14 +57,14 @@ xml_content_ending = u'''        <loop from="0" to="0">
                 <testcase name="'last_case'">
                     <sequence>
                         <stafcmd>
-                            <location>'10.3.30.137'</location>
+                            <location>'10.3.31.1'</location>
                             <service>'event'</service>
                             <request>'generate type monitor subtype endoftest'</request>
                         </stafcmd>
                         <stafcmd>
                             <location>'local'</location>
                             <service>'fs'</service>
-                            <request>'COPY DIRECTORY /home/test/log/ TODIRECTORY {{STAF/Env/HOME}}/log/{0} TOMACHINE 10.3.30.137 RECURSE KEEPEMPTYDIRECTORIES'</request>
+                            <request>'COPY DIRECTORY /home/test/log/ TODIRECTORY {{STAF/Env/HOME}}/log/{0} TOMACHINE 10.3.31.1 RECURSE KEEPEMPTYDIRECTORIES'</request>
                         </stafcmd>
                         <tcstatus result="'pass'"/>
                     </sequence>

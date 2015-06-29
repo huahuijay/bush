@@ -43,7 +43,7 @@
     <!-- BOX -->
     <div class="box border blue">
         <div class="box-title">
-            <h4><i class="fa fa-hand-o-up"></i>报表列表</h4>
+            <h4><i class="fa fa-hand-o-up"></i>用例列表</h4>
             <div class="tools">
                 <a href="javascript:;" class="collapse">
                     <i class="fa fa-chevron-up"></i>
@@ -59,26 +59,26 @@
                 <tr>
                     <th>#</th>
                     <th>状态</th>
-                    <th>创建时间</th>
+                    <th>log</th>
                 </tr>
                 </thead>
                 <tbody>
-                {% if task_reports %}
-                    {% for task_report in task_reports %}
+                {% if case_reports %}
+                    {% for case_report in case_reports %}
                         <tr>
-                            <td><a href="{% url 'report_task_view' task_report.id %}">{{ forloop.counter }}</a></td>
+                            <td><a href="{% url 'report_task_view' case_report.id %}">{{ forloop.counter }}</a></td>
                             <td>
-                            {% ifequal task_report.result 1 %}
-                                    <span class="label label-success">{{ task_report.get_result_display }}</span>
+                            {% ifequal case_report.result 1 %}
+                                    <span class="label label-success">{{ case_report.get_result_display }}</span>
                             {% endifequal %}
-                            {% ifequal task_report.result 2 %}
-                                    <span class="label label-danger">{{ task_report.get_result_display }}</span>
+                            {% ifequal case_report.result 2 %}
+                                    <span class="label label-danger">{{ case_report.get_result_display }}</span>
                             {% endifequal %}
-                            {% ifequal task_report.result 3 %}
-                                    <span class="label label-info">{{ task_report.get_result_display }}</span>
+                            {% ifequal case_report.result 3 %}
+                                    <span class="label label-info">{{ case_report.get_result_display }}</span>
                             {% endifequal %}
                             </td>
-                            <td>{{ task_report.createdAt|date:'Y-m-d H:i:s' }}</td>
+                            <td>{{ case_report.createdAt|date:'Y-m-d H:i:s' }}</td>
                         </tr>
                     {% endfor %}
                 {% else %}

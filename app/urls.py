@@ -57,6 +57,7 @@ urlpatterns = [
     url(r'^report$', views.report_list, name="report_list"),
     # url(r'^report/(?P<pk>\d+)$', views.report_list_index, name="report_list_index"),
     url(r'^report/task/(?P<pk>\d+)$', views.report_task_list, name="report_task_list"),
+    url(r'^report/task/view/(?P<pk>\d+)$', views.report_task_view, name="report_task_view"),
 
 
     url(r'demo_celery.html$', views.demo_celery, name="demo_celery"),
