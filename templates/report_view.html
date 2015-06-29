@@ -58,6 +58,7 @@
                 <thead>
                 <tr>
                     <th>#</th>
+                    <th>用例名称</th>
                     <th>状态</th>
                     <th>log</th>
                 </tr>
@@ -67,6 +68,7 @@
                     {% for case_report in case_reports %}
                         <tr>
                             <td><a href="{% url 'report_task_view' case_report.id %}">{{ forloop.counter }}</a></td>
+                            <td>{{ case_report.case.name }}</td>
                             <td>
                             {% ifequal case_report.result 1 %}
                                     <span class="label label-success">{{ case_report.get_result_display }}</span>
@@ -78,7 +80,7 @@
                                     <span class="label label-info">{{ case_report.get_result_display }}</span>
                             {% endifequal %}
                             </td>
-                            <td>{{ case_report.createdAt|date:'Y-m-d H:i:s' }}</td>
+                            <td><a href="/report/log/view?name={{ case_report.case.name }}&id={{ p_task_report.id }}">log_link</a></td>
                         </tr>
                     {% endfor %}
                 {% else %}

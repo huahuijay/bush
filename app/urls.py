@@ -59,6 +59,8 @@ urlpatterns = [
     url(r'^report/task/(?P<pk>\d+)$', views.report_task_list, name="report_task_list"),
     url(r'^report/task/view/(?P<pk>\d+)$', views.report_task_view, name="report_task_view"),
 
+    url(r'^report/log/view', views.report_case_log_view, name="report_case_log_view"),
+
 
     url(r'demo_celery.html$', views.demo_celery, name="demo_celery"),
 

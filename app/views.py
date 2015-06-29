@@ -562,6 +562,19 @@ def report_task_view(request, pk):
     case_reports = p_task_report.case_report_set.all().order_by('id')
     return render(request, "report_view.html", locals())
 
+def report_case_log_view(request):
+    g_task_report_id = request.GET['id']
+    log_name = request.GET['name'] + '.log'
+    log_path = os.path.expanduser(r'~/log/{}'.format(g_task_report_id))
+    log_location = os.path.join(log_path, log_name)
+
+    try:
+        log_handle = open(log_location)
+        log_text = log_handle.read()
+    finally:
+        log_handle.close()
+    return render(request, "log_view.html", locals())
+
 
 def demo_celery(request):
     print 123
