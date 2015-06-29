@@ -69,7 +69,17 @@
                         <tr>
                             <td>{{ forloop.counter }}</td>
                             <td><a href="{% url 'case_view' case.id %}">{{ case.name }}</a></td>
-                            <td>{{ case.get_level_display }}</td>
+                            <td>
+                                {% ifequal case.level 1 %}
+                                    <span class="label label-success">{{ case.get_level_display }}</span>
+                                {% else %}
+                                    {% ifequal case.level 2 %}
+                                        <span class="label label-warning">{{ case.get_level_display }}</span>
+                                    {% else %}
+                                        <span class="label label-danger">{{ case.get_level_display }}</span>
+                                    {% endifequal %}
+                                {% endifequal %}
+                            </td>
                             <td>{{ case.createdAt|date:'Y-m-d H:i:s' }}</td>
                         </tr>
                     {% endfor %}

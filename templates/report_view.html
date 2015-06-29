@@ -67,7 +67,7 @@
                 {% if case_reports %}
                     {% for case_report in case_reports %}
                         <tr>
-                            <td><a href="{% url 'report_task_view' case_report.id %}">{{ forloop.counter }}</a></td>
+                            <td>{{ forloop.counter }}</td>
                             <td>{{ case_report.case.name }}</td>
                             <td>
                             {% ifequal case_report.result 1 %}
