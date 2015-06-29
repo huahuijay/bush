@@ -3,13 +3,13 @@
     <!-- BOX -->
     <div class="box border blue">
         <div class="box-title">
-            <h4><i class="fa fa-hand-o-up"></i>脚本列表</h4>
+            <h4><i class="fa fa-file-text-o"></i>脚本列表</h4>
             {% if request.user.is_authenticated %}
                 <!--<a href="{% url 'case_create'%}">
                     <button class="btn btn-primary pull-right"><i class="fa fa-file-text fa-fw"></i>上传</button>
                 </a>-->
                 <button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#myModal">
-                    添加文件
+                    <i class="fa fa-file"></i> 新建
                 </button>
             {% endif %}
         </div>

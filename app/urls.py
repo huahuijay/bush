@@ -23,7 +23,7 @@ urlpatterns = [
 
     url(r'^case$', views.case_list, name="case_list"),
     url(r'^case/(?P<pk>\d+)$', views.case_list_index, name="case_list_index"),
-    url(r'^case/create $', views.case_create, name="case_create"),
+    url(r'^case/create$', views.case_create, name="case_create"),
     url(r'^case/view/(?P<pk>\d+)$', views.case_view, name="case_view"),
     url(r'^case/edit/(?P<pk>\d+)$', views.case_edit, name="case_edit"),
     url(r'^case/del/(?P<pk>\d+)$', views.case_delete, name="case_delete"),
@@ -42,7 +42,7 @@ urlpatterns = [
 
     url(r'^machine$', views.machine_list, name="machine_list"),
     # url(r'^machine/(?P<pk>\d+)$', views.machine_list_index, name="machine_list_index"),
-    url(r'^machine/create/(?P<pk>\d+)$', views.machine_create, name="machine_create"),
+    url(r'^machine/create/$', views.machine_create, name="machine_create"),
     url(r'^machine/view/(?P<pk>\d+)$', views.machine_view, name="machine_view"),
     url(r'^machine/edit/(?P<pk>\d+)$', views.machine_edit, name="machine_edit"),
     url(r'^machine/del/(?P<pk>\d+)$', views.machine_delete, name="machine_delete"),

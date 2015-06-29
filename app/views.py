@@ -479,9 +479,8 @@ def machine_view(request, pk):
     suites = Suite.objects.all()
     return render(request, "machine_view.html", locals())
 
-def machine_create(request, pk):
+def machine_create(request):
     suites = Suite.objects.all()
-    p_suite = Suite.objects.get(id=pk)
     if request.method == "POST":
         p_name = request.POST['name']
         p_description = request.POST['description']
@@ -490,7 +489,7 @@ def machine_create(request, pk):
             error = "数据不能为空"
         else:
             Machine(name=p_name, description=p_description, address=p_address, createdAt=now()).save()
-            return redirect(reverse("machine_list_index", kwargs={"pk": pk}))
+            return redirect(reverse("machine_list"))
     return render(request, "machine_create.html", locals())
 
 def machine_edit(request, pk):

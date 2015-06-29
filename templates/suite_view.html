@@ -13,13 +13,13 @@
 {% block content %}
     <div class="box border blue">
         <div class="box-title">
-            <h4><i class="fa fa-bars"></i> 套件内容 </h4>
+            <h4><i class="fa fa-tasks"></i> 套件内容 </h4>
             {% if request.user.is_authenticated %}
                 <a href="{% url 'add_suite_list' suite.pk %}">
-                    <button class="btn btn-primary pull-right"><i class="fa fa-file-text fa-fw"></i>添加套件</button>
+                    <button class="btn btn-primary pull-right"><i class="fa fa-file"></i> 添加套件</button>
                 </a>
                 <a href="{% url 'add_case_list' suite.pk %}">
-                    <button class="btn btn-primary pull-right"><i class="fa fa-file-text fa-fw"></i>添加用例</button>
+                    <button class="btn btn-primary pull-right"><i class="fa fa-file"></i> 添加用例</button>
                 </a>
 {#                <a href="{% url 'suite_create' %}">#}
 {#                    <button class="btn btn-primary pull-right"><i class="fa fa-file-text fa-fw"></i>新建</button>#}
@@ -44,7 +44,7 @@
                         <tr>
                             <td>{{ forloop.counter }}</td>
                             <td><a href="{% url 'suite_view' c_suite.id %}">{{ c_suite.name }}</a></td>
-                            <td>套间</td>
+                            <td>套件</td>
                             <td>{{ c_suite.description }}</td>
                             <td>{{ c_suite.createdAt | date:'Y-m-d H:i:s' }}</td>
                             <td><a href="{% url 'remove_suite'  suite.pk c_suite.pk %}"><button class="btn btn-danger">从套件中移除</button></a></td>
@@ -59,7 +59,7 @@
                             <td>用例</td>
                             <td>{{ case.description }}</td>
                             <td>{{ case.createdAt | date:'Y-m-d H:i:s' }}</td>
-                            <td><a href="{% url 'remove_case' suite.pk case.pk %}"><button class="btn btn-danger">从套件中移除</button></a></td>
+                            <td><a href="{% url 'remove_case' suite.pk case.pk %}"><button class="btn btn-danger"><i class="fa fa-trash-o"></i> 移除</button></a></td>
                         </tr>
                     {% endfor %}
                 {% endif %}
